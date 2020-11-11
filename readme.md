@@ -14,6 +14,8 @@ Als Technologie sollen .NET Core 3.1 für Backend, ReactJs für Frontend und SQL
 **Libraries**
 - ApplicationInsights soll für Logging verwendet werden.
 - Serilog Logger
+- AutoMapper
+- FluentValidation
 
 ## 3. What features will it include?
 - Betrag mit Bezichnung und Datum
