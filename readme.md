@@ -16,6 +16,8 @@ Als Technologie sollen .NET Core 3.1 für Backend, ReactJs für Frontend und SQL
 - Serilog Logger
 - AutoMapper
 - FluentValidation
+- mermaid: https://mermaid-js.github.io/mermaid/#/
+- SwashBuckle
 
 ## 3. What features will it include?
 - Betrag mit Bezichnung und Datum
@@ -80,8 +82,141 @@ expenses
 ## 6. What's your timeline?
 Weekly Wednesday Meetup 20:00 Uhr
 - Week 1: Initialize Project, introduce object structure, API Design, User Flow
+
+AuthController
+    POST api/auth/register
+        FromBody: UserRegisterModel
+        Returns: 
+            201 NoContent
+            400 BadRequest
+                X is invalid or already taken.
+
+    POST api/auth/login
+        FromBody: LoginModel
+        Returns:
+            200 Ok -> TokenModel
+            400 BadRequest
+
+    POST api/auth/logout
+        Returns:
+            201 NoContent
+
+    POST api/auth/refreshToken
+        FromCookie
+        Returns: 
+            200 Ok -> TokenModel
+            400 BadRequest
+            401 Unauthorized
+
+    POST api/auth/emailVerification
+
+UserController
+    [Authorized]
+    GET api/users/info
+    Get userdata from backend
+        Returns:
+            200 Ok -> UserInfoReadModel
+            401 Unauthorized
+
+    [Authorized]
+    POST api/users/changeEmail
+        FromBody: UserInfoEmailWriteModel
+    Request email change
+        Returns: 
+            201 NoContent
+            401 Unauthorized
+
+    [Authorized]
+    PUT api/users/info
+        FromBody: UserInfoWriteModel
+        Returns: 
+            200 Ok -> UserInfoReadModel
+            401 Unauthorized
+
+[Authorized]
+EventController
+    POST api/events
+        FromBody: EventWriteModel
+        Returns: 
+            200 Ok -> EventReadModel
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+    
+    GET api/events
+        FromQuery: Filter options
+        Returns: 
+            200 Ok -> List<EventReadModel>
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+
+    GET api/events/{id}
+        Returns: 
+            200 Ok -> EventReadModel
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+
+    PUT api/events/{id}
+        FromBody: EventWriteModel
+        Returns: 
+            201 NoContent
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+
+    DELETE api/events/{id}
+        Returns: 
+            201 NoContent
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+
+[Authorized]
+ExpenseController
+    POST api/events/{eventid}/expenses
+        FromBody: ExpenseWriteModel
+        Returns: 
+            200 Ok -> ExpenseReadModel
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+    
+    GET api/events/{eventid}/expenses
+        FromQuery: Filter options
+        Returns: 
+            200 Ok -> List<ExpenseReadModel>
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+
+    GET api/events/{eventid}/expenses/{id}
+        Returns: 
+            200 Ok -> ExpenseReadModel
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+
+    PUT api/events/{eventid}/expenses/{id}
+        FromBody: ExpenseWriteModel
+        Returns: 
+            201 NoContent
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+
+    DELETE api/events/{eventid}/expenses/{id}
+        Returns: 
+            201 NoContent
+            400 BadRequest
+            401 Unauthorized
+            403 Forbidden
+
 - Week 2: Implementation objects, api, ...
 - Week 3: Design UI
 - Week 4: Implementation UI
 - Week 5: Finalization Release v1
 Release v1
+
+
