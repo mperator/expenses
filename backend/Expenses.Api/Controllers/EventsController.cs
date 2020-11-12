@@ -68,7 +68,7 @@ namespace Expenses.Api.Controllers
                 Title = newEvent.Title,
                 Description = newEvent.Description,
                 Creator = newEvent.Creator,
-                Currency = newEvent.Currency,
+                Currency = "Euro",
                 StartDate = newEvent.StartDate,
                 EndDate = newEvent.EndDate
             };
