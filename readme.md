@@ -83,7 +83,8 @@ expenses
 Weekly Wednesday Meetup 20:00 Uhr
 - Week 1: Initialize Project, introduce object structure, API Design, User Flow
 
-AuthController
+**AuthController**  
+    
     POST api/auth/register
         FromBody: UserRegisterModel
         Returns: 
@@ -110,7 +111,8 @@ AuthController
 
     POST api/auth/emailVerification
 
-UserController
+**UserController**  
+    
     [Authorized]
     GET api/users/info
     Get userdata from backend
@@ -133,8 +135,10 @@ UserController
             200 Ok -> UserInfoReadModel
             401 Unauthorized
 
-[Authorized]
-EventController
+
+**EventController**  
+
+    [Authorized]
     POST api/events
         FromBody: EventWriteModel
         Returns: 
@@ -143,6 +147,7 @@ EventController
             401 Unauthorized
             403 Forbidden
     
+    [Authorized]
     GET api/events
         FromQuery: Filter options
         Returns: 
@@ -151,6 +156,7 @@ EventController
             401 Unauthorized
             403 Forbidden
 
+    [Authorized]
     GET api/events/{id}
         Returns: 
             200 Ok -> EventReadModel
@@ -158,6 +164,7 @@ EventController
             401 Unauthorized
             403 Forbidden
 
+    [Authorized]
     PUT api/events/{id}
         FromBody: EventWriteModel
         Returns: 
@@ -166,6 +173,7 @@ EventController
             401 Unauthorized
             403 Forbidden
 
+    [Authorized]
     DELETE api/events/{id}
         Returns: 
             201 NoContent
@@ -173,8 +181,10 @@ EventController
             401 Unauthorized
             403 Forbidden
 
-[Authorized]
-ExpenseController
+
+**ExpenseController**
+
+    [Authorized]
     POST api/events/{eventid}/expenses
         FromBody: ExpenseWriteModel
         Returns: 
@@ -183,6 +193,7 @@ ExpenseController
             401 Unauthorized
             403 Forbidden
     
+    [Authorized]
     GET api/events/{eventid}/expenses
         FromQuery: Filter options
         Returns: 
@@ -191,6 +202,7 @@ ExpenseController
             401 Unauthorized
             403 Forbidden
 
+    [Authorized]
     GET api/events/{eventid}/expenses/{id}
         Returns: 
             200 Ok -> ExpenseReadModel
@@ -198,6 +210,7 @@ ExpenseController
             401 Unauthorized
             403 Forbidden
 
+    [Authorized]
     PUT api/events/{eventid}/expenses/{id}
         FromBody: ExpenseWriteModel
         Returns: 
@@ -206,6 +219,7 @@ ExpenseController
             401 Unauthorized
             403 Forbidden
 
+    [Authorized]
     DELETE api/events/{eventid}/expenses/{id}
         Returns: 
             201 NoContent
@@ -217,6 +231,6 @@ ExpenseController
 - Week 3: Design UI
 - Week 4: Implementation UI
 - Week 5: Finalization Release v1
-Release v1
+- Week 6: Release v1
 
 
