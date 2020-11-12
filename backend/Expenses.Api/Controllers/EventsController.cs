@@ -32,6 +32,25 @@ namespace Expenses.Api.Controllers
             return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData.ToListAsync()));
         }
 
+        [HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
+        public async Task<ActionResult<EventReadModel>> GetEventByIdAsync(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            Event foundEvent;
+            //try
+            //{
+                foundEvent = await _dbContext.EventData.SingleOrDefaultAsync(ev => ev.Id == id);
+            //}
+            //catch (Exception e)
+            //{
+            //    new InvalidOperationException(e.Message);
+            //}
+            if (foundEvent == null) return NotFound();
+            
+            return Ok(_mapper.Map<EventReadModel>(foundEvent));
+        }
+
         [HttpPost]
         public async Task<ActionResult<EventReadModel>> CreateEventAsync([FromBody] EventWriteModel eventModel)
         {
