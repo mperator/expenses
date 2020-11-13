@@ -23,6 +23,8 @@ namespace Expenses.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
+        // https://www.codewithmukesh.com/blog/refresh-tokens-in-aspnet-core/
+
         private readonly UserManager<User> _userManager;
         private readonly AppDbContext _context;
         private readonly JwtTokenOptions _options;
