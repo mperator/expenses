@@ -193,7 +193,7 @@ namespace Expenses.Api.Controllers
             {
                 TokenType = "Bearer",
                 AccessToken = accessToken,
-                ExpiryDate = expires
+                Expires = expires
             };
         }
 
