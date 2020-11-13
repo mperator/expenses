@@ -21,7 +21,10 @@ namespace Expenses.Api.Controllers
             _dbContext = dbContext;
             _mapper = mapper;
         }
-
+        /// <summary>
+        /// Gets a list of events
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<List<EventReadModel>>> GetEventsAsync()
         {
@@ -29,7 +32,11 @@ namespace Expenses.Api.Controllers
             // if not return 401 Unauthorized
             return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData.ToListAsync()));
         }
-
+        /// <summary>
+        /// Get a single event by its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
         public async Task<ActionResult<EventReadModel>> GetEventByIdAsync(int? id)
         {
@@ -40,7 +47,11 @@ namespace Expenses.Api.Controllers
             
             return Ok(_mapper.Map<EventReadModel>(foundEvent));
         }
-
+        /// <summary>
+        /// creates a new event
+        /// </summary>
+        /// <param name="eventModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<EventReadModel>> CreateEventAsync([FromBody] EventWriteModel eventModel)
         {
@@ -74,7 +85,12 @@ namespace Expenses.Api.Controllers
             }
             return Ok(savedEvent);
         }
-
+        /// <summary>
+        /// update an event by replacing it
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateEventAsync(int? id, [FromBody] EventUpdateModel model)
         {
@@ -101,7 +117,11 @@ namespace Expenses.Api.Controllers
 
             return NoContent();
         }
-
+        /// <summary>
+        /// delete an event using its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteEventByIdAsync(int? id)
         {
