@@ -15,6 +15,8 @@ namespace Expenses.Api.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public List<User> Attendees { get; set; }
+        public int ExpenseId { get; set; }
+        public Expense Expense { get; set; }
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Expenses.Api.Entities
 {
@@ -12,6 +13,7 @@ namespace Expenses.Api.Entities
         public float Amount { get; set; }
         public string Currency { get; set; }
         public User Issuer { get; set; }
+        public ICollection<Event> Events { get; set; }
         #endregion
     }
 }
