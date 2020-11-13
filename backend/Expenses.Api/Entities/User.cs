@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 
 namespace Expenses.Api.Entities
 {
@@ -12,6 +13,8 @@ namespace Expenses.Api.Entities
         public string LastName { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
+
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
 
         #endregion
     }
