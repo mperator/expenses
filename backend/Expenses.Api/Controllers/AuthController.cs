@@ -1,7 +1,9 @@
-﻿using Expenses.Api.Entities;
+﻿using Expenses.Api.Data;
+using Expenses.Api.Entities;
 using Expenses.Api.Models;
 using Expenses.Api.Options;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -11,6 +13,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,11 +24,13 @@ namespace Expenses.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly AppDbContext _context;
         private readonly JwtTokenOptions _options;
 
-        public AuthController(UserManager<User> userManager, IOptions<JwtTokenOptions> options)
+        public AuthController(UserManager<User> userManager, AppDbContext context, IOptions<JwtTokenOptions> options)
         {
             _userManager = userManager;
+            _context = context;
             _options = options.Value;
         }
 
@@ -84,8 +89,22 @@ namespace Expenses.Api.Controllers
                 return BadRequest("Could not login.");
             }
 
+            var refreshToken = CreateRefreshToken();
+            user.RefreshTokens.Add(refreshToken);
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors.First());
+            };
+
+            SetRefreshTokenInCookie(refreshToken);
+
             // Create token
-            return GenerateToken(user);
+            var token = GenerateToken(user);
+            token.RefreshToken = refreshToken.Token;
+            token.RefreshTokenExpires = refreshToken.Expires;
+
+            return token;
         }
 
         [Authorize]
@@ -99,12 +118,53 @@ namespace Expenses.Api.Controllers
 
         public void Logout()
         {
-
+            // delete cookie invalidate all refresh tokens
         }
 
-        public void RefreshToken()
+        [HttpPost("refreshToken")]
+        public async Task<IActionResult> RefreshTokenAsync([FromBody] RefreshTokenModel model)
         {
+            return await HandleRefreshTokenAsync(model.Token);
+        }
 
+        [HttpPost("refreshTokenbyCookie")]
+        public async Task<IActionResult> RefreshTokenByCookieAsync()
+        {
+            return await HandleRefreshTokenAsync(Request.Cookies["X-RefreshToken"]);
+        }
+
+        private async Task<IActionResult> HandleRefreshTokenAsync(string refreshToken)
+        {
+            var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+            if(user == null)
+            {
+                return Unauthorized("Token did not match any users.");
+            }
+
+            // check if token is active
+            var token = user.RefreshTokens.Single(x => x.Token == refreshToken);
+            if(!token.IsActive)
+            {
+                return Unauthorized("Token expired.");
+            }
+
+            token.Revoked = DateTime.UtcNow;
+
+            // generate new refresh and access token
+
+            var newRefreshToken = CreateRefreshToken();
+            user.RefreshTokens.Add(newRefreshToken);
+            _context.Update(user);
+            
+            SetRefreshTokenInCookie(newRefreshToken);
+
+            // Create token
+            var newAccessToken = GenerateToken(user);
+            newAccessToken.RefreshToken = newRefreshToken.Token;
+            newAccessToken.RefreshTokenExpires = newRefreshToken.Expires;
+            await _context.SaveChangesAsync();
+
+            return Ok(newAccessToken);
         }
 
         private TokenModel GenerateToken(User user)
@@ -117,7 +177,7 @@ namespace Expenses.Api.Controllers
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(30));
+            var expires = DateTime.UtcNow.AddMinutes(15);
 
             var token = new JwtSecurityToken(
                 issuer: _options.Issuer,
@@ -131,9 +191,36 @@ namespace Expenses.Api.Controllers
 
             return new TokenModel
             {
+                TokenType = "Bearer",
                 AccessToken = accessToken,
                 ExpiryDate = expires
             };
+        }
+
+
+        private RefreshToken CreateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using(var generator = new RNGCryptoServiceProvider())
+            {
+                generator.GetBytes(randomNumber);
+                return new RefreshToken
+                {
+                    Token = Convert.ToBase64String(randomNumber),
+                    Expires = DateTime.UtcNow.AddDays(14),
+                    Created = DateTime.UtcNow
+                };
+            }
+        }
+
+        private void SetRefreshTokenInCookie(RefreshToken refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = refreshToken.Expires,
+            };
+            Response.Cookies.Append("X-RefreshToken", refreshToken.Token, cookieOptions);
         }
     }
 }
