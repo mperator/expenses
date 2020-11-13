@@ -35,6 +35,19 @@ namespace Expenses.Api.Controllers
         }
 
         /// <summary>
+        /// Endpoint to test authorization. For demo purpose only.
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("test")]
+        public async Task<string> TestAsync()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            return $"Secret for {user.FirstName} {user.LastName}";
+        }
+
+        /// <summary>
         /// Registers a new user to Expenses.
         /// </summary>
         [HttpPost("register")]
@@ -66,6 +79,11 @@ namespace Expenses.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Login a user. 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Returns access and refresh token.</returns>
         [HttpPost("login")]
         public async Task<ActionResult<TokenModel>> LoginAsync([FromBody] LoginModel model)
         {
@@ -107,32 +125,53 @@ namespace Expenses.Api.Controllers
             return token;
         }
 
+        /// <summary>
+        /// Log out user. Revokes all refresh tokens.
+        /// </summary>
         [Authorize]
-        [HttpGet("test")]
-        public async Task<string> TestAsync()
-        {
-            var user = await _userManager.GetUserAsync(User);
-
-            return $"Secret for {user.FirstName} {user.LastName}";
-        }
-
-        public void Logout()
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutAsync()
         {
             // delete cookie invalidate all refresh tokens
+            var user = await _userManager.GetUserAsync(User);
+            var activeTokens = user.RefreshTokens.Where(x => x.IsActive);
+            foreach(var token in activeTokens)
+            {
+                token.Revoked = DateTime.UtcNow;
+            }
+            await _userManager.UpdateAsync(user);
+
+            Response.Cookies.Delete("X-RefreshToken");
+
+            return NoContent();
         }
 
+        /// <summary>
+        /// Refresh token by token value in body.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("refreshToken")]
         public async Task<IActionResult> RefreshTokenAsync([FromBody] RefreshTokenModel model)
         {
             return await HandleRefreshTokenAsync(model.Token);
         }
 
-        [HttpPost("refreshTokenbyCookie")]
+        /// <summary>
+        /// Refresh token silent by token in cookie.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("refreshTokenSilent")]
         public async Task<IActionResult> RefreshTokenByCookieAsync()
         {
             return await HandleRefreshTokenAsync(Request.Cookies["X-RefreshToken"]);
         }
 
+        /// <summary>
+        /// Check if request is allowd to generate new refresh and access tokens.
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns></returns>
         private async Task<IActionResult> HandleRefreshTokenAsync(string refreshToken)
         {
             var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
@@ -167,6 +206,11 @@ namespace Expenses.Api.Controllers
             return Ok(newAccessToken);
         }
 
+        /// <summary>
+        /// Generate an access token for user.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private TokenModel GenerateToken(User user)
         {
             var claims = new List<Claim>
@@ -197,7 +241,10 @@ namespace Expenses.Api.Controllers
             };
         }
 
-
+        /// <summary>
+        /// Generate a refresh token for user.
+        /// </summary>
+        /// <returns></returns>
         private RefreshToken CreateRefreshToken()
         {
             var randomNumber = new byte[32];
@@ -213,6 +260,10 @@ namespace Expenses.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Set RefreshToken in Cookie.
+        /// </summary>
+        /// <param name="refreshToken"></param>
         private void SetRefreshTokenInCookie(RefreshToken refreshToken)
         {
             var cookieOptions = new CookieOptions
