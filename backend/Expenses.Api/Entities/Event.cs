@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Expenses.Api.Entities
 {
@@ -13,6 +14,7 @@ namespace Expenses.Api.Entities
         public string Currency { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public List<User> Attendees { get; set; }
         #endregion
     }
 }
