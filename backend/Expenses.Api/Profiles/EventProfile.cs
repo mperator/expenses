@@ -14,8 +14,8 @@ namespace Expenses.Api.Profiles
         {
             CreateMap<Event, EventWriteModel>().ReverseMap();
             CreateMap<Event, EventReadModel>().ReverseMap();
+            CreateMap<Event, EventUpdateModel>().ReverseMap();
         }
-
     }
 
 }

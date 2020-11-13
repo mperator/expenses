@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Expenses.Api.Data;
 using Expenses.Api.Data.Dtos;
 using Expenses.Api.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,15 +35,7 @@ namespace Expenses.Api.Controllers
         {
             if (id == null) return BadRequest();
 
-            Event foundEvent;
-            //try
-            //{
-                foundEvent = await _dbContext.EventData.SingleOrDefaultAsync(ev => ev.Id == id);
-            //}
-            //catch (Exception e)
-            //{
-            //    new InvalidOperationException(e.Message);
-            //}
+            Event foundEvent = await _dbContext.EventData.SingleOrDefaultAsync(ev => ev.Id == id);
             if (foundEvent == null) return NotFound();
             
             return Ok(_mapper.Map<EventReadModel>(foundEvent));
@@ -72,6 +62,7 @@ namespace Expenses.Api.Controllers
                 StartDate = newEvent.StartDate,
                 EndDate = newEvent.EndDate
             };
+
             _dbContext.EventData.Add(savedEvent);
             try
             {
@@ -84,6 +75,47 @@ namespace Expenses.Api.Controllers
             return Ok(savedEvent);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateEventAsync(int? id, [FromBody] EventUpdateModel model)
+        {
+            if (id == null) return BadRequest();
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var update = _mapper.Map<Event>(model);
+
+            if (update == null) return BadRequest();
+
+            var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == id);
+
+            if (dbEvent == null) return BadRequest();
+
+            dbEvent.Title = update.Title;
+            dbEvent.StartDate = update.StartDate;
+            dbEvent.EndDate = update.EndDate;
+            dbEvent.Description = update.Description;
+            dbEvent.Creator = update.Creator;
+            dbEvent.Currency = update.Currency;
+
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteEventByIdAsync(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == id);
+
+            if (dbEvent == null) return BadRequest();
+
+            _dbContext.Remove(dbEvent);
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
 
     }
 }
