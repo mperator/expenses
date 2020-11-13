@@ -11,28 +11,24 @@ namespace Expenses.Api.Migrations
                 name: "RefreshToken",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Token = table.Column<string>(nullable: true),
                     Expires = table.Column<DateTime>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
-                    Revoked = table.Column<DateTime>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
+                    Revoked = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RefreshToken", x => x.Id);
+                    table.PrimaryKey("PK_RefreshToken", x => new { x.UserId, x.Id });
                     table.ForeignKey(
                         name: "FK_RefreshToken_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RefreshToken_UserId",
-                table: "RefreshToken",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
