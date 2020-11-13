@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
 {
+    [Produces("application/json")]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
@@ -50,9 +51,14 @@ namespace Expenses.Api.Controllers
         }
 
         /// <summary>
-        /// Registers a new user to Expenses.
+        /// Register a new user.
         /// </summary>
+        /// <param name="model"></param>
+        /// <response code="201">On success.</response>
+        /// <response code="400">Registration could not be proceeded.</response>
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RegisterAsync([FromBody] UserRegistrationModel model)
         {
             if(!ModelState.IsValid)
