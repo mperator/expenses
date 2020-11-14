@@ -1,6 +1,7 @@
 using Expenses.Api.Data;
 using Expenses.Api.Entities;
 using Expenses.Api.Options;
+using Expenses.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,7 @@ namespace Expenses.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<JwtTokenOptions>(Configuration.GetSection("JwtToken"));
+            services.Configure<SmtpServerOptions>(Configuration.GetSection("SmtpServer"));
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Test")));
@@ -70,6 +72,8 @@ namespace Expenses.Api
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            services.AddScoped<IEmailService, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

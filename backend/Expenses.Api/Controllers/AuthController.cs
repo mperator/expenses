@@ -2,6 +2,7 @@
 using Expenses.Api.Entities;
 using Expenses.Api.Models;
 using Expenses.Api.Options;
+using Expenses.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Expenses.Api.Controllers
 {
@@ -28,12 +30,14 @@ namespace Expenses.Api.Controllers
 
         private readonly UserManager<User> _userManager;
         private readonly AppDbContext _context;
+        private readonly IEmailService _emailService;
         private readonly JwtTokenOptions _options;
 
-        public AuthController(UserManager<User> userManager, AppDbContext context, IOptions<JwtTokenOptions> options)
+        public AuthController(UserManager<User> userManager, AppDbContext context, IOptions<JwtTokenOptions> options, IEmailService emailService)
         {
             _userManager = userManager;
             _context = context;
+            _emailService = emailService;
             _options = options.Value;
         }
 
@@ -61,7 +65,7 @@ namespace Expenses.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RegisterAsync([FromBody] UserRegistrationModel model)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -82,6 +86,32 @@ namespace Expenses.Api.Controllers
             if(!result.Succeeded)
             {
                 return BadRequest(result.Errors);
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var confirmationLink = $"{Request.Scheme}://{Request.Host.Value}{Url.RouteUrl(nameof(ConfirmEmail))}?email={user.Email}&token={token}";
+
+            await _emailService.SendAsync(user.Email, "Confirm your email", confirmationLink);
+
+            return NoContent();
+        }
+
+        // TODO: Better create post.
+        // user navigates on email confirmation sites with params. Site requests for email confirm with posts and redirect depending on data. Eventually requests new confirmation link. Or navigate to login.
+        // TODO: Link which is send by email must manually encode token value because it canc contain + sings which will removed. Use: https://www.urlencoder.org
+        [HttpGet("confirmEmail", Name = nameof(ConfirmEmail))]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return BadRequest("Invalid link.");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if(!result.Succeeded)
+            {
+                return BadRequest(result.Errors.First());
             }
 
             return NoContent();
@@ -108,6 +138,12 @@ namespace Expenses.Api.Controllers
             else
             {
                 return BadRequest("Could not login.");
+            }
+
+            // check if user email is confirmend
+            if(!await _userManager.IsEmailConfirmedAsync(user)) 
+            {
+                return BadRequest("Please confirm email");
             }
 
             if(!await _userManager.CheckPasswordAsync(user, model.Password))
