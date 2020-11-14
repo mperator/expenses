@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -31,13 +32,20 @@ namespace Expenses.Api.Controllers
         private readonly UserManager<User> _userManager;
         private readonly AppDbContext _context;
         private readonly IEmailService _emailService;
+        private readonly IFeatureManager _featureManager;
         private readonly JwtTokenOptions _options;
 
-        public AuthController(UserManager<User> userManager, AppDbContext context, IOptions<JwtTokenOptions> options, IEmailService emailService)
+        public AuthController(
+            UserManager<User> userManager, 
+            AppDbContext context, 
+            IEmailService emailService,
+            IFeatureManager featureManager,
+            IOptions<JwtTokenOptions> options)
         {
             _userManager = userManager;
             _context = context;
             _emailService = emailService;
+            _featureManager = featureManager;
             _options = options.Value;
         }
 
@@ -88,12 +96,16 @@ namespace Expenses.Api.Controllers
                 return BadRequest(result.Errors);
             }
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            // Send email if feature is enabled.
+            if(await _featureManager.IsEnabledAsync("EmailConfirmation"))
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var confirmationLink = $"{Request.Scheme}://{Request.Host.Value}{Url.RouteUrl(nameof(ConfirmEmail))}?email={user.Email}&token={token}";
+                var confirmationLink = $"{Request.Scheme}://{Request.Host.Value}{Url.RouteUrl(nameof(ConfirmEmail))}?email={user.Email}&token={token}";
 
-            await _emailService.SendAsync(user.Email, "Confirm your email", confirmationLink);
+                await _emailService.SendAsync(user.Email, "Confirm your email", confirmationLink);
+            }
 
             return NoContent();
         }
@@ -140,10 +152,14 @@ namespace Expenses.Api.Controllers
                 return BadRequest("Could not login.");
             }
 
-            // check if user email is confirmend
-            if(!await _userManager.IsEmailConfirmedAsync(user)) 
+            // Check if eemail confirmation is enabled.
+            if (await _featureManager.IsEnabledAsync("EmailConfirmation"))
             {
-                return BadRequest("Please confirm email");
+                // check if user email is confirmend
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    return BadRequest("Please confirm email");
+                }
             }
 
             if(!await _userManager.CheckPasswordAsync(user, model.Password))

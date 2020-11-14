@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
@@ -31,6 +32,9 @@ namespace Expenses.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // https://github.com/microsoft/FeatureManagement-Dotnet
+            services.AddFeatureManagement();
+
             services.Configure<JwtTokenOptions>(Configuration.GetSection("JwtToken"));
             services.Configure<SmtpServerOptions>(Configuration.GetSection("SmtpServer"));
 
