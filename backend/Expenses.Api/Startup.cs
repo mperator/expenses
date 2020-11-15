@@ -1,3 +1,4 @@
+using AutoMapper;
 using Expenses.Api.Data;
 using Expenses.Api.Entities;
 using Expenses.Api.Options;
