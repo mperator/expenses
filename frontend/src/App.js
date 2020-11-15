@@ -9,26 +9,18 @@ import Unauthorized from './components/Unauthorized';
 // import Login from './components/Login'
 // import Register from './components/Register'
 
+import { AuthProvider } from './AuthContext';
+
 function App() {
-    const [user, setUser] = useState(false);
-
-    const handleLogin = e => {
-        e.preventDefault();
-        setUser(true);
-    }
-
-    const handleLogout = e => {
-        e.preventDefault();
-        setUser(false);
-    }
-
     return (
         <div className="App">
-            <Router>
-                <Route exact path='/' render={props => <Landing {...props} user={user.toString()} handleLogin={handleLogin} />} />
-                <ProtectedRoute exact path='/dashboard' user={user} handleLogout={handleLogout} component={Dashboard} />
-                <Route exact path='/unauthorized' component={Unauthorized} />
-            </Router>
+            <AuthProvider>
+                <Router>
+                    <Route exact path='/' render={props => <Landing {...props} />} />
+                    <ProtectedRoute exact path='/dashboard' component={Dashboard} />
+                    <Route exact path='/unauthorized' component={Unauthorized} />
+                </Router>
+            </AuthProvider>
         </div>
     );
 }
