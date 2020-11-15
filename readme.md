@@ -51,12 +51,12 @@ Als Technologie sollen .NET Core 3.1 für Backend, ReactJs für Frontend und SQL
 ### Interation 1
 
 #### Database
-User: (FirstName, LastName, DateOfBirth)
-Event: (Id, Title, Description, Creator, BeginDate, EndDate, Currency)
-EventParticipants: (E_Id, UserId)
-EventExpenses: (E_Id, EX_Id)
-Expenses: (Id, Title, Description, Date, Amount, Issuer)
-ExpensesParticipants: (EX_Id, UserId)
+User: (FirstName, LastName, DateOfBirth)  
+Event: (Id, Title, Description, Creator, BeginDate, EndDate, Currency)  
+EventParticipants: (E_Id, UserId)  
+EventExpenses: (E_Id, EX_Id)  
+Expenses: (Id, Title, Description, Date, Amount, Issuer)  
+ExpensesParticipants: (EX_Id, UserId)  
 
 #### Businessrules
 - Issuer can update event data
