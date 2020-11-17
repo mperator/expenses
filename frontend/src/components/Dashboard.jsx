@@ -9,7 +9,7 @@ const Dashboard = (props) => {
 
     useEffect(() => {
         loadDataAsync();
-    }, []);
+    }, [accessToken]);
 
     const loadDataAsync = async () => {
         const response = await fetch('https://localhost:5001/api/auth/test', {
@@ -19,6 +19,8 @@ const Dashboard = (props) => {
             }
         })
 
+        console.log(response)
+
         setMessage(await response.json());
     }
 
@@ -27,6 +29,7 @@ const Dashboard = (props) => {
             <h1>Dashboard</h1>
             <p>Secret Message:</p>
             <p>{message}</p>
+            <p>{accessToken}</p>
             <button onClick={() => signOut()}>Logout</button>
         </div>
     )
