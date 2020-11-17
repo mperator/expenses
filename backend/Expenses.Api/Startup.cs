@@ -1,3 +1,4 @@
+using AutoMapper;
 using Expenses.Api.Data;
 using Expenses.Api.Entities;
 using Expenses.Api.Options;
@@ -37,6 +38,8 @@ namespace Expenses.Api
 
             services.Configure<JwtTokenOptions>(Configuration.GetSection("JwtToken"));
             services.Configure<SmtpServerOptions>(Configuration.GetSection("SmtpServer"));
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Test")));
@@ -99,7 +102,9 @@ namespace Expenses.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
             });
         }
     }
