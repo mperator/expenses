@@ -5,6 +5,7 @@ const AuthContext = React.createContext([{}, () => {}]);
 const AuthProvider = (props) => {
     const [state, setState] = useState({
         isSignedIn: false,
+        silentSignedInFailed: false,
         tokenType: null,
         accessToken: null
     })
