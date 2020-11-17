@@ -17,11 +17,13 @@ const useAuth = () => {
         if(response.status === 200) {
             const data = await response.json();
 
+            console.log(data)
+
             setState(state => ({ 
                 ...state, 
                 isSignedIn: true,
-                token_type: data.token_type,
-                access_token: data.access_token
+                tokenType: data.tokenType,
+                accessToken: data.accessToken
             }));
         }
     }
@@ -34,8 +36,8 @@ const useAuth = () => {
         isSignedIn: state.isSignedIn,
         signInAsync,
         signOut,
-        access_token: state.access_token,
-        token_type: state.token_type,
+        accessToken: state.accessToken,
+        tokenType: state.tokenType,
         test: state.test
     }
 }
