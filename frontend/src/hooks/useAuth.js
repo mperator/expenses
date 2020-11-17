@@ -13,8 +13,6 @@ import { AuthContext } from '../AuthContext'
 
 
 const useAuth = () => {
-    const url = 'https://localhost:5001/api'
-
     const [state, setState] = useContext(AuthContext);
 
     async function signInAsync(username, password) {
@@ -44,8 +42,6 @@ const useAuth = () => {
     }
 
     function signInSilent() {
-        console.log("test")
-
         fetch(`/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' })
             .then(r => { return r.text()})
             .then(d => {
@@ -57,9 +53,6 @@ const useAuth = () => {
                     tokenType: data.tokenType,
                     accessToken: data.accessToken
                 }));
-
-                console.log("yarp")
-                return true;
             })
             .catch(e => {
                 setState(state => ({
@@ -71,8 +64,6 @@ const useAuth = () => {
                 }));
             })
                 
-            console.log("nope")
-            return false;
         // const response = await fetch(`/auth/refreshTokenSilent`, {
         //     method: 'POST',
         //     credentials: 'include'
