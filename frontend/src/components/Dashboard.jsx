@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import useAuth from '../hooks/useAuth'
 
 const Dashboard = (props) => {
-    const { signOut, access_token, token_type } = useAuth();
+    const { signOut, accessToken, tokenType } = useAuth();
+
+    const [message, setMessage] = useState("");
 
     useEffect(() => {
         loadDataAsync();
@@ -13,17 +15,18 @@ const Dashboard = (props) => {
         const response = await fetch('https://localhost:5001/api/auth/test', {
             method: 'GET',
             headers: {
-                'Authentication': `${token_type} ${access_token}`
+                'Authorization': `${tokenType} ${accessToken}`
             }
         })
 
-        console.log(response)
+        setMessage(await response.json());
     }
 
     return (
         <div>
             <h1>Dashboard</h1>
-            <p>Secret Page</p>
+            <p>Secret Message:</p>
+            <p>{message}</p>
             <button onClick={() => signOut()}>Logout</button>
         </div>
     )
