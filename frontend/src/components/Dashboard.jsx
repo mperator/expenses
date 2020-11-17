@@ -12,14 +12,12 @@ const Dashboard = (props) => {
     }, [accessToken]);
 
     const loadDataAsync = async () => {
-        const response = await fetch('https://localhost:5001/api/auth/test', {
+        const response = await fetch('/auth/test', {
             method: 'GET',
             headers: {
                 'Authorization': `${tokenType} ${accessToken}`
             }
         })
-
-        console.log(response)
 
         setMessage(await response.json());
     }

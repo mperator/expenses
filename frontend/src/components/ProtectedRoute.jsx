@@ -19,16 +19,6 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
         }
     }
 
-    // if(!isSignedIn) {
-
-    //     console.log("silent 1")
-
-    //     // silent sign in
-    //     //signInSilent();
-
-    //     console.log("silent 2")
-    // }
-
     return (
         <Route {...rest} render={props => dodo(props)} />
     )
