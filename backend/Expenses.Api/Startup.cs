@@ -68,7 +68,16 @@ namespace Expenses.Api
                     };
                 });
 
-            services.AddScoped<EventManager>();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -82,6 +91,7 @@ namespace Expenses.Api
                 c.IncludeXmlComments(xmlPath);
             });
 
+            services.AddScoped<EventManager>();
             services.AddScoped<IEmailService, EmailService>();
         }
 
@@ -96,8 +106,9 @@ namespace Expenses.Api
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
+            
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
