@@ -46,6 +46,7 @@ const useAuth = () => {
             .then(r => { return r.text()})
             .then(d => {
                 const data = JSON.parse(d);
+                console.log(data)
                 setState(state => ({
                     ...state,
                     isSignedIn: true,
