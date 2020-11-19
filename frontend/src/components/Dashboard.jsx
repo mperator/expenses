@@ -3,28 +3,16 @@ import React, { useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 
 const Dashboard = (props) => {
-    const { signOut, accessToken, tokenType } = useAuth();
+    const { signOut, getAccessTokenAsync, renewAccessTokenAsync } = useAuth();
 
-    const [message, setMessage] = useState("");
+    const [state, setState] = useState({accessToken: '', message: ''});
 
     useEffect(() => {
         loadDataAsync();
-    }, [accessToken]);
-
-    async function refreshTokenAsync() {
-        const response = await fetch('/auth/refreshTokenSilent', { method: 'POST', credentials: 'include' });
-        console.log(response)
-        if (response.status === 200) {
-            return await response.json();
-        } else {
-            // user needs to login again
-            console.log("User needs to login");
-            return null;
-        }
-    }
+    }, []);
 
     async function getAsync(url, token) {
-        console.log(token)
+        console.log("TOKEN:", token)
 
         const response = await fetch(url, {
             method: 'GET',
@@ -40,20 +28,18 @@ const Dashboard = (props) => {
                 
             case 401:
                 console.log("access token invalid, refresh token.")
-
-                const refreshToken = await refreshTokenAsync();
-                if (!refreshToken) return null; // to login
-                return await getAsync(url, `${refreshToken.tokenType} ${refreshToken.accessToken}`);
+                const renewedToken = await renewAccessTokenAsync();
+                if (!renewedToken) return null; // to login
+                return await getAsync(url, renewedToken);
             default: return null;
         }
     }
 
-
-
     const loadDataAsync = async () => {
-        const text = await getAsync('/auth/test', `${tokenType} ${accessToken}`)
+        const accessToken = await getAccessTokenAsync()
+        const message = await getAsync('/auth/test', `${accessToken}`)
 
-        setMessage(text);
+        setState({ ...state, accessToken, message})
     }
 
 async function refresh() {
@@ -64,8 +50,8 @@ return (
     <div>
         <h1>Dashboard</h1>
         <p>Secret Message:</p>
-        <p>{message}</p>
-        <p>{accessToken}</p>
+        <p>{state.message}</p>
+        <p>{state.accessToken}</p>
         <button onClick={() => refresh()}>Refresh</button>
         <button onClick={() => signOut()}>Logout</button>
     </div>

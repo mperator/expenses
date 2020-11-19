@@ -4,23 +4,21 @@ import { Route, Redirect } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
-    const { isSignedIn, silentSignedInFailed, signInSilent } = useAuth();
+    const { allowedAsync } = useAuth();
 
-    function dodo(props) {
-        if (isSignedIn) {
+    function render(props) {
+        const isAllowed = allowedAsync();
+
+        if(isAllowed) {
             return <Component {...props} {...rest} />
-        } 
-        else if(silentSignedInFailed) {
+        } else {
+            // to appen login with redirect
             return <Redirect to={{ pathname: '/unauthorized', state: { from: props.location } }} />
-        } 
-        else {
-            signInSilent()
-            return <Component {...props} {...rest} />
         }
     }
 
     return (
-        <Route {...rest} render={props => dodo(props)} />
+        <Route {...rest} render={props => render(props)} />
     )
 }
 
