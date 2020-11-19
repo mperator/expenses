@@ -18,6 +18,7 @@ function App() {
                 <Router>
                     <Route exact path='/' render={props => <Landing {...props} />} />
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
+                    <ProtectedRoute exact path='/dashboard2' component={Dashboard} />
                     <Route exact path='/unauthorized' component={Unauthorized} />
                 </Router>
             </AuthProvider>
