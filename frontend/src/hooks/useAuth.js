@@ -31,64 +31,59 @@ const useAuth = () => {
                 ...state,
                 isSignedIn: true,
                 silentSignedInFailed: false,
-                tokenType: data.tokenType,
+                token: data.tokenType,
                 accessToken: data.accessToken
             }));
         }
     }
 
     function signOut() {
+        // todo send semd tp server that user logs out
         setState(state => ({ ...state, isSignedIn: false }));
     }
 
-    function signInSilent() {
-        fetch(`/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' })
-            .then(r => { return r.text()})
-            .then(d => {
-                const data = JSON.parse(d);
-                console.log(data)
-                setState(state => ({
-                    ...state,
-                    isSignedIn: true,
-                    silentSignedInFailed: false,
-                    tokenType: data.tokenType,
-                    accessToken: data.accessToken
-                }));
-            })
-            .catch(e => {
-                setState(state => ({
-                    ...state,
-                    isSignedIn: false,
-                    silentSignedInFailed: true,
-                    tokenType: null,
-                    accessToken: null
-                }));
-            })
-                
-        // const response = await fetch(`/auth/refreshTokenSilent`, {
-        //     method: 'POST',
-        //     credentials: 'include'
-        // });
+    async function getAccessTokenAsync() {
+        if (state.token) {
+            return state.token;
+        }
+        else {
+            return await renewAccessTokenAsync();
+        }
+    }
 
-        // if(response.ok) {
-        //     const data = await response.json();
-        //     setState(state => ({
-        //         ...state,
-        //         isSignedIn: true,
-        //         tokenType: data.tokenType,
-        //         accessToken: data.accessToken
-        //     }));
-        // }
+    // renew access token independen if existing
+    async function renewAccessTokenAsync() {
+        const response = await fetch(`/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' });
+        if (response.status === 200) {
+            const data = await response.json();
+            const token = `${data.tokenType} ${data.accessToken}`;
+
+            setState(state => ({
+                ...state,
+                token
+            }));
+            return token;
+        } else {
+            setState(state => ({
+                ...state,
+                token: null
+            }));
+            return null;
+        }
+    }
+
+    // returns if user is sined in refresh automaticall if user was not signed in
+    async function allowedAsync() {
+        return await getAccessTokenAsync() !== null;
     }
 
     return {
-        isSignedIn: state.isSignedIn,
         signInAsync,
         signOut,
-        accessToken: state.accessToken,
-        tokenType: state.tokenType,
-        test: state.test,
-        signInSilent
+        getAccessTokenAsync,
+        renewAccessTokenAsync,
+        allowedAsync
     }
 }
+
 export default useAuth
