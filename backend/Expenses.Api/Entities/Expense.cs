@@ -12,8 +12,10 @@ namespace Expenses.Api.Entities
         public DateTime Date { get; set; }
         public float Amount { get; set; }
         public string Currency { get; set; }
+        public string IssuerId { get; set; }
         public User Issuer { get; set; }
-        public ICollection<Event> Events { get; set; }
+        public int EventId { get; set; }
+        public Event Event { get; set; }
         #endregion
     }
 }
