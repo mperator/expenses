@@ -11,6 +11,7 @@ import Unauthorized from './components/Unauthorized';
 
 import { AuthProvider } from './AuthContext';
 import Navigation from './components/Navigation';
+import Login from './components/Login';
 
 function App() {
     return (
@@ -19,6 +20,8 @@ function App() {
                 <Router>
                     <Navigation />
                     <Route exact path='/' render={props => <Landing {...props} />} />
+                    <Route exact path='/login' component={Login} />
+
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                     <ProtectedRoute exact path='/dashboard2' component={Dashboard} />
                     <Route exact path='/unauthorized' component={Unauthorized} />
