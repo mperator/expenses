@@ -10,12 +10,14 @@ import Unauthorized from './components/Unauthorized';
 // import Register from './components/Register'
 
 import { AuthProvider } from './AuthContext';
+import Navigation from './components/Navigation';
 
 function App() {
     return (
         <div className="App">
             <AuthProvider>
                 <Router>
+                    <Navigation />
                     <Route exact path='/' render={props => <Landing {...props} />} />
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                     <ProtectedRoute exact path='/dashboard2' component={Dashboard} />
