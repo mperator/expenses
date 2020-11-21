@@ -15,41 +15,6 @@ import { AuthContext } from '../AuthContext'
 const useAuth = () => {
     const [state, setState] = useContext(AuthContext);
 
-    console.log(state)
-
-    function updateCount() {
-        console.log("update count", state.count)
-        
-        if(state.count < 10) {
-            
-            setState({ ...state, count: state.count + 1});
-        }
-        
-        
-    }
-
-    async function signInAsync(username, password) {
-        var response = await fetch(`/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        });
-
-        if (response.status === 200) {
-            const data = await response.json();
-            setState(state => ({
-                ...state,
-                isSignedIn: true,
-                silentSignedInFailed: false,
-                token: data.tokenType,
-                accessToken: data.accessToken
-            }));
-        }
-    }
-
     async function loginAsync(username, password) {
         var response = await fetch(`/auth/login`, {
             method: 'POST',
@@ -74,6 +39,29 @@ const useAuth = () => {
     }
 
 
+/* DEPRECATED */
+
+    async function signInAsync(username, password) {
+        var response = await fetch(`/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            setState(state => ({
+                ...state,
+                isSignedIn: true,
+                silentSignedInFailed: false,
+                token: data.tokenType,
+                accessToken: data.accessToken
+            }));
+        }
+    }
     function signOut() {
         // todo send semd tp server that user logs out
         setState(state => ({ ...state, isSignedIn: false }));
@@ -115,8 +103,11 @@ const useAuth = () => {
     }
 
     return {
-        hasToken: state.accessToken,
+        isLoading: state.loading,
+        hasToken: state.accessToken !== null,
         token: `${state.tokenType} ${state.accessToken}`,
+
+        loginAsync,
 
 
         signInAsync,
@@ -124,9 +115,6 @@ const useAuth = () => {
         getAccessTokenAsync,
         renewAccessTokenAsync,
         allowedAsync,
-
-        loginAsync,
-        updateCount
     }
 }
 
