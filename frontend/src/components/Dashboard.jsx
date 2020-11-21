@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router';
 
 import useAuth from '../hooks/useAuth'
 
 const Dashboard = (props) => {
-    const { signOut, getAccessTokenAsync, renewAccessTokenAsync } = useAuth();
+    const history = useHistory();
+    const { token, renewAccessTokenAsync } = useAuth();
 
-    const [state, setState] = useState({accessToken: '', message: ''});
+    const [state, setState] = useState({message: ''});
 
     useEffect(() => {
         loadDataAsync();
@@ -29,17 +31,25 @@ const Dashboard = (props) => {
             case 401:
                 console.log("access token invalid, refresh token.")
                 const renewedToken = await renewAccessTokenAsync();
-                if (!renewedToken) return null; // to login
+                console.log("Renewd TRoken", renewedToken)
+                if (!renewedToken) {
+                    history.push('/login?redirect=dashboard') // TODO append page info for redirect
+
+                    // this cause Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
+                    // TODO: look for other solution
+                    return null; // to login
+                }
                 return await getAsync(url, renewedToken);
-            default: return null;
+            default: 
+                console.log("ERROR:",response)
+                return null;
         }
     }
 
     const loadDataAsync = async () => {
-        const accessToken = await getAccessTokenAsync()
-        const message = await getAsync('/auth/test', `${accessToken}`)
+        const message = await getAsync('/auth/test', token)
 
-        setState({ ...state, accessToken, message})
+        setState({ ...state, message})
     }
 
 async function refresh() {
@@ -51,9 +61,8 @@ return (
         <h1>Dashboard</h1>
         <p>Secret Message:</p>
         <p>{state.message}</p>
-        <p>{state.accessToken}</p>
+        <p>{token}</p>
         <button onClick={() => refresh()}>Refresh</button>
-        <button onClick={() => signOut()}>Logout</button>
     </div>
 )
 }
