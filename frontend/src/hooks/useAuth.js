@@ -29,12 +29,33 @@ const useAuth = () => {
             const data = await response.json();
             setState(state => ({
                 ...state,
-                // tokenType: data.tokenType,
-                // accessToken: data.accessToken
-                token: `${data.tokenType} ${data.accessToken}`
+                tokenType: data.tokenType,
+                accessToken: data.accessToken
             }));
         } else {
             throw "Username or password invalid.";
+        }
+    }
+
+    // renew access token independen if existing
+    async function renewAccessTokenAsync() {
+        const response = await fetch(`/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' });
+        if (response.status === 200) {
+            const data = await response.json();
+
+            setState(state => ({
+                ...state,
+                tokenType: data.tokenType,
+                accessToken: data.accessToken
+            }));
+            return `${data.tokenType} ${data.accessToken}`
+        } else {
+            setState(state => ({
+                ...state,
+                tokenType: null,
+                accessToken: null
+            }));
+            return null;
         }
     }
 
@@ -67,54 +88,20 @@ const useAuth = () => {
         setState(state => ({ ...state, isSignedIn: false }));
     }
 
-    async function getAccessTokenAsync() {
-        if (state.token) {
-            return state.token;
-        }
-        else {
-            return await renewAccessTokenAsync();
-        }
-    }
 
-    // renew access token independen if existing
-    async function renewAccessTokenAsync() {
-        const response = await fetch(`/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' });
-        if (response.status === 200) {
-            const data = await response.json();
-            const token = `${data.tokenType} ${data.accessToken}`;
+    
 
-            setState(state => ({
-                ...state,
-                token
-            }));
-            return token;
-        } else {
-            setState(state => ({
-                ...state,
-                token: null
-            }));
-            return null;
-        }
-    }
-
-    // returns if user is sined in refresh automaticall if user was not signed in
-    async function allowedAsync() {
-        return await getAccessTokenAsync() !== null;
-    }
 
     return {
         isLoading: state.loading,
         hasToken: state.accessToken !== null,
         token: `${state.tokenType} ${state.accessToken}`,
-
+        
         loginAsync,
-
+        renewAccessTokenAsync,
 
         signInAsync,
         signOut,
-        getAccessTokenAsync,
-        renewAccessTokenAsync,
-        allowedAsync,
     }
 }
 
