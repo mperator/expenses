@@ -37,6 +37,30 @@ const useAuth = () => {
         }
     }
 
+    async function loginAsync(username, password) {
+        var response = await fetch(`/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            setState(state => ({
+                ...state,
+                // tokenType: data.tokenType,
+                // accessToken: data.accessToken
+                token: `${data.tokenType} ${data.accessToken}`
+            }));
+        } else {
+            throw "Username or password invalid.";
+        }
+    }
+
+
     function signOut() {
         // todo send semd tp server that user logs out
         setState(state => ({ ...state, isSignedIn: false }));
@@ -82,7 +106,9 @@ const useAuth = () => {
         signOut,
         getAccessTokenAsync,
         renewAccessTokenAsync,
-        allowedAsync
+        allowedAsync,
+
+        loginAsync
     }
 }
 
