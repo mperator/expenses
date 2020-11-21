@@ -62,27 +62,6 @@ const useAuth = () => {
 
 /* DEPRECATED */
 
-    async function signInAsync(username, password) {
-        var response = await fetch(`/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        });
-
-        if (response.status === 200) {
-            const data = await response.json();
-            setState(state => ({
-                ...state,
-                isSignedIn: true,
-                silentSignedInFailed: false,
-                token: data.tokenType,
-                accessToken: data.accessToken
-            }));
-        }
-    }
     function signOut() {
         // todo send semd tp server that user logs out
         setState(state => ({ ...state, isSignedIn: false }));
@@ -100,7 +79,6 @@ const useAuth = () => {
         loginAsync,
         renewAccessTokenAsync,
 
-        signInAsync,
         signOut,
     }
 }
