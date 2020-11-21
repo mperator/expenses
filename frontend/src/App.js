@@ -12,6 +12,7 @@ import Unauthorized from './components/Unauthorized';
 import { AuthProvider } from './AuthContext';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
+import useAuth from './hooks/useAuth';
 
 function App() {
     return (

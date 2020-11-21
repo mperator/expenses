@@ -15,6 +15,19 @@ import { AuthContext } from '../AuthContext'
 const useAuth = () => {
     const [state, setState] = useContext(AuthContext);
 
+    console.log(state)
+
+    function updateCount() {
+        console.log("update count", state.count)
+        
+        if(state.count < 10) {
+            
+            setState({ ...state, count: state.count + 1});
+        }
+        
+        
+    }
+
     async function signInAsync(username, password) {
         var response = await fetch(`/auth/login`, {
             method: 'POST',
@@ -102,13 +115,18 @@ const useAuth = () => {
     }
 
     return {
+        hasToken: state.accessToken,
+        token: `${state.tokenType} ${state.accessToken}`,
+
+
         signInAsync,
         signOut,
         getAccessTokenAsync,
         renewAccessTokenAsync,
         allowedAsync,
 
-        loginAsync
+        loginAsync,
+        updateCount
     }
 }
 
