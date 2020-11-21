@@ -3,6 +3,10 @@ import { useHistory } from 'react-router';
 
 import useAuth from '../hooks/useAuth'
 
+// TODO: check for Warning: Can't perform a React state update on an unmounted component. 
+// This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and 
+// asynchronous tasks in a useEffect cleanup function.
+//     at Dashboard (http://localhost:3000/static/js/main.chunk.js:525:82)
 const Dashboard = (props) => {
     const history = useHistory();
     const { token, renewAccessTokenAsync } = useAuth();
