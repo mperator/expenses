@@ -5,14 +5,10 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Landing from './components/Landing'
 import Dashboard from './components/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute';
-import Unauthorized from './components/Unauthorized';
-// import Login from './components/Login'
-// import Register from './components/Register'
 
 import { AuthProvider } from './AuthContext';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
-import useAuth from './hooks/useAuth';
 
 function App() {
     return (
@@ -25,7 +21,6 @@ function App() {
 
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                     <ProtectedRoute exact path='/dashboard2' component={Dashboard} />
-                    <Route exact path='/unauthorized' component={Unauthorized} />
                 </Router>
             </AuthProvider>
         </div>
