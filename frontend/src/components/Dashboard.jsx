@@ -6,6 +6,7 @@ import useAuth from '../hooks/useAuth'
 // TODO: check for Warning: Can't perform a React state update on an unmounted component. 
 // This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and 
 // asynchronous tasks in a useEffect cleanup function.
+// throw error or return null only if data set update data.
 //     at Dashboard (http://localhost:3000/static/js/main.chunk.js:525:82)
 const Dashboard = (props) => {
     const history = useHistory();
@@ -14,7 +15,14 @@ const Dashboard = (props) => {
     const [state, setState] = useState({message: ''});
 
     useEffect(() => {
-        loadDataAsync();
+        let mounted = true;
+
+        (async () => {
+            const message = await loadDataAsync();
+            if(mounted) setState({ ...state, message})
+        })();
+
+        return () => mounted = false;
     }, []);
 
     async function getAsync(url, token) {
@@ -51,13 +59,12 @@ const Dashboard = (props) => {
     }
 
     const loadDataAsync = async () => {
-        const message = await getAsync('/auth/test', token)
-
-        setState({ ...state, message})
+        return await getAsync('/auth/test', token)
     }
 
 async function refresh() {
-    await loadDataAsync();
+    const message = await loadDataAsync();
+    setState({ ...state, message})
 }
 
 return (
