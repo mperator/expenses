@@ -1,10 +1,11 @@
 import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import { Route, Redirect, useLocation } from 'react-router-dom'
 
 import useAuth from '../hooks/useAuth'
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
     const { isLoading, hasToken } = useAuth();
+    const location = useLocation();
 
     function render(props) {
         if(isLoading) {
@@ -14,7 +15,16 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
         if(hasToken) {
             return <Component {...props} {...rest} />
         } else {
-            return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+            const path = location.pathname.substring(1);
+            const search2 = location.search;
+
+            const uri = path + search2;
+            console.log(uri)
+            const encodedUri = encodeURI(uri);
+            const search = `?redirectTo=${encodedUri}`;
+            console.log(search)
+
+            return <Redirect to={{ pathname: '/login', search, state: { from: props.location } }} />
         }
     }
 
