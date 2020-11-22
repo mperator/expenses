@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Logout from './Logout'
+
 import useAuth from '../hooks/useAuth'
 
 const Navigation = () => {
@@ -39,7 +41,7 @@ const Navigation = () => {
                         {
                             hasToken ?
                                 <li className="nav-item">
-                                    <button className="nav-link" onClick={() => { console.log("LOGOUT")}}>Logout</button>
+                                    <Logout />
                                 </li> :
                                 <li className="nav-item">
                                     <Link className="nav-link" to='/login'>Login</Link>

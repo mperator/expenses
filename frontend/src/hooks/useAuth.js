@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { AuthContext } from '../AuthContext'
+import { useHistory } from 'react-router';
 
 /* IMPORTANT!
  * To use httpsOnly cookie from server we have to configure several things.
@@ -13,6 +14,7 @@ import { AuthContext } from '../AuthContext'
 
 
 const useAuth = () => {
+    const history = useHistory();
     const [state, setState] = useContext(AuthContext);
 
     async function loginAsync(username, password) {
@@ -34,6 +36,56 @@ const useAuth = () => {
             }));
         } else {
             throw "Username or password invalid.";
+        }
+    }
+
+    async function logoutAsync() {
+        let response = await fetch('/auth/logout', {
+            method: 'POST',
+            headers: {
+                'Authorization': `${state.token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        switch (response.status) {
+            case 204:
+                setState(state => ({
+                    ...state,
+                    tokenType: null,
+                    accessToken: null
+                }));
+
+                return history.push(`/`);
+
+            case 401:
+                console.log("access token invalid, refresh token.")
+                const renewedToken = await renewAccessTokenAsync();
+                console.log("Renewd TRoken", renewedToken)
+                if (!renewedToken) {
+                    // history.push(`/`)
+                    throw "Unauthorized";
+                }
+                response = await fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `${renewedToken}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                setState(state => ({
+                    ...state,
+                    tokenType: null,
+                    accessToken: null
+                }));
+
+                return history.push(`/`);
+            default:
+                console.log("ERROR:")
+                // return null;
         }
     }
 
@@ -60,23 +112,20 @@ const useAuth = () => {
     }
 
 
-/* DEPRECATED */
+    /* DEPRECATED */
 
     function signOut() {
         // todo send semd tp server that user logs out
         setState(state => ({ ...state, isSignedIn: false }));
     }
 
-
-    
-
-
     return {
         isLoading: state.loading,
         hasToken: state.accessToken !== null,
         token: `${state.tokenType} ${state.accessToken}`,
-        
+
         loginAsync,
+        logoutAsync,
         renewAccessTokenAsync,
 
         signOut,
