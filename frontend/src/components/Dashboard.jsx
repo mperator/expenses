@@ -3,26 +3,16 @@ import { useHistory } from 'react-router';
 
 import useAuth from '../hooks/useAuth'
 
-// TODO: check for Warning: Can't perform a React state update on an unmounted component. 
-// This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and 
-// asynchronous tasks in a useEffect cleanup function.
-// throw error or return null only if data set update data.
-//     at Dashboard (http://localhost:3000/static/js/main.chunk.js:525:82)
 const Dashboard = (props) => {
     const history = useHistory();
     const { token, renewAccessTokenAsync } = useAuth();
 
-    const [state, setState] = useState({message: ''});
+    const [state, setState] = useState({ message: '' });
 
     useEffect(() => {
-        let mounted = true;
-
         (async () => {
-            const message = await loadDataAsync();
-            if(mounted) setState({ ...state, message})
+            await loadDataAsync();
         })();
-
-        return () => mounted = false;
     }, []);
 
     async function getAsync(url, token) {
@@ -39,43 +29,44 @@ const Dashboard = (props) => {
             case 200:
                 console.log("valid")
                 return await response.text();
-                
+
             case 401:
                 console.log("access token invalid, refresh token.")
                 const renewedToken = await renewAccessTokenAsync();
                 console.log("Renewd TRoken", renewedToken)
                 if (!renewedToken) {
-                    history.push('/login?redirect=dashboard') // TODO append page info for redirect
-
-                    // this cause Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-                    // TODO: look for other solution
-                    return null; // to login
+                    history.push('/login?redirect=dashboard')
+                    throw "Unauthorized";
                 }
                 return await getAsync(url, renewedToken);
-            default: 
-                console.log("ERROR:",response)
+            default:
+                console.log("ERROR:", response)
                 return null;
         }
     }
 
     const loadDataAsync = async () => {
-        return await getAsync('/auth/test', token)
+        try {
+            const message = await getAsync('/auth/test', token)
+            setState({ ...state, message })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-async function refresh() {
-    const message = await loadDataAsync();
-    setState({ ...state, message})
-}
+    async function refresh() {
+        await loadDataAsync();
+    }
 
-return (
-    <div>
-        <h1>Dashboard</h1>
-        <p>Secret Message:</p>
-        <p>{state.message}</p>
-        <p>{token}</p>
-        <button onClick={() => refresh()}>Refresh</button>
-    </div>
-)
+    return (
+        <div>
+            <h1>Dashboard</h1>
+            <p>Secret Message:</p>
+            <p>{state.message}</p>
+            <p>{token}</p>
+            <button onClick={() => refresh()}>Refresh</button>
+        </div>
+    )
 }
 
 export default Dashboard
