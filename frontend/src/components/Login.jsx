@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import useAuth from '../hooks/useAuth';
 
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 
 function Login() {
     // check if user is logged in the naviaget to Home (or redirekt)
     const { isLoading, hasToken, loginAsync } = useAuth();
+    const location = useLocation();
 
     const [state, setState] = useState({
         username: "",
@@ -41,9 +42,17 @@ function Login() {
         }
     }
 
-    // TODO: if route contains redirection redirect back
     if (!isLoading && hasToken) {
-        return <Redirect to={{ pathname: '/dashboard' }} />
+        const searchParams = new URLSearchParams(location.search);
+        let path = 'dashboard', search = null;
+        const url = searchParams.get("redirectTo")
+        if(url) {
+            const split = url.split('?');
+            if(split.length > 0) path = split[0];
+            if(split.length > 1) search = split[1];
+        }
+        console.log(path, search)
+        return <Redirect to={{ pathname: `/${path}`, search}} />
     }
 
     if (isLoading) {

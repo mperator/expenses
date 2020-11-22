@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 
 import useAuth from '../hooks/useAuth'
 
 const Dashboard = (props) => {
     const history = useHistory();
+    const location = useLocation();
     const { token, renewAccessTokenAsync } = useAuth();
-
+    
     const [state, setState] = useState({ message: '' });
 
     useEffect(() => {
@@ -35,7 +36,12 @@ const Dashboard = (props) => {
                 const renewedToken = await renewAccessTokenAsync();
                 console.log("Renewd TRoken", renewedToken)
                 if (!renewedToken) {
-                    history.push('/login?redirect=dashboard')
+                    const path = location.pathname.substring(1);
+                    const search = location.search;
+                    const uri = path + search;
+                    const encodedUri = encodeURIComponent(uri);
+
+                    history.push(`/login?redirectTo=${encodedUri}`)
                     throw "Unauthorized";
                 }
                 return await getAsync(url, renewedToken);
