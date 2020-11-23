@@ -47,6 +47,14 @@ namespace Expenses.Api.Controllers
             //abfrage gib mir alle expenses für das event mit der id
             return Ok(expenses);
         }
+        [HttpGet("{expenseId}")]
+        public async Task<ActionResult<ExpenseReadModel>> GetExpenseById(int eventId, int expenseId)
+        {
+            var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
+            if (dbExpense == null) return NotFound();
+
+            return Ok(_mapper.Map<ExpenseReadModel>(dbExpense));
+        }
         [HttpPost()]
         public async Task<ActionResult<ExpenseReadModel>> CreateExpenseAsync(int eventId, [FromBody] ExpenseWriteModel model)
         {
