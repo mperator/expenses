@@ -68,8 +68,6 @@ namespace Expenses.Api
                     };
                 });
 
-            services.AddScoped<EventManager>();
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -82,6 +80,7 @@ namespace Expenses.Api
                 c.IncludeXmlComments(xmlPath);
             });
 
+            services.AddScoped<EventManager>();
             services.AddScoped<IEmailService, EmailService>();
         }
 
@@ -96,9 +95,8 @@ namespace Expenses.Api
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
