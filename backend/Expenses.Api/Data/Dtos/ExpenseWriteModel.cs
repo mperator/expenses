@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Expenses.Api.Data.Dtos
 {
-    public class EventWriteModel
+    public class ExpenseWriteModel
     {
         #region Properties
+
         [Required]
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Currency { get; set; }
         [Required]
-        public string StartDate { get; set; }
+        public string Date { get; set; }
         [Required]
-        public string EndDate { get; set; }
+        public float Amount { get; set; }
+
         #endregion
     }
 }
