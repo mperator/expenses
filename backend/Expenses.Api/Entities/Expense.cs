@@ -3,20 +3,19 @@ using System.Collections.Generic;
 
 namespace Expenses.Api.Entities
 {
-    public class Event
+    public class Expense
     {
         #region Properties
-
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public User Creator { get; set; }
+        public DateTime Date { get; set; }
+        public float Amount { get; set; }
         public string Currency { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public List<User> Attendees { get; set; }
-        public ICollection<Expense> Expenses { get; set; }
-
+        public string IssuerId { get; set; }
+        public User Issuer { get; set; }
+        public int EventId { get; set; }
+        public Event Event { get; set; }
         #endregion
     }
 }

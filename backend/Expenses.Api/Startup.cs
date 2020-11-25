@@ -68,6 +68,8 @@ namespace Expenses.Api
                     };
                 });
 
+            services.AddScoped<EventManager>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

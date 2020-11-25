@@ -15,5 +15,6 @@ namespace Expenses.Api.Data
         #endregion
 
         public DbSet<Event> EventData { get; set; } 
+        public DbSet<Expense> ExpenseData { get; set; }
     }
 }
