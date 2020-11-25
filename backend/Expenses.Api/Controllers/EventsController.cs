@@ -6,23 +6,27 @@ using Expenses.Api.Data;
 using Expenses.Api.Data.Dtos;
 using Expenses.Api.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expenses.Api.Controllers
 {
     //TODO: implement clear error messages and return them to the user
-    [Authorize]
+    //FIXME: just for dev purpose
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EventsController : Controller
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
-        public EventsController(AppDbContext dbContext, IMapper mapper)
+        private readonly UserManager<User> _userManager;
+        public EventsController(AppDbContext dbContext, IMapper mapper, UserManager<User> userManager)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _userManager = userManager;
         }
         /// <summary>
         /// Gets a list of events
@@ -67,12 +71,15 @@ namespace Expenses.Api.Controllers
             var newEvent = _mapper.Map<Event>(eventModel);
 
             if (newEvent == null) return BadRequest();
+
             
+            var user = await _userManager.GetUserAsync(User);
+
             Event savedEvent = new Event
             {
                 Title = newEvent.Title,
                 Description = newEvent.Description,
-                Creator = newEvent.Creator,
+                Creator = user,
                 Currency = "Euro",
                 StartDate = newEvent.StartDate,
                 EndDate = newEvent.EndDate
@@ -98,10 +105,8 @@ namespace Expenses.Api.Controllers
         /// <response code="404">No event to update found for the given ID </response>
         /// <response code="204">On success</response>
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateEventAsync(int? id, [FromBody] EventUpdateModel model)
+        public async Task<ActionResult> UpdateEventAsync(int id, [FromBody] EventUpdateModel model)
         {
-            if (id == null) return BadRequest();
-
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var update = _mapper.Map<Event>(model);
@@ -118,6 +123,7 @@ namespace Expenses.Api.Controllers
             dbEvent.Description = update.Description;
             dbEvent.Creator = update.Creator;
             dbEvent.Currency = update.Currency;
+            //dbEvent.Attendees = update.Attendees;
 
             await _dbContext.SaveChangesAsync();
 
