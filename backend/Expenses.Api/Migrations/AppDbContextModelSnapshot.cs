@@ -49,43 +49,6 @@ namespace Expenses.Api.Migrations
                     b.ToTable("EventData");
                 });
 
-            modelBuilder.Entity("Expenses.Api.Entities.Expense", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<float>("Amount")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Currency")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IssuerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("IssuerId");
-
-                    b.ToTable("ExpenseData");
-                });
-
             modelBuilder.Entity("Expenses.Api.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -296,23 +259,6 @@ namespace Expenses.Api.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Expenses.Api.Entities.Expense", b =>
-                {
-                    b.HasOne("Expenses.Api.Entities.Event", "Event")
-                        .WithMany("Expenses")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expenses.Api.Entities.User", "Issuer")
-                        .WithMany()
-                        .HasForeignKey("IssuerId");
-
-                    b.Navigation("Event");
-
-                    b.Navigation("Issuer");
-                });
-
             modelBuilder.Entity("Expenses.Api.Entities.User", b =>
                 {
                     b.HasOne("Expenses.Api.Entities.Event", null)
@@ -406,8 +352,6 @@ namespace Expenses.Api.Migrations
             modelBuilder.Entity("Expenses.Api.Entities.Event", b =>
                 {
                     b.Navigation("Attendees");
-
-                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }
