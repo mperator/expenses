@@ -59,7 +59,7 @@ namespace Expenses.Api.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            return $"Secret for {user.FirstName} {user.LastName}";
+            return $"Secret for {user.FirstName} {user.LastName} {Guid.NewGuid()}";
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Expenses.Api.Controllers
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.UtcNow.AddMinutes(15);
+            var expires = DateTime.UtcNow.AddSeconds(_options.AccessTokenExpiryTimeInSeconds);
 
             var token = new JwtSecurityToken(
                 issuer: _options.Issuer,
@@ -314,7 +314,7 @@ namespace Expenses.Api.Controllers
                 return new RefreshToken
                 {
                     Token = Convert.ToBase64String(randomNumber),
-                    Expires = DateTime.UtcNow.AddDays(14),
+                    Expires = DateTime.UtcNow.AddSeconds(_options.RefreshTokenExpiryTimeInSeconds),
                     Created = DateTime.UtcNow
                 };
             }
