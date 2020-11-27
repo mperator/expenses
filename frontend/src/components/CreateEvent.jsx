@@ -9,62 +9,88 @@ const CreateEvent = () => {
     const [state, setState] = useState({
         title: "",
         description: "",
-        begin: "",
-        end: "",
-        error: ""
-    })
+        startDate: "",
+        endDate: ""
+    });
+
+    const [error, setError] = useState({
+        title: "",
+        description: "",
+        startDate: "",
+        endDate: ""
+    });
 
     const handleChange = (e) => {
         setState(s => ({
             ...s,
-            error: "",
             [e.target.name]: e.target.value
+        }))
+
+        setError(s => ({
+            ...s,
+            [e.target.name]: ""
         }))
     }
 
     const handleCreateAsync = async (e) => {
         e.preventDefault();
-        
         try {
-            const result = await postEventAsync({
+            await postEventAsync({
                 title: state.title,
                 description: state.description,
-                startDate: state.begin,
-                endDate: state.end
+                startDate: state.startDate,
+                endDate: state.endDate
             });
-            console.log(result)
-
             history.goBack();
-        } catch(error) {
-            console.log(error)
-            setState(s => ({
-                ...s,
-                error: "An error happend see console log."
+        } catch (error) {
+            setError(s => ({
+                title: (error.Title && error.Title[0]) || "",
+                description: (error.Description && error.Description[0]) || "",
+                startDate: (error.StartDate && error.StartDate[0]) || "",
+                endDate: (error.EndDate && error.EndDate[0]) || ""
             }))
         }
     }
 
-    return (
-        <div>
-            <h1>Create Event</h1>
+    const isValid = (e) => {
+        return e && " is-invalid";
+    }
 
-            <form>
-                <div>
-                    <input id="title" name="title" type="text" value={state.title} onChange={handleChange} />
+    return (
+        <div className="container">
+            <h2>Create Event</h2>
+            <form className="">
+                <div className="mb-3">
+                    <label htmlFor="title" className="form-label">Title</label>
+                    <input className={"form-control" + isValid(error.title)} id="title" name="title"
+                        type="text" placeholder="My event title ..." value={state.title} onChange={handleChange}
+                    />
+                    {error.title && <div className="invalid-feedback">{error.title}</div>}
                 </div>
-                <div>
-                    <input id="description" name="description" type="text" value={state.description} onChange={handleChange} />
+                <div className="mb-3">
+                    <label htmlFor="description" className="form-label">Description</label>
+                    <textarea className={"form-control" + isValid(error.description)} id="description" name="description"
+                        placeholder="My event description ..." value={state.description} onChange={handleChange}
+                    ></textarea>
+                    {error.description && <div className="invalid-feedback">{error.description}</div>}
                 </div>
-                <div>
-                    <input id="begin" name="begin" type="text" value={state.begin} onChange={handleChange} />
+                <div className="mb-3">
+                    <label htmlFor="startDate" className="form-label">Start Date</label>
+                    <input className={"form-control" + isValid(error.startDate)} id="startDate" name="startDate"
+                        type="date" value={state.startDate} onChange={handleChange}
+                    ></input>
+                    {error.startDate && <div className="invalid-feedback">{error.startDate}</div>}
                 </div>
-                <div>
-                    <input id="end" name="end" type="text" value={state.end} onChange={handleChange} />
+                <div className="mb-3">
+                    <label htmlFor="endDate" className="form-label">End Date</label>
+                    <input className={"form-control" + isValid(error.endDate)} id="endDate" name="endDate"
+                        type="date" value={state.endDate} onChange={handleChange}
+                    ></input>
+                    {error.endDate && <div className="invalid-feedback">{error.endDate}</div>}
                 </div>
-                <div>
-                    <button onClick={handleCreateAsync}>Submit</button>
+                <div className="col-12">
+                    <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
                 </div>
-                {state.error && <p>{state.error}</p>}
             </form>
         </div>
     )
