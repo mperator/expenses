@@ -32,15 +32,15 @@ const Dashboard = () => {
     ]
 
     return (
-        <div>
-            <h1>Dashboard</h1>
-            <p>my Events:</p>
+        <div className="container mt-4">
+            <h2>My Events</h2>
+            <button className="btn btn-primary" onClick={create}>New</button>
 
-            <button onClick={create}>New</button>
-
-            {events && events.map(e => (
-                <Event key={e.id} {...e} />
-            ))}
+            <div className="mt-3">
+                {events && events.map(e => (
+                    <Event key={e.id} {...e} />
+                ))}
+            </div>
         </div>
     )
 }
