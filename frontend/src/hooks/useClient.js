@@ -18,8 +18,7 @@ const useClient = () => {
         switch (response.status) {
             case 200:
                 console.log("valid")
-                return await response.text();
-
+                return await response.json();
             case 401:
                 console.log("access token invalid, refresh token.")
                 const renewedToken = await renewAccessTokenAsync();
@@ -54,7 +53,10 @@ const useClient = () => {
         switch (response.status) {
             case 200:
                 console.log("valid")
-                return await response.text();
+                return await response.json();
+            case 400:
+                const error = await response.json();
+                throw (error).errors;
 
             case 401:
                 console.log("access token invalid, refresh token.")
@@ -82,11 +84,21 @@ const useClient = () => {
         return await getWithAuthenticationAsync('/auth/test', token);
     }
 
+    /* events */
+    const getEventAsync = async() => {
+        return await getWithAuthenticationAsync('/events', token);
+    }
+
+    const postEventAsync = async(data) => {
+        return await postWithAuthenticationAsync('/events', token, data);
+    }
 
 
 
     return {
-        getAuthTestAsync
+        getAuthTestAsync,
+        getEventAsync,
+        postEventAsync,
     }
 }
 
