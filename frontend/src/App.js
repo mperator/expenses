@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './AuthContext';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
+import Info from './components/Info';
 
 function App() {
     return (
@@ -20,7 +21,7 @@ function App() {
                     <Route exact path='/login' component={Login} />
 
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
-                    <ProtectedRoute exact path='/dashboard2' component={Dashboard} />
+                    <ProtectedRoute exact path='/info' component={Info} />
                 </Router>
             </AuthProvider>
         </div>
