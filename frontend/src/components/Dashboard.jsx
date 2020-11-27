@@ -1,39 +1,46 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 import useClient from '../hooks/useClient'
-import useAuth from '../hooks/useAuth'
 
-const Dashboard = (props) => {
-    const { getAuthTestAsync } = useClient();
-    const { token} = useAuth();
-    
-    const [state, setState] = useState({ message: '' });
+
+import Event from './Event'
+
+/* Get a list of events and display them. */
+const Dashboard = () => {
+    const history = useHistory();
+    const { getEventAsync } = useClient();
+    const [events, setEvents] = useState([]);
 
     useEffect(() => {
         (async () => {
-            await loadDataAsync();
+            await loadEventsAsync();
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const loadDataAsync = async () => {
+    const loadEventsAsync = async () => {
         try {
-            const message = await getAuthTestAsync();
-            setState({ ...state, message })
+            const events = await getEventAsync();
+            setEvents(e => events);
         } catch (error) {
             console.log(error)
         }
     }
 
-    async function refresh() {
-        await loadDataAsync();
-    }
+    const create = () => [
+        history.push('/create-event')
+    ]
 
     return (
         <div>
             <h1>Dashboard</h1>
-            <p>Secret Message:</p>
-            <p>{state.message}</p>
-            <p>{token}</p>
-            <button onClick={() => refresh()}>Refresh</button>
+            <p>my Events:</p>
+
+            <button onClick={create}>New</button>
+
+            {events && events.map(e => (
+                <Event key={e.id} {...e} />
+            ))}
         </div>
     )
 }
