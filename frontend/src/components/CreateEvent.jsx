@@ -57,7 +57,7 @@ const CreateEvent = () => {
     }
 
     return (
-        <div className="container">
+        <div className="container mt-4">
             <h2>Create Event</h2>
             <form className="">
                 <div className="mb-3">
