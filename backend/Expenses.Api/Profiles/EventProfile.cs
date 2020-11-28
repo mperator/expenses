@@ -1,9 +1,5 @@
 ﻿using Expenses.Api.Data.Dtos;
 using Expenses.Api.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 
 namespace Expenses.Api.Profiles
@@ -13,7 +9,10 @@ namespace Expenses.Api.Profiles
         public EventProfile()
         {
             CreateMap<Event, EventWriteModel>().ReverseMap();
-            CreateMap<Event, EventReadModel>().ReverseMap();
+            CreateMap<Event, EventReadModel>()
+                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Creator.UserName))
+                .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.Creator.Id));
+            //CreateMap<EventReadModel, Event>().ForMember(dest => dest.);
             CreateMap<Event, EventUpdateModel>().ReverseMap();
             //CreateMap<User, Creator>().ReverseMap();
         }
