@@ -36,7 +36,9 @@ namespace Expenses.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<EventReadModel>>> GetEventsAsync()
         {
-            return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData.ToListAsync()));
+            return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
+                .Include(ev => ev.Creator)
+                .ToListAsync()));
         }
         /// <summary>
         /// Get a single event by its ID
@@ -51,7 +53,9 @@ namespace Expenses.Api.Controllers
         {
             if (id == null) return BadRequest();
 
-            Event foundEvent = await _dbContext.EventData.SingleOrDefaultAsync(ev => ev.Id == id);
+            Event foundEvent = await _dbContext.EventData
+                .Include(ev => ev.Creator)
+                .SingleOrDefaultAsync(ev => ev.Id == id);
             if (foundEvent == null) return NotFound();
             
             return Ok(_mapper.Map<EventReadModel>(foundEvent));
@@ -94,7 +98,7 @@ namespace Expenses.Api.Controllers
             {
                 new InvalidOperationException(e.Message);
             }
-            return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, savedEvent);
+            return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
         }
         /// <summary>
         /// Update an event by replacing it
@@ -121,7 +125,7 @@ namespace Expenses.Api.Controllers
             dbEvent.StartDate = update.StartDate;
             dbEvent.EndDate = update.EndDate;
             dbEvent.Description = update.Description;
-            dbEvent.Creator = update.Creator;
+            //dbEvent.Creator = update.Creator;
             dbEvent.Currency = update.Currency;
             //dbEvent.Attendees = update.Attendees;
 
