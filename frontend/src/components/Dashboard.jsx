@@ -1,76 +1,46 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory, useLocation } from 'react-router';
+import { useHistory } from 'react-router'
+import useClient from '../hooks/useClient'
 
-import useAuth from '../hooks/useAuth'
 
-const Dashboard = (props) => {
+import Event from './Event'
+
+/* Get a list of events and display them. */
+const Dashboard = () => {
     const history = useHistory();
-    const location = useLocation();
-    const { token, renewAccessTokenAsync } = useAuth();
-    
-    const [state, setState] = useState({ message: '' });
+    const { getEventAsync } = useClient();
+    const [events, setEvents] = useState([]);
 
     useEffect(() => {
         (async () => {
-            await loadDataAsync();
+            await loadEventsAsync();
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    async function getAsync(url, token) {
-        console.log("TOKEN:", token)
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `${token}`
-            }
-        })
-
-        switch (response.status) {
-            case 200:
-                console.log("valid")
-                return await response.text();
-
-            case 401:
-                console.log("access token invalid, refresh token.")
-                const renewedToken = await renewAccessTokenAsync();
-                console.log("Renewd TRoken", renewedToken)
-                if (!renewedToken) {
-                    const path = location.pathname.substring(1);
-                    const search = location.search;
-                    const uri = path + search;
-                    const encodedUri = encodeURIComponent(uri);
-
-                    history.push(`/login?redirectTo=${encodedUri}`)
-                    throw "Unauthorized";
-                }
-                return await getAsync(url, renewedToken);
-            default:
-                console.log("ERROR:", response)
-                return null;
-        }
-    }
-
-    const loadDataAsync = async () => {
+    const loadEventsAsync = async () => {
         try {
-            const message = await getAsync('/auth/test', token)
-            setState({ ...state, message })
+            const events = await getEventAsync();
+            setEvents(e => events);
         } catch (error) {
             console.log(error)
         }
     }
 
-    async function refresh() {
-        await loadDataAsync();
-    }
+    const create = () => [
+        history.push('/create-event')
+    ]
 
     return (
-        <div>
-            <h1>Dashboard</h1>
-            <p>Secret Message:</p>
-            <p>{state.message}</p>
-            <p>{token}</p>
-            <button onClick={() => refresh()}>Refresh</button>
+        <div className="container mt-4">
+            <h2>My Events</h2>
+            <button className="btn btn-primary" onClick={create}>New</button>
+
+            <div className="mt-3">
+                {events && events.map(e => (
+                    <Event key={e.id} {...e} />
+                ))}
+            </div>
         </div>
     )
 }

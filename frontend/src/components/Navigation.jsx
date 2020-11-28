@@ -27,11 +27,8 @@ const Navigation = () => {
                                     <li className="nav-item">
                                         <Link className="nav-link" to='/dashboard'>Dashboard</Link>
                                     </li>
-                                    {/* <li className="nav-item">
-                                        <a className="nav-link active" aria-current="page" href="#">Secret 1</a>
-                                    </li> */}
                                     <li className="nav-item">
-                                        <Link className="nav-link" to='/dashboard'>Secret 2</Link>
+                                        <Link className="nav-link" to='/info'>Info</Link>
                                     </li>
                                 </> : null
                         }
