@@ -11,6 +11,7 @@ import Navigation from './components/Navigation';
 import Login from './components/Login';
 import Info from './components/Info';
 import CreateEvent from './components/CreateEvent';
+import ExpenseEdit from './components/ExpenseEdit'
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                     <ProtectedRoute exact path='/info' component={Info} />
                     <ProtectedRoute exact path='/create-event' component={CreateEvent} />
+                    <ProtectedRoute exact path='/expense/editor' component={ExpenseEdit} />
                 </Router>
             </AuthProvider>
         </div>
