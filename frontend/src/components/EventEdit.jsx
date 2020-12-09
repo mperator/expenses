@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useClient from '../hooks/useClient'
 import { useHistory } from 'react-router';
 
-const CreateEvent = () => {
+const EventEdit = () => {
     const history = useHistory();
-    const { postEventAsync } = useClient();
+    const { postEventAsync, getAttendeeAsync } = useClient();
 
     const [state, setState] = useState({
         title: "",
@@ -18,6 +18,11 @@ const CreateEvent = () => {
         description: "",
         startDate: "",
         endDate: ""
+    });
+
+    const [search, setSearch] = useState({
+        query: "",
+        attendees: []
     });
 
     const handleChange = (e) => {
@@ -56,6 +61,34 @@ const CreateEvent = () => {
         return e && " is-invalid";
     }
 
+    useEffect(() => {
+        (async () => {
+            let attendees = [];
+            if(search.query !== "") {
+                try {
+                    attendees = await getAttendeeAsync(search.query);
+                    setSearch(s => ({
+                        ...s,
+                        attendees
+                    }));
+                } catch (error) { }
+            }
+
+            setSearch(s => ({
+                ...s,
+                attendees
+            }));
+        })()
+    }, [search.query])
+
+    const handleSearch = async (e) => {
+        const query = e.target.value;
+        setSearch(s => ({
+            ...s,
+            query
+        }));
+    }
+
     return (
         <div className="container mt-4">
             <h2>Create Event</h2>
@@ -88,7 +121,21 @@ const CreateEvent = () => {
                     ></input>
                     {error.endDate && <div className="invalid-feedback">{error.endDate}</div>}
                 </div>
-                <div className="col-12">
+
+                <div className="mb-3">
+                    <label htmlFor="search" className="form-label">Search</label>
+                    <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder="Search for users ..."></input>
+
+                    <div>
+                        {search.attendees.map(a => (
+                            <div key={a.id}>
+                                <p>{a.name}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="col-12 text-right">
                     <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
                 </div>
             </form>
@@ -96,4 +143,4 @@ const CreateEvent = () => {
     )
 }
 
-export default CreateEvent
+export default EventEdit
