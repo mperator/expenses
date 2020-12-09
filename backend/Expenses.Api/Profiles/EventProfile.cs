@@ -15,5 +15,4 @@ namespace Expenses.Api.Profiles
             CreateMap<Event, EventUpdateModel>().ReverseMap();
         }
     }
-
 }

@@ -93,12 +93,15 @@ const useClient = () => {
         return await postWithAuthenticationAsync('/events', token, data);
     }
 
-
+    const getAttendeeAsync = async(name) => {
+        return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
+    }
 
     return {
         getAuthTestAsync,
         getEventAsync,
         postEventAsync,
+        getAttendeeAsync,
     }
 }
 
