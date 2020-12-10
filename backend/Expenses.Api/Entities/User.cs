@@ -16,6 +16,8 @@ namespace Expenses.Api.Entities
 
         public ICollection<RefreshToken> RefreshTokens { get; set; }
 
+        public ICollection<Event> Events {get; set;}
+
         #endregion
     }
 }
