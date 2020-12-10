@@ -25,6 +25,8 @@ const EventEdit = () => {
         attendees: []
     });
 
+    const [attendees, setAttendees] = useState([]);
+
     const handleChange = (e) => {
         setState(s => ({
             ...s,
@@ -44,7 +46,8 @@ const EventEdit = () => {
                 title: state.title,
                 description: state.description,
                 startDate: state.startDate,
-                endDate: state.endDate
+                endDate: state.endDate,
+                attendees: attendees
             });
             history.goBack();
         } catch (error) {
@@ -64,7 +67,7 @@ const EventEdit = () => {
     useEffect(() => {
         (async () => {
             let attendees = [];
-            if(search.query !== "") {
+            if (search.query !== "") {
                 try {
                     attendees = await getAttendeeAsync(search.query);
                     setSearch(s => ({
@@ -80,6 +83,14 @@ const EventEdit = () => {
             }));
         })()
     }, [search.query])
+
+    const selectAttendee = (a) => {
+        setAttendees([...attendees, a]);
+        setSearch({
+            query: "",
+            attendees: []
+        })
+    }
 
     const handleSearch = async (e) => {
         const query = e.target.value;
@@ -124,15 +135,33 @@ const EventEdit = () => {
 
                 <div className="mb-3">
                     <label htmlFor="search" className="form-label">Search</label>
-                    <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder="Search for users ..."></input>
+                    <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder="Search for users ..." autoComplete="off"></input>
 
-                    <div>
+                    <div className="list-group">
                         {search.attendees.map(a => (
-                            <div key={a.id}>
-                                <p>{a.name}</p>
-                            </div>
+                            <button key={a.id} type="button" className="list-group-item list-group-item-action"
+                                onClick={e => { e.preventDefault(); selectAttendee(a);}}
+                            >{a.name}</button>
                         ))}
                     </div>
+                </div>
+
+                {/* TODO */}
+                {/* https://medium.com/swlh/creating-real-time-autocompletion-with-react-the-complete-guide-39a3bee7e38c */}
+                {/* <div className="mb-3">
+                    <label for="exampleDataList" className="form-label">Datalist example</label>
+                    <input className="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..."/>
+                    <datalist id="datalistOptions">
+                        {search.attendees.map(a => (
+                            <option key={a.id} value={a.name}/>
+                        ))}
+                    </datalist>
+                </div> */}
+
+                <div className="mb-3">
+                    {attendees.map(a => (
+                        <div>{a.name}</div>
+                    ))}
                 </div>
 
                 <div className="col-12 text-right">
