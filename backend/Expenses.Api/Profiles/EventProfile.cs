@@ -1,6 +1,7 @@
 ﻿using Expenses.Api.Data.Dtos;
 using Expenses.Api.Entities;
 using AutoMapper;
+using System;
 
 namespace Expenses.Api.Profiles
 {
@@ -12,6 +13,8 @@ namespace Expenses.Api.Profiles
 
             CreateMap<EventWriteModel, Event>();
             CreateMap<EventUpdateModel, Event>();
+            CreateMap<Event, EventUpdateModel>().ReverseMap();
+            CreateMap<DateTime, string>().ConvertUsing(dt => dt.ToString("u"));
         }
     }
 }

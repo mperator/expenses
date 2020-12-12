@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Expenses.Api.Data.Dtos
@@ -15,10 +16,9 @@ namespace Expenses.Api.Data.Dtos
         public string Currency { get; set; }
         
         [Required]
-        public string StartDate { get; set; }
-        
+        public DateTimeOffset StartDate { get; set; }
         [Required]
-        public string EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
         
         public IEnumerable<AttendeeWriteModel> Attendees { get; set;}
 
