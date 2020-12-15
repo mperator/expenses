@@ -14,6 +14,14 @@ namespace Expenses.Api.Data
 
         #endregion
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Event>().HasMany(e => e.Attendees).WithMany(a => a.Events);
+            builder.Entity<Event>().HasOne(e => e.Creator);
+        }
+
         public DbSet<Event> EventData { get; set; } 
         public DbSet<Expense> ExpenseData { get; set; }
     }
