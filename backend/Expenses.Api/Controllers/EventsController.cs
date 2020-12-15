@@ -71,12 +71,9 @@ namespace Expenses.Api.Controllers
         public async Task<ActionResult<EventReadModel>> CreateEventAsync([FromBody] EventWriteModel eventModel)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
             var newEvent = _mapper.Map<Event>(eventModel);
-
             if (newEvent == null) return BadRequest();
 
-            
             var user = await _userManager.GetUserAsync(User);
 
             Event savedEvent = new Event
@@ -88,6 +85,13 @@ namespace Expenses.Api.Controllers
                 StartDate = newEvent.StartDate,
                 EndDate = newEvent.EndDate
             };
+            savedEvent.Attendees = new List<User>();
+            savedEvent.Attendees.Add(user);
+            foreach(var a in eventModel.Attendees)
+            {
+                var attendee = await _userManager.FindByIdAsync(a.Id);
+                savedEvent.Attendees.Add(attendee);
+            }
 
             _dbContext.EventData.Add(savedEvent);
             try
