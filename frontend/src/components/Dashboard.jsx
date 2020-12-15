@@ -28,7 +28,7 @@ const Dashboard = () => {
     }
 
     const create = () => [
-        history.push('/create-event')
+        history.push('/event/editor')
     ]
 
     return (
