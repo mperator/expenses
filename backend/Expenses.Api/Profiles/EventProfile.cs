@@ -14,7 +14,7 @@ namespace Expenses.Api.Profiles
             CreateMap<EventWriteModel, Event>();
             CreateMap<EventUpdateModel, Event>();
             CreateMap<Event, EventUpdateModel>().ReverseMap();
-            CreateMap<DateTime, string>().ConvertUsing(dt => dt.ToString("u"));
+            CreateMap<DateTimeOffset, string>().ConvertUsing(dt => dt.ToString("u"));
         }
     }
 }
