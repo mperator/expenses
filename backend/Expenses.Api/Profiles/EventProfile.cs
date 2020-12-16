@@ -8,11 +8,10 @@ namespace Expenses.Api.Profiles
     {
         public EventProfile()
         {
-            CreateMap<Event, EventWriteModel>().ReverseMap();
-            CreateMap<Event, EventReadModel>()
-                .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.Creator.UserName))
-                .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.Creator.Id));
-            CreateMap<Event, EventUpdateModel>().ReverseMap();
+            CreateMap<Event, EventReadModel>();
+
+            CreateMap<EventWriteModel, Event>();
+            CreateMap<EventUpdateModel, Event>();
         }
     }
 }

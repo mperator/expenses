@@ -1,4 +1,4 @@
-﻿using Expenses.Api.Entities;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Expenses.Api.Data.Dtos
@@ -10,12 +10,11 @@ namespace Expenses.Api.Data.Dtos
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Creator { get; set; }
-        public string CreatorId { get; set; }
+        public AttendeeReadModel Creator { get; set; }
         public string Currency { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public ICollection<ExpenseReadModel> Expenses { get; set; }
+        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
+        public List<AttendeeReadModel> Attendees { get; set; }
 
         #endregion
     }
