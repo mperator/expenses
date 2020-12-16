@@ -4,14 +4,16 @@ using Expenses.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Expenses.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201216221602_updatedEvent")]
+    partial class updatedEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,24 +103,6 @@ namespace Expenses.Api.Migrations
                     b.HasIndex("IssuerId");
 
                     b.ToTable("ExpenseData");
-                });
-
-            modelBuilder.Entity("Expenses.Api.Entities.ExpenseUser", b =>
-                {
-                    b.Property<int>("ExpenseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.HasKey("ExpenseId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ExpenseUsers");
                 });
 
             modelBuilder.Entity("Expenses.Api.Entities.User", b =>
@@ -367,25 +351,6 @@ namespace Expenses.Api.Migrations
                     b.Navigation("Issuer");
                 });
 
-            modelBuilder.Entity("Expenses.Api.Entities.ExpenseUser", b =>
-                {
-                    b.HasOne("Expenses.Api.Entities.Expense", "Expense")
-                        .WithMany("ExpensesUsers")
-                        .HasForeignKey("ExpenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expenses.Api.Entities.User", "User")
-                        .WithMany("ExpensesUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Expense");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Expenses.Api.Entities.User", b =>
                 {
                     b.OwnsMany("Expenses.Api.Entities.RefreshToken", "RefreshTokens", b1 =>
@@ -475,16 +440,6 @@ namespace Expenses.Api.Migrations
             modelBuilder.Entity("Expenses.Api.Entities.Event", b =>
                 {
                     b.Navigation("Expenses");
-                });
-
-            modelBuilder.Entity("Expenses.Api.Entities.Expense", b =>
-                {
-                    b.Navigation("ExpensesUsers");
-                });
-
-            modelBuilder.Entity("Expenses.Api.Entities.User", b =>
-                {
-                    b.Navigation("ExpensesUsers");
                 });
 #pragma warning restore 612, 618
         }
