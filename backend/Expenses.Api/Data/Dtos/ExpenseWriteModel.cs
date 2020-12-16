@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Expenses.Api.Data.Dtos
@@ -8,12 +9,14 @@ namespace Expenses.Api.Data.Dtos
         #region Properties
 
         [Required]
+        public DateTimeOffset Date { get; set; }
+
+        [Required]
         public string Title { get; set; }
+        
         public string Description { get; set; }
-        [Required]
-        public string Date { get; set; }
-        [Required]
-        public float Amount { get; set; }
+        
+        public List<ParticipantWriteModel> Participants { get; set; }
 
         #endregion
     }
