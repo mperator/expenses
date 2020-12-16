@@ -85,8 +85,12 @@ const useClient = () => {
     }
 
     /* events */
-    const getEventAsync = async() => {
+    const getEventsAsync = async() => {
         return await getWithAuthenticationAsync('/events', token);
+    }
+
+    const getEventAsync = async(id) => {
+        return await getWithAuthenticationAsync(`/events/${id}`, token);
     }
 
     const postEventAsync = async(data) => {
@@ -99,6 +103,7 @@ const useClient = () => {
 
     return {
         getAuthTestAsync,
+        getEventsAsync,
         getEventAsync,
         postEventAsync,
         getAttendeeAsync,
