@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import useClient from '../hooks/useClient'
 
 /*
 - Datum
@@ -17,19 +19,33 @@ Es fehlt eine tabelle issuer/expense/amount
 */
 
 const ExpenseEdit = () => {
+    const eventId = useQuery().get('eventId');
+    const { getEventAsync } = useClient();
+
     const [state, setState] = useState({
         date: '2020-12-08',
-        title: 'title',
-        description: 'descr',
+        title: '',
+        description: '',
         amount: 0,
         participants: [
-            { id: 1, isParticipating: true, name: "Peter Parker", amount: 0 },
-            { id: 2, isParticipating: true, name: "Undo Umparken", amount: 0 },
-            { id: 3, isParticipating: true, name: "Andew Anderson", amount: 0 },
-            { id: 4, isParticipating: true, name: "Peter Enis", amount: 0 },
-            { id: 5, isParticipating: false, name: "Sam Saupeter", amount: 0 }
         ]
     })
+
+    useEffect(() => {
+        if(!eventId) console.log("error");
+
+        // load event with id
+        (async () => {
+            const event = await getEventAsync(eventId);
+            const participants = event.attendees.map(a => ({ id: a.id, isParticipating: true, name: a.name, amount: 0}));
+            setState({
+                ...state,
+                participants
+            })
+        })();
+
+        // load data
+    }, [eventId])
 
     const handleFormChange = (e) => {
         setState({
@@ -53,11 +69,11 @@ const ExpenseEdit = () => {
 
         const participants = state.participants;
         const amount = state.amount;
-        if(amount > 0) {
+        if (amount > 0) {
             const split = amount / participants.filter(p => p.isParticipating).length;
 
-            for(const p of participants) {
-                if(p.isParticipating) {
+            for (const p of participants) {
+                if (p.isParticipating) {
                     p.amount = split;
                 } else {
                     p.amount = 0;
@@ -94,6 +110,12 @@ const ExpenseEdit = () => {
         }
     }
 
+    function useQuery() {
+        return new URLSearchParams(useLocation().search);
+    }
+    
+    console.log("Param:", useQuery().get("eventId") )
+
     return (
         <div className="container mt-4">
             <h2>Expense</h2>
@@ -105,18 +127,18 @@ const ExpenseEdit = () => {
 
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">Title</label>
-                    <input type="text" className="form-control" id="title" name="title" value={state.title} onChange={handleFormChange}/>
+                    <input type="text" className="form-control" id="title" name="title" value={state.title} onChange={handleFormChange} />
                 </div>
 
                 <div className="mb-3">
                     <label htmlFor="description" className="form-label">Description</label>
-                    <textarea type="form-control" className="form-control" id="description" name="description" value={state.description} onChange={handleFormChange}/>
+                    <textarea type="form-control" className="form-control" id="description" name="description" value={state.description} onChange={handleFormChange} />
                 </div>
 
                 <div className="mb-3">
                     <label htmlFor="amount" className="form-label">Amount</label>
                     <div className="input-group">
-                        <input type="text" className="form-control text-right" aria-label="amount" id="amount" name="amount" value={state.amount} onChange={handleFormChange}/>
+                        <input type="text" className="form-control text-right" aria-label="amount" id="amount" name="amount" value={state.amount} onChange={handleFormChange} />
                         <button type="button" className="btn btn-outline-primary" onClick={handleSplit}>Split</button>
                         <span className="input-group-text">€</span>
                     </div>
@@ -130,17 +152,17 @@ const ExpenseEdit = () => {
                             <div className="col-sm-9">
                                 <div className="input-group">
                                     <div className="input-group-text">
-                                        <input className="form-check-input" type="checkbox" aria-label="Checkbox for following text input" id="isParticipating" name="isParticipating" checked={p.isParticipating} onChange={e => handleParticipantAmountChange(e, i)}/>
+                                        <input className="form-check-input" type="checkbox" aria-label="Checkbox for following text input" id="isParticipating" name="isParticipating" checked={p.isParticipating} onChange={e => handleParticipantAmountChange(e, i)} />
                                     </div>
-                                    <input type="text" className="form-control text-right" aria-label="Text input with checkbox" id="splitAmount" name="amount" value={p.amount} onChange={e => handleParticipantAmountChange(e, i)}/>
+                                    <input type="text" className="form-control text-right" aria-label="Text input with checkbox" id="splitAmount" name="amount" value={p.amount} onChange={e => handleParticipantAmountChange(e, i)} />
                                     <span className="input-group-text">€</span>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-                 
-                 <div className="col-12 text-right">
+
+                <div className="col-12 text-right">
                     <button className="btn btn-primary mr-1" type="submit" onClick={handleSubmit}>Create</button>
                     <button className="btn btn-outline-secondary" type="submit" onClick={handleSubmit}>Cancel</button>
                 </div>

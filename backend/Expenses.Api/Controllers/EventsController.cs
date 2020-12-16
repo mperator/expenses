@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -55,8 +56,9 @@ namespace Expenses.Api.Controllers
         {
             if (id == null) return BadRequest();
 
-            Event foundEvent = await _dbContext.EventData
+            var foundEvent = await _dbContext.EventData
                 .Include(ev => ev.Creator)
+                .Include(e => e.Attendees)
                 .Include(ev => ev.Expenses)
                 .AsSplitQuery()
                 .SingleOrDefaultAsync(ev => ev.Id == id);
