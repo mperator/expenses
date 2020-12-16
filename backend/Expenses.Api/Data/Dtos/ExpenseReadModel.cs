@@ -12,7 +12,8 @@ namespace Expenses.Api.Data.Dtos
         public DateTime Date { get; set; }
         public float Amount { get; set; }
         public string Currency { get; set; }
-        //public int Issuer { get; set; }
+        public string IssuerId { get; set; }
+        public string Issuer { get; set; }
 
         #endregion
     }
