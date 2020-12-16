@@ -40,6 +40,7 @@ namespace Expenses.Api.Controllers
             return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
                 .Include(ev => ev.Creator)
                 .Include(ev => ev.Expenses)
+                .Include(ev => ev.Attendees)
                 .AsSplitQuery()
                 .ToListAsync()));
         }
