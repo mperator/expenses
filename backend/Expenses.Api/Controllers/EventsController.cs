@@ -38,6 +38,8 @@ namespace Expenses.Api.Controllers
         {
             return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
                 .Include(ev => ev.Creator)
+                .Include(ev => ev.Expenses)
+                .AsSplitQuery()
                 .ToListAsync()));
         }
         /// <summary>
@@ -55,6 +57,8 @@ namespace Expenses.Api.Controllers
 
             Event foundEvent = await _dbContext.EventData
                 .Include(ev => ev.Creator)
+                .Include(ev => ev.Expenses)
+                .AsSplitQuery()
                 .SingleOrDefaultAsync(ev => ev.Id == id);
             if (foundEvent == null) return NotFound();
             
