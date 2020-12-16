@@ -16,6 +16,8 @@ namespace Expenses.Api.Entities
         public User Issuer { get; set; }
         public int EventId { get; set; }
         public Event Event { get; set; }
+        public ICollection<ExpenseUser> ExpensesUsers { get; set; }
+
         #endregion
     }
 }
