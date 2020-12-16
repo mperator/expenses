@@ -13,8 +13,8 @@ namespace Expenses.Api.Data.Dtos
         public string Description { get; set; }
         public string Creator { get; set; }
         public string Currency { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         #endregion
     }
