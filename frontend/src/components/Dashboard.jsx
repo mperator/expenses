@@ -29,10 +29,6 @@ const Dashboard = () => {
         }
     }
 
-    const create = () => [
-        history.push('/event/editor')
-    ]
-
     return (
         <div className="container mt-4">
             <h2>My Events</h2>
