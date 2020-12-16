@@ -17,8 +17,8 @@ namespace Expenses.Api.Data.Dtos
         public string Currency { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }
-        public List<AttendeeReadModel> Attendees { get; set; }
-        public ICollection<Expense> Expenses { get; set; }
+        public ICollection<AttendeeReadModel> Attendees { get; set; }
+        public ICollection<ExpenseReadModel> Expenses { get; set; }
 
         #endregion
     }
