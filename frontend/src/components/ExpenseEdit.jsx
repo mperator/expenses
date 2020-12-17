@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import useClient from '../hooks/useClient'
 
 /*
@@ -19,8 +19,9 @@ Es fehlt eine tabelle issuer/expense/amount
 */
 
 const ExpenseEdit = () => {
+    const history = useHistory();
     const eventId = useQuery().get('eventId');
-    const { getEventAsync } = useClient();
+    const { getEventAsync, postExpenseAsync } = useClient();
 
     const [state, setState] = useState({
         date: '2020-12-08',
@@ -87,19 +88,16 @@ const ExpenseEdit = () => {
         }
     }
 
-    const handleSubmit = (e) => {
-        const eventId = 0;
-
+    const handleSubmitAsync = async (e) => {
         e.preventDefault();
         try {
-            // await postExpenseAsync(eventId, {
-            //     date: state.date
-            //     title: state.title,
-            //     description: state.description,
-            //     amount: state.amount,
-            //     participants: state.participants
-            // });
-            // history.goBack();
+            await postExpenseAsync(eventId, {
+                date: state.date,
+                title: state.title,
+                description: state.description,
+                participants: state.participants
+            });
+            history.goBack();
         } catch (error) {
             // setError(s => ({
             //     title: (error.Title && error.Title[0]) || "",
@@ -163,8 +161,9 @@ const ExpenseEdit = () => {
                 </div>
 
                 <div className="col-12 text-right">
-                    <button className="btn btn-primary mr-1" type="submit" onClick={handleSubmit}>Create</button>
-                    <button className="btn btn-outline-secondary" type="submit" onClick={handleSubmit}>Cancel</button>
+                    <button className="btn btn-primary mr-1" type="submit" onClick={handleSubmitAsync}>Create</button>
+                    <button className="btn btn-outline-secondary" type="submit" onClick={e => {e.preventDefault();history.goBack()}}
+                    >Cancel</button>
                 </div>
             </form>
         </div>
