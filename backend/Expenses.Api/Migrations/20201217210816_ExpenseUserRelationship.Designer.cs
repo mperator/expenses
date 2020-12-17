@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expenses.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201216210729_ExpenseUserRelation")]
-    partial class ExpenseUserRelation
+    [Migration("20201217210816_ExpenseUserRelationship")]
+    partial class ExpenseUserRelationship
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -107,18 +107,18 @@ namespace Expenses.Api.Migrations
 
             modelBuilder.Entity("Expenses.Api.Entities.ExpenseUser", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("ExpenseId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
-                    b.HasKey("UserId", "ExpenseId");
+                    b.HasKey("ExpenseId", "UserId");
 
-                    b.HasIndex("ExpenseId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ExpenseUsers");
                 });
