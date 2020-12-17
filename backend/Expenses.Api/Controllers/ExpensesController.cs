@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
@@ -105,6 +106,14 @@ namespace Expenses.Api.Controllers
 
             _dbContext.ExpenseData.Add(expenseToAdd);
             dbEvent.Expenses.Add(expenseToAdd);
+
+            _dbContext.ExpenseUsers.AddRange(model.Participants.Select(e => new ExpenseUser
+            {
+                Amount = e.Amount,
+                Expense = expenseToAdd,
+                UserId = e.Id
+            }));
+
             try
             {
                 await _dbContext.SaveChangesAsync();
@@ -114,7 +123,7 @@ namespace Expenses.Api.Controllers
                 new InvalidOperationException(e.Message);
             }
 
-            return CreatedAtRoute(nameof(GetExpenseById), new { id = expenseToAdd.Id }, _mapper.Map<ExpenseReadModel>(expenseToAdd));
+            return CreatedAtRoute(nameof(GetExpenseById), new { eventId = eventId, expenseId = expenseToAdd.Id }, _mapper.Map<ExpenseReadModel>(expenseToAdd));
         }
         /// <summary>
         /// Update an expense
