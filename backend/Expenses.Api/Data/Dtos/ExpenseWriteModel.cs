@@ -9,7 +9,7 @@ namespace Expenses.Api.Data.Dtos
         #region Properties
 
         [Required]
-        public DateTimeOffset Date { get; set; }
+        public DateTime Date { get; set; }
 
         [Required]
         public string Title { get; set; }
