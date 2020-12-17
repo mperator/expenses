@@ -1,4 +1,7 @@
-﻿namespace Expenses.Api.Data.Dtos
+﻿using Expenses.Api.Entities;
+using System.Collections.Generic;
+
+namespace Expenses.Api.Data.Dtos
 {
     public class EventReadModel
     {
@@ -12,6 +15,7 @@
         public string Currency { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+        public ICollection<ExpenseReadModel> Expenses { get; set; }
 
         #endregion
     }
