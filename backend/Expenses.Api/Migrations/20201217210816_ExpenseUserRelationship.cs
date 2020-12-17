@@ -2,7 +2,7 @@
 
 namespace Expenses.Api.Migrations
 {
-    public partial class ExpenseUserRelation : Migration
+    public partial class ExpenseUserRelationship : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,13 +10,13 @@ namespace Expenses.Api.Migrations
                 name: "ExpenseUsers",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ExpenseId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Amount = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExpenseUsers", x => new { x.UserId, x.ExpenseId });
+                    table.PrimaryKey("PK_ExpenseUsers", x => new { x.ExpenseId, x.UserId });
                     table.ForeignKey(
                         name: "FK_ExpenseUsers_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -32,9 +32,9 @@ namespace Expenses.Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExpenseUsers_ExpenseId",
+                name: "IX_ExpenseUsers_UserId",
                 table: "ExpenseUsers",
-                column: "ExpenseId");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

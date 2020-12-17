@@ -22,7 +22,7 @@ namespace Expenses.Api.Data
             builder.Entity<Event>().HasOne(e => e.Creator);
 
             // https://www.learnentityframeworkcore.com/configuration/many-to-many-relationship-configuration
-            builder.Entity<ExpenseUser>().HasKey(e => new { e.UserId, e.ExpenseId });
+            builder.Entity<ExpenseUser>().HasKey(e => new { e.ExpenseId, e.UserId });
             builder.Entity<ExpenseUser>()
                 .HasOne(eu => eu.Expense)
                 .WithMany(e => e.ExpensesUsers)
