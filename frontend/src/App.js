@@ -12,7 +12,7 @@ import Login from './components/Login';
 import Info from './components/Info';
 import EventEdit from './components/EventEdit';
 import ExpenseEdit from './components/ExpenseEdit'
-import ViewEditEvent from './components/ViewEditEvent';
+import ViewEvent from './components/ViewEvent';
 
 function App() {
     return (
@@ -26,7 +26,7 @@ function App() {
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                     <ProtectedRoute exact path='/info' component={Info} />
                     <ProtectedRoute exact path='/event/editor' component={EventEdit} />
-                    <ProtectedRoute path='/event/editor/:id' component={ViewEditEvent} />
+                    <ProtectedRoute path='/event/editor/:id' component={ViewEvent} />
                     <ProtectedRoute exact path='/expense/editor' component={ExpenseEdit} />
                 </Router>
             </AuthProvider>
