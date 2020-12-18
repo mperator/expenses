@@ -10,9 +10,9 @@ import { AuthProvider } from './AuthContext';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
 import Info from './components/Info';
-import EventEdit from './components/EventEdit';
+import EventCreate from './components/EventCreate';
 import ExpenseEdit from './components/ExpenseEdit'
-import ViewEvent from './components/ViewEvent';
+import EventView from './components/EventView';
 
 function App() {
     return (
@@ -25,8 +25,8 @@ function App() {
 
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                     <ProtectedRoute exact path='/info' component={Info} />
-                    <ProtectedRoute exact path='/event/editor' component={EventEdit} />
-                    <ProtectedRoute path='/event/editor/:id' component={ViewEvent} />
+                    <ProtectedRoute exact path='/event/editor' component={EventCreate} />
+                    <ProtectedRoute path='/event/editor/:id' component={EventView} />
                     <ProtectedRoute exact path='/expense/editor' component={ExpenseEdit} />
                 </Router>
             </AuthProvider>

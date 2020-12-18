@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 // import useClient from '../hooks/useClient'
 // import { useHistory } from 'react-router';
-import './ViewEvent.css'
+import './EventView.css'
 
 export default function ViewEvent(props) {
 
