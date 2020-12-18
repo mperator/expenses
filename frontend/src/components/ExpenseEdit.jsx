@@ -30,7 +30,15 @@ const ExpenseEdit = () => {
         amount: 0,
         participants: [
         ]
-    })
+    });
+
+    const [error, setError] = useState({
+        date: "",
+        title: "",
+        description: "",
+        participants: "",
+        others: ""
+    });
 
     useEffect(() => {
         if(!eventId) console.log("error");
@@ -49,10 +57,15 @@ const ExpenseEdit = () => {
     }, [eventId])
 
     const handleFormChange = (e) => {
-        setState({
+        setState(s => ({
             ...state,
             [e.target.name]: e.target.value
-        })
+        }))
+
+        setError(s => ({
+            ...s,
+            [e.target.name]: ""
+        }))
     }
 
     const handleParticipantAmountChange = (e, i) => {
@@ -99,20 +112,23 @@ const ExpenseEdit = () => {
             });
             history.goBack();
         } catch (error) {
-            // setError(s => ({
-            //     title: (error.Title && error.Title[0]) || "",
-            //     description: (error.Description && error.Description[0]) || "",
-            //     startDate: (error.StartDate && error.StartDate[0]) || "",
-            //     endDate: (error.EndDate && error.EndDate[0]) || ""
-            // }))
+            setError(s => ({
+                date: (error.Date && error.Date[0]) || "", 
+                title: (error.Title && error.Title[0]) || "",
+                 description: (error.Description && error.Description[0]) || "",
+                 participants: (error.Participants && error.Participants[0]) || "",
+                 others: (error.Others && error.Others[0]) || ""
+            }))
         }
     }
 
     function useQuery() {
         return new URLSearchParams(useLocation().search);
     }
-    
-    console.log("Param:", useQuery().get("eventId") )
+
+    const isValid = (e) => {
+        return e && " is-invalid";
+    }
 
     return (
         <div className="container mt-4">
@@ -120,17 +136,20 @@ const ExpenseEdit = () => {
             <form>
                 <div className="mb-3">
                     <label htmlFor="date" className="form-label">Date</label>
-                    <input type="date" className="form-control" id="date" name="date" value={state.date} onChange={handleFormChange} />
+                    <input type="date" className={"form-control" + isValid(error.date)} id="date" name="date" value={state.date} onChange={handleFormChange} />
+                    {error.date && <div className="invalid-feedback">{error.date}</div>}
                 </div>
 
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">Title</label>
-                    <input type="text" className="form-control" id="title" name="title" value={state.title} onChange={handleFormChange} />
+                    <input type="text" className={"form-control" + isValid(error.title)} id="title" name="title" value={state.title} onChange={handleFormChange} />
+                    {error.title && <div className="invalid-feedback">{error.title}</div>}
                 </div>
 
                 <div className="mb-3">
                     <label htmlFor="description" className="form-label">Description</label>
-                    <textarea type="form-control" className="form-control" id="description" name="description" value={state.description} onChange={handleFormChange} />
+                    <textarea type="form-control" className={"form-control" + isValid(error.description)} id="description" name="description" value={state.description} onChange={handleFormChange} />
+                    {error.description && <div className="invalid-feedback">{error.description}</div>}
                 </div>
 
                 <div className="mb-3">
