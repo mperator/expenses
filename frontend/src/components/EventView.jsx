@@ -1,15 +1,10 @@
 import React, { useState } from 'react'
-// import useClient from '../hooks/useClient'
-// import { useHistory } from 'react-router';
 import './EventView.css'
 
-export default function ViewEvent(props) {
+export default function EventView(props) {
 
     const { id, title, description, startDate, endDate, currency, creator, attendees, expenses } = props.location.state.event;
 
-
-    // const history = useHistory();
-    // const { postEventAsync, getEventByIdAsync } = useClient();
 
     //store everything in localstorage
 

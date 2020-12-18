@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useClient from '../hooks/useClient'
 import { useHistory } from 'react-router';
 
-const EventEdit = () => {
+const EventCreate = () => {
     const history = useHistory();
     const { postEventAsync, getAttendeeAsync } = useClient();
 
@@ -140,7 +140,7 @@ const EventEdit = () => {
                     <div className="list-group">
                         {search.attendees.map(a => (
                             <button key={a.id} type="button" className="list-group-item list-group-item-action"
-                                onClick={e => { e.preventDefault(); selectAttendee(a);}}
+                                onClick={e => { e.preventDefault(); selectAttendee(a); }}
                             >{a.name}</button>
                         ))}
                     </div>
@@ -172,4 +172,4 @@ const EventEdit = () => {
     )
 }
 
-export default EventEdit
+export default EventCreate
