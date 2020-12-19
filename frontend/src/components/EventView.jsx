@@ -46,7 +46,7 @@ export default function EventView(props) {
             <div className="card mt-3 ms-3 me-3">
                 <h5 className="card-header">{event.title}
                     <Link to={{ pathname: `/event/editor/${id}`, state: { event: props.location.state.event } }} className="stretched-link">
-                        <button type="button" className="btn btn-dark">Edit</button>
+                        <button type="button" className="btn btn-primary ms-3">Edit</button>
                     </Link>
                 </h5>
                 <div className="card-body">
