@@ -18,6 +18,8 @@ namespace Expenses.Api.Entities
 
         public ICollection<Event> Events {get; set;}
 
+        public ICollection<ExpenseUser> ExpensesUsers { get; set; }
+
         #endregion
     }
 }
