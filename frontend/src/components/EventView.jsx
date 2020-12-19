@@ -1,18 +1,23 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 import './EventView.css'
 
 export default function EventView(props) {
 
     const { id, title, description, startDate, endDate, currency, creator, attendees, expenses } = props.location.state.event;
 
-
+    //TODO: remove editMode property
     //store everything in localstorage
+
+    const history = useHistory();
 
     // console.log(props.location)
     const [event, setEvent] = useState({
         id: props.match.params.id,
         title: title,
-        description: description,
+        // needed for not mandatory fields in case they are null
+        description: description || '',
         startDate: startDate,
         endDate: endDate,
         currency: currency,
@@ -30,15 +35,19 @@ export default function EventView(props) {
     // });
 
     const toggleEdit = (id) => {
-        setEvent({ editMode: true })
+        // setEvent({ editMode: true })
+        // history.push(`/event/editor/${id}`)
     }
 
+    //TODO: change type of input for start and end date to date instead of text
     // effect das useParams nutzt zum Laden des Events
     if (!event.editMode) {
         return (
-            <div className="card mt-3 ml-3 mr-3">
+            <div className="card mt-3 ms-3 me-3">
                 <h5 className="card-header">{event.title}
-                    <button type="button" className="btn btn-dark" onClick={() => toggleEdit(id)}>Edit</button>
+                    <Link to={{ pathname: `/event/editor/${id}`, state: { event: props.location.state.event } }} className="stretched-link">
+                        <button type="button" className="btn btn-dark">Edit</button>
+                    </Link>
                 </h5>
                 <div className="card-body">
                     <form className="form-floating mb-3">
@@ -46,7 +55,7 @@ export default function EventView(props) {
                         <label htmlFor="floatingInputValue">Description</label>
                     </form>
                     <div id="datesContainer">
-                        <form className="form-floating mb-3 mr-3">
+                        <form className="form-floating mb-3 me-3">
                             <input type="text" className="form-control" id="startDate" readOnly placeholder="name@example.com" value={event.startDate} />
                             <label htmlFor="startDate">Start date</label>
                         </form>
@@ -71,7 +80,7 @@ export default function EventView(props) {
                             </ul>
                         </div>
 
-                        <div className="card ml-3" style={{ width: '30rem' }}>
+                        <div className="card ms-3" style={{ width: '30rem' }}>
                             <div className="card-header">
                                 Expenses
                         </div>
@@ -90,7 +99,7 @@ export default function EventView(props) {
         )
     }
     return (
-        <div className="card mt-3 ml-3 mr-3">
+        <div className="card mt-3 ms-3 me-3">
             <h5 className="card-header">{event.title}
                 <button type="button" className="btn btn-dark" onClick={() => toggleEdit(id)}>Edit</button>
             </h5>
@@ -100,7 +109,7 @@ export default function EventView(props) {
                     <label htmlFor="floatingInputValue">Description</label>
                 </form>
                 <div id="datesContainer">
-                    <form className="form-floating mb-3 mr-3">
+                    <form className="form-floating mb-3 me-5">
                         <input type="text" className="form-control" id="startDate" placeholder="name@example.com" value={event.startDate} />
                         <label htmlFor="startDate">Start date</label>
                     </form>
@@ -125,7 +134,7 @@ export default function EventView(props) {
                         </ul>
                     </div>
 
-                    <div className="card ml-3" style={{ width: '30rem' }}>
+                    <div className="card ms-3" style={{ width: '30rem' }}>
                         <div className="card-header">
                             Expenses
                         </div>
