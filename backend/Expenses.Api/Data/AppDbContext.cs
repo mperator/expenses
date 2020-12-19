@@ -20,9 +20,22 @@ namespace Expenses.Api.Data
 
             builder.Entity<Event>().HasMany(e => e.Attendees).WithMany(a => a.Events);
             builder.Entity<Event>().HasOne(e => e.Creator);
+
+            // https://www.learnentityframeworkcore.com/configuration/many-to-many-relationship-configuration
+            builder.Entity<ExpenseUser>().HasKey(e => new { e.ExpenseId, e.UserId });
+            builder.Entity<ExpenseUser>()
+                .HasOne(eu => eu.Expense)
+                .WithMany(e => e.ExpensesUsers)
+                .HasForeignKey(eu => eu.ExpenseId);
+            builder.Entity<ExpenseUser>()
+                .HasOne(eu => eu.User)
+                .WithMany(e => e.ExpensesUsers)
+                .HasForeignKey(eu => eu.UserId);
         }
 
         public DbSet<Event> EventData { get; set; } 
         public DbSet<Expense> ExpenseData { get; set; }
+
+        public DbSet<ExpenseUser> ExpenseUsers { get; set; }
     }
 }

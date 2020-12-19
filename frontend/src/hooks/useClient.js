@@ -85,8 +85,12 @@ const useClient = () => {
     }
 
     /* events */
-    const getEventAsync = async() => {
+    const getEventsAsync = async() => {
         return await getWithAuthenticationAsync('/events', token);
+    }
+
+    const getEventAsync = async(id) => {
+        return await getWithAuthenticationAsync(`/events/${id}`, token);
     }
 
     const postEventAsync = async(data) => {
@@ -97,10 +101,16 @@ const useClient = () => {
         return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
     }
 
+    const postExpenseAsync = async(eventid, data) => {
+        return await postWithAuthenticationAsync(`/events/${eventid}/expenses`, token, data);
+    }
+
     return {
         getAuthTestAsync,
+        getEventsAsync,
         getEventAsync,
         postEventAsync,
+        postExpenseAsync,
         getAttendeeAsync,
     }
 }
