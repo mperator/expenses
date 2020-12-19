@@ -8,7 +8,7 @@ import Event from './Event'
 /* Get a list of events and display them. */
 const Dashboard = () => {
     const history = useHistory();
-    const { getEventAsync } = useClient();
+    const { getEventsAsync } = useClient();
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const Dashboard = () => {
 
     const loadEventsAsync = async () => {
         try {
-            const events = await getEventAsync();
+            const events = await getEventsAsync();
             setEvents(e => events);
         } catch (error) {
             console.log(error)
