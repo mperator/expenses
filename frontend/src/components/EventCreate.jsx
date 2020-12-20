@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useClient from '../hooks/useClient'
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const EventCreate = () => {
     const history = useHistory();
@@ -163,9 +164,15 @@ const EventCreate = () => {
                         <div>{a.name}</div>
                     ))}
                 </div>
-
-                <div className="col-12 text-right">
-                    <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
+                <div className="row justify-content-start">
+                    <div className="col-1">
+                        <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
+                    </div>
+                    <div className="col-1">
+                        <Link to="/dashboard">
+                            <button type="button" className="btn btn-primary">Back</button>
+                        </Link>
+                    </div>
                 </div>
             </form>
         </div>
