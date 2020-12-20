@@ -13,6 +13,7 @@ import Info from './components/Info';
 import EventCreate from './components/EventCreate';
 import ExpenseEdit from './components/ExpenseEdit'
 import EventView from './components/EventView';
+import EventEdit from './components/EventEdit';
 
 function App() {
     return (
@@ -26,8 +27,9 @@ function App() {
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                     <ProtectedRoute exact path='/info' component={Info} />
                     <ProtectedRoute exact path='/event/editor' component={EventCreate} />
-                    <ProtectedRoute path='/event/editor/:id' component={EventView} />
+                    <ProtectedRoute path='/event/view/:id' component={EventView} />
                     <ProtectedRoute exact path='/expense/editor' component={ExpenseEdit} />
+                    <ProtectedRoute path='/event/editor/:id' component={EventEdit} />
                 </Router>
             </AuthProvider>
         </div>
