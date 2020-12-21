@@ -154,16 +154,16 @@ export default function EventViewEdit() {
             </h5>
             <div className="card-body">
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" id="floatingDescription" readOnly={!editMode} name="description" onChange={handleChange} placeholder="name@example.com" value={event.description} />
+                    <input type="text" className="form-control" id="floatingDescription" readOnly={!editMode} name="description" disabled={!editMode} onChange={handleChange} placeholder="name@example.com" value={event.description} />
                     <label htmlFor="floatingDescription">Description</label>
                 </div>
                 <div id="datesContainer">
                     <div className="form-floating mb-3 me-3">
-                        <input type="date" className="form-control" id="startDate" readOnly={!editMode} name="startDate" onChange={handleChange} placeholder="name@example.com" value={event.startDate} />
+                        <input type="date" className="form-control" id="startDate" readOnly={!editMode} name="startDate" disabled={!editMode} onChange={handleChange} placeholder="name@example.com" value={event.startDate} />
                         <label htmlFor="startDate">Start date</label>
                     </div>
                     <div className="form-floating">
-                        <input type="date" className="form-control" id="endDate" readOnly={!editMode} name="endDate" onChange={handleChange} placeholder="name@example.com" value={event.endDate} />
+                        <input type="date" className="form-control" id="endDate" readOnly={!editMode} name="endDate" disabled={!editMode} onChange={handleChange} placeholder="name@example.com" value={event.endDate} />
                         <label htmlFor="endDate">End date</label>
                     </div>
                 </div>
