@@ -15,7 +15,9 @@ namespace Expenses.Api.Data.Dtos
         public string Title { get; set; }
         
         public string Description { get; set; }
-        
+
+        public float Amount { get; set; }
+
         public List<ParticipantWriteModel> Participants { get; set; }
 
         #endregion
