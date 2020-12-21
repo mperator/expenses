@@ -36,6 +36,7 @@ const ExpenseEdit = () => {
         date: "",
         title: "",
         description: "",
+        amount: "",
         participants: "",
         others: ""
     });
@@ -108,7 +109,8 @@ const ExpenseEdit = () => {
                 date: state.date,
                 title: state.title,
                 description: state.description,
-                participants: state.participants
+                amount: state.amount,
+                participants: state.participants,
             });
             history.goBack();
         } catch (error) {
@@ -116,6 +118,7 @@ const ExpenseEdit = () => {
                 date: (error.Date && error.Date[0]) || "",
                 title: (error.Title && error.Title[0]) || "",
                 description: (error.Description && error.Description[0]) || "",
+                amount: (error.Amount && error.Amount[0]) || "",
                 participants: (error.Participants && error.Participants[0]) || "",
                 others: (error.Others && error.Others[0]) || ""
             }))
@@ -164,7 +167,7 @@ const ExpenseEdit = () => {
                 <div className="mb-3">
                     <h3 className="mb-3" >Teilnehmer</h3>
                     {state.participants.map((p, i) => (
-                        <div className="row mb-2">
+                        <div key={p.id} className="row mb-2">
                             <label className="col-sm-3 col-form-label">{p.name}</label>
                             <div className="col-sm-9">
                                 <div className="input-group">
