@@ -2,9 +2,7 @@ import React from 'react'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 
-const Event = (props) => {
-
-    const { id, title, description, startDate, endDate } = props;
+const Event = ({ id, title, description, startDate, endDate }) => {
 
     return (
         <div className="card mb-3">
