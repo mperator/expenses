@@ -137,6 +137,7 @@ export default function EventViewEdit() {
             [e.target.name]: e.target.value
         })
     }
+
     return (
         <div className="card mt-3 ms-3 me-3">
             <h5 className="card-header">
@@ -198,14 +199,21 @@ export default function EventViewEdit() {
                         <div className="card-header">
                             Expenses
                         </div>
-                        <div className="card-body">
+                        <ul className="list-group list-group-flush">
                             {event.expenses && event.expenses.map(e => (
-                                <div key={e.id}>
+                                <li className="list-group-item" key={e.id}>
                                     <h5 className="card-title">{e.title}</h5>
                                     <h6 className="card-subtitle mb-2 text-muted">{e.amount} {e.currency}</h6>
-                                </div>
+                                </li>
                             ))}
-                        </div>
+                            <li className="list-group-item" style={{ cursor: 'pointer' }}>
+                                <Link className="stretchedLink" to={`/expense/editor?eventId=${event.id}`}>
+                                    <svg width="0.8em" height="0.8em" viewBox="0 0 16 16" className="addButton bi bi-plus-circle-fill text-primary" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fillRule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                    </svg>
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
