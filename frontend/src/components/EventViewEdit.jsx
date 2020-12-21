@@ -131,6 +131,13 @@ export default function EventViewEdit() {
         }
     }
 
+    const handleChange = (e) => {
+        setEvent({
+            ...event,
+            [e.target.name]: e.target.value
+        })
+    }
+    //TODO: title in edit mode on should be editable
     return (
         <div className="card mt-3 ms-3 me-3">
             <h5 className="card-header">
@@ -141,19 +148,19 @@ export default function EventViewEdit() {
                 </Link>
             </h5>
             <div className="card-body">
-                <form className="form-floating mb-3">
-                    <input type="text" className="form-control" id="floatingInputValue" readOnly={!editMode} placeholder="name@example.com" value={event.description} />
+                <div className="form-floating mb-3">
+                    <input type="text" className="form-control" id="floatingInputValue" readOnly={!editMode} name="description" onChange={handleChange} placeholder="name@example.com" value={event.description} />
                     <label htmlFor="floatingInputValue">Description</label>
-                </form>
+                </div>
                 <div id="datesContainer">
-                    <form className="form-floating mb-3 me-3">
-                        <input type="date" className="form-control" id="startDate" readOnly={!editMode} placeholder="name@example.com" value={event.startDate} />
+                    <div className="form-floating mb-3 me-3">
+                        <input type="date" className="form-control" id="startDate" readOnly={!editMode} name="startDate" onChange={handleChange} placeholder="name@example.com" value={event.startDate} />
                         <label htmlFor="startDate">Start date</label>
-                    </form>
-                    <form className="form-floating">
-                        <input type="date" className="form-control" id="endDate" readOnly={!editMode} placeholder="name@example.com" value={event.endDate} />
+                    </div>
+                    <div className="form-floating">
+                        <input type="date" className="form-control" id="endDate" readOnly={!editMode} name="endDate" onChange={handleChange} placeholder="name@example.com" value={event.endDate} />
                         <label htmlFor="endDate">End date</label>
-                    </form>
+                    </div>
                 </div>
                 <div id="participantExpenseContainer">
                     <div className="card" style={{ width: '20rem' }}>
