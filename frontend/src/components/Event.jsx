@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const Event = (props) => {
 
     const { id, title, description, startDate, endDate } = props;
-    //FIXME: only send event id
+
     return (
         <div className="card mb-3">
             <div className="card-body">
