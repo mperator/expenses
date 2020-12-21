@@ -137,11 +137,15 @@ export default function EventViewEdit() {
             [e.target.name]: e.target.value
         })
     }
-    //TODO: title in edit mode on should be editable
     return (
         <div className="card mt-3 ms-3 me-3">
             <h5 className="card-header">
-                {event.title}
+                {!editMode ? event.title :
+                    <div className="form-floating mb-3 ">
+                        <input type="text" className="form-control" id="floatingTitle" name="title" onChange={handleChange} placeholder="name@example.com" value={event.title} />
+                        <label htmlFor="floatingTitle">Title</label>
+                    </div>
+                }
                 <button type="button" className="btn btn-primary ms-3" onClick={toggleEditMode}>{!editMode ? "Edit" : "Save"}</button>
                 <Link to="/dashboard">
                     <button type="button" className="btn btn-primary ms-3">Back</button>
@@ -149,8 +153,8 @@ export default function EventViewEdit() {
             </h5>
             <div className="card-body">
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" id="floatingInputValue" readOnly={!editMode} name="description" onChange={handleChange} placeholder="name@example.com" value={event.description} />
-                    <label htmlFor="floatingInputValue">Description</label>
+                    <input type="text" className="form-control" id="floatingDescription" readOnly={!editMode} name="description" onChange={handleChange} placeholder="name@example.com" value={event.description} />
+                    <label htmlFor="floatingDescription">Description</label>
                 </div>
                 <div id="datesContainer">
                     <div className="form-floating mb-3 me-3">
