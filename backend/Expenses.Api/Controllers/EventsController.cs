@@ -40,6 +40,7 @@ namespace Expenses.Api.Controllers
             return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
                 .Include(ev => ev.Creator)
                 .Include(ev => ev.Expenses)
+                .Include(ev => ev.Attendees)
                 .AsSplitQuery()
                 .ToListAsync()));
         }
@@ -127,7 +128,12 @@ namespace Expenses.Api.Controllers
 
             if (update == null) return BadRequest();
 
-            var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == id);
+            var dbEvent = await _dbContext.EventData
+                .Include(ev => ev.Creator)
+                .Include(e => e.Attendees)
+                .Include(ev => ev.Expenses)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(ev => ev.Id == id);
 
             if (dbEvent == null) return NotFound();
 
@@ -136,8 +142,13 @@ namespace Expenses.Api.Controllers
             dbEvent.EndDate = update.EndDate;
             dbEvent.Description = update.Description;
             //dbEvent.Creator = update.Creator;
-            dbEvent.Currency = update.Currency;
-            //dbEvent.Attendees = update.Attendees;
+            //dbEvent.Currency = update.Currency;
+
+            foreach (var a in model.Attendees)
+            {
+                var attendee = await _userManager.FindByIdAsync(a.Id);
+                dbEvent.Attendees.Add(attendee);
+            }
 
             await _dbContext.SaveChangesAsync();
 
