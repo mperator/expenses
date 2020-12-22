@@ -36,17 +36,18 @@ const ExpenseEdit = () => {
         date: "",
         title: "",
         description: "",
+        amount: "",
         participants: "",
         others: ""
     });
 
     useEffect(() => {
-        if(!eventId) console.log("error");
+        if (!eventId) console.log("error");
 
         // load event with id
         (async () => {
             const event = await getEventAsync(eventId);
-            const participants = event.attendees.map(a => ({ id: a.id, isParticipating: true, name: a.name, amount: 0}));
+            const participants = event.attendees.map(a => ({ id: a.id, isParticipating: true, name: a.name, amount: 0 }));
             setState({
                 ...state,
                 participants
@@ -108,16 +109,18 @@ const ExpenseEdit = () => {
                 date: state.date,
                 title: state.title,
                 description: state.description,
-                participants: state.participants
+                amount: state.amount,
+                participants: state.participants,
             });
             history.goBack();
         } catch (error) {
             setError(s => ({
-                date: (error.Date && error.Date[0]) || "", 
+                date: (error.Date && error.Date[0]) || "",
                 title: (error.Title && error.Title[0]) || "",
-                 description: (error.Description && error.Description[0]) || "",
-                 participants: (error.Participants && error.Participants[0]) || "",
-                 others: (error.Others && error.Others[0]) || ""
+                description: (error.Description && error.Description[0]) || "",
+                amount: (error.Amount && error.Amount[0]) || "",
+                participants: (error.Participants && error.Participants[0]) || "",
+                others: (error.Others && error.Others[0]) || ""
             }))
         }
     }
@@ -164,7 +167,7 @@ const ExpenseEdit = () => {
                 <div className="mb-3">
                     <h3 className="mb-3" >Teilnehmer</h3>
                     {state.participants.map((p, i) => (
-                        <div className="row mb-2">
+                        <div key={p.id} className="row mb-2">
                             <label className="col-sm-3 col-form-label">{p.name}</label>
                             <div className="col-sm-9">
                                 <div className="input-group">
@@ -180,8 +183,8 @@ const ExpenseEdit = () => {
                 </div>
 
                 <div className="col-12 text-right">
-                    <button className="btn btn-primary mr-1" type="submit" onClick={handleSubmitAsync}>Create</button>
-                    <button className="btn btn-outline-secondary" type="submit" onClick={e => {e.preventDefault();history.goBack()}}
+                    <button className="btn btn-primary me-1" type="submit" onClick={handleSubmitAsync}>Create</button>
+                    <button className="btn btn-outline-secondary" type="submit" onClick={e => { e.preventDefault(); history.goBack() }}
                     >Cancel</button>
                 </div>
             </form>

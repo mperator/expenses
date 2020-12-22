@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import useClient from '../hooks/useClient'
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
-const EventEdit = () => {
+const EventCreate = () => {
     const history = useHistory();
     const { postEventAsync, getAttendeeAsync } = useClient();
 
@@ -140,7 +141,7 @@ const EventEdit = () => {
                     <div className="list-group">
                         {search.attendees.map(a => (
                             <button key={a.id} type="button" className="list-group-item list-group-item-action"
-                                onClick={e => { e.preventDefault(); selectAttendee(a);}}
+                                onClick={e => { e.preventDefault(); selectAttendee(a); }}
                             >{a.name}</button>
                         ))}
                     </div>
@@ -163,13 +164,19 @@ const EventEdit = () => {
                         <div>{a.name}</div>
                     ))}
                 </div>
-
-                <div className="col-12 text-right">
-                    <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
+                <div className="row justify-content-start">
+                    <div className="col-1">
+                        <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
+                    </div>
+                    <div className="col-1">
+                        <Link to="/dashboard">
+                            <button type="button" className="btn btn-primary">Back</button>
+                        </Link>
+                    </div>
                 </div>
             </form>
         </div>
     )
 }
 
-export default EventEdit
+export default EventCreate
