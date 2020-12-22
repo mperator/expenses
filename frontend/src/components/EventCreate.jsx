@@ -3,6 +3,10 @@ import useClient from '../hooks/useClient'
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
+import FormTextAreaInput from './layout/FormTextAreaInput'
+import FormInput from './layout/FormInput'
+import dayjs from 'dayjs'
+
 const EventCreate = () => {
     const history = useHistory();
     const { postEventAsync, getAttendeeAsync } = useClient();
@@ -10,8 +14,8 @@ const EventCreate = () => {
     const [state, setState] = useState({
         title: "",
         description: "",
-        startDate: "",
-        endDate: ""
+        startDate: dayjs(new Date()).format('YYYY-MM-DD'),
+        endDate: dayjs(new Date()).format('YYYY-MM-DD')
     });
 
     const [error, setError] = useState({
@@ -105,34 +109,14 @@ const EventCreate = () => {
         <div className="container mt-4">
             <h2>Create Event</h2>
             <form className="">
-                <div className="mb-3">
-                    <label htmlFor="title" className="form-label">Title</label>
-                    <input className={"form-control" + isValid(error.title)} id="title" name="title"
-                        type="text" placeholder="My event title ..." value={state.title} onChange={handleChange}
-                    />
-                    {error.title && <div className="invalid-feedback">{error.title}</div>}
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="description" className="form-label">Description</label>
-                    <textarea className={"form-control" + isValid(error.description)} id="description" name="description"
-                        placeholder="My event description ..." value={state.description} onChange={handleChange}
-                    ></textarea>
-                    {error.description && <div className="invalid-feedback">{error.description}</div>}
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="startDate" className="form-label">Start Date</label>
-                    <input className={"form-control" + isValid(error.startDate)} id="startDate" name="startDate"
-                        type="date" value={state.startDate} onChange={handleChange}
-                    ></input>
-                    {error.startDate && <div className="invalid-feedback">{error.startDate}</div>}
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="endDate" className="form-label">End Date</label>
-                    <input className={"form-control" + isValid(error.endDate)} id="endDate" name="endDate"
-                        type="date" value={state.endDate} onChange={handleChange}
-                    ></input>
-                    {error.endDate && <div className="invalid-feedback">{error.endDate}</div>}
-                </div>
+                <FormInput type="text" id="title" label="Title" placeholder="My event title ..." value={state.title} handleChange={handleChange} error={error.title}
+                />
+                <FormTextAreaInput id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleChange} error={error.description}
+                />
+                <FormInput type="date" id="startDate" label="Start Date" value={state.startDate} handleChange={handleChange} error={error.startDate}
+                />
+                <FormInput type="date" id="endDate" label="End Date" value={state.endDate} handleChange={handleChange} error={error.endDate}
+                />
 
                 <div className="mb-3">
                     <label htmlFor="search" className="form-label">Search</label>
