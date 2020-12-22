@@ -3,7 +3,6 @@ import useClient from '../hooks/useClient'
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import FormTextAreaInput from './layout/FormTextAreaInput'
 import FormInput from './layout/FormInput'
 import dayjs from 'dayjs'
 
@@ -111,7 +110,7 @@ const EventCreate = () => {
             <form className="">
                 <FormInput type="text" id="title" label="Title" placeholder="My event title ..." value={state.title} handleChange={handleChange} error={error.title}
                 />
-                <FormTextAreaInput id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleChange} error={error.description}
+                <FormInput type="textarea" id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleChange} error={error.description}
                 />
                 <FormInput type="date" id="startDate" label="Start Date" value={state.startDate} handleChange={handleChange} error={error.startDate}
                 />
