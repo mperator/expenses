@@ -21,15 +21,13 @@ const useClient = () => {
                 throw (error).errors;
             case 401:   // Unauthorized
                 const renewedToken = await renewAccessTokenAsync();
-                //console.log("renewed token:", renewedToken)
                 if (!renewedToken) {
                     const path = location.pathname.substring(1);
                     const search = location.search;
                     const uri = path + search;
                     const encodedUri = encodeURIComponent(uri);
                     history.push(`/login?redirectTo=${encodedUri}`)
-                    // TODO: Create error object to throw.
-                    throw "Unauthorized";
+                    throw new Error("Unauthorized");
                 }
                 // retry call with new token.
                 return await callback(url, renewedToken, data);
