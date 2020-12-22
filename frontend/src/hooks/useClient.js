@@ -7,36 +7,46 @@ const useClient = () => {
     const history = useHistory();
     const location = useLocation();
 
+    async function handleResponseAsync(response, callback, url, data) {
+        switch (response.status) {
+            case 200:   // OK
+                return await response.json();
+            case 201:   // Created
+                return await response.json();
+            case 204:   // No Content
+                return null;
+            case 400:   // Bad Request
+                // TODO: Create error object that contains errors.
+                const error = await response.json();
+                throw (error).errors;
+            case 401:   // Unauthorized
+                const renewedToken = await renewAccessTokenAsync();
+                //console.log("renewed token:", renewedToken)
+                if (!renewedToken) {
+                    const path = location.pathname.substring(1);
+                    const search = location.search;
+                    const uri = path + search;
+                    const encodedUri = encodeURIComponent(uri);
+                    history.push(`/login?redirectTo=${encodedUri}`)
+                    // TODO: Create error object to throw.
+                    throw "Unauthorized";
+                }
+                // retry call with new token.
+                return await callback(url, renewedToken, data);
+            default:
+                console.log(`TODO: Response status code ${response.status} not implemented!!!`)
+                return null;
+        }
+    }
+
     async function getWithAuthenticationAsync(url, token) {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Authorization': `${token}`
             }
-        })
-
-        switch (response.status) {
-            case 200:
-                console.log("valid")
-                return await response.json();
-            case 401:
-                console.log("access token invalid, refresh token.")
-                const renewedToken = await renewAccessTokenAsync();
-                console.log("Renewd TRoken", renewedToken)
-                if (!renewedToken) {
-                    const path = location.pathname.substring(1);
-                    const search = location.search;
-                    const uri = path + search;
-                    const encodedUri = encodeURIComponent(uri);
-
-                    history.push(`/login?redirectTo=${encodedUri}`)
-                    throw "Unauthorized";
-                }
-                return await getWithAuthenticationAsync(url, renewedToken);
-            default:
-                console.log("ERROR:", response)
-                return null;
-        }
+        });
+        return await handleResponseAsync(response, getWithAuthenticationAsync, url);
     }
 
     async function postWithAuthenticationAsync(url, token, data) {
@@ -49,33 +59,7 @@ const useClient = () => {
             },
             body: JSON.stringify(data)
         })
-
-        switch (response.status) {
-            case 200:
-                console.log("valid")
-                return await response.json();
-            case 400:
-                const error = await response.json();
-                throw (error).errors;
-
-            case 401:
-                console.log("access token invalid, refresh token.")
-                const renewedToken = await renewAccessTokenAsync();
-                console.log("Renewd TRoken", renewedToken)
-                if (!renewedToken) {
-                    const path = location.pathname.substring(1);
-                    const search = location.search;
-                    const uri = path + search;
-                    const encodedUri = encodeURIComponent(uri);
-
-                    history.push(`/login?redirectTo=${encodedUri}`)
-                    throw "Unauthorized";
-                }
-                return await postWithAuthenticationAsync(url, renewedToken, data);
-            default:
-                console.log("ERROR:", response)
-                return null;
-        }
+        return await handleResponseAsync(response, postWithAuthenticationAsync, url, data);
     }
 
     async function putWithAuthenticationAsync(url, token, data) {
@@ -88,36 +72,10 @@ const useClient = () => {
             },
             body: JSON.stringify(data)
         })
-
-        switch (response.status) {
-            case 204:
-                console.log("putting event success")
-                return await response;
-            case 400:
-                const error = await response.json();
-                throw (error).errors;
-            case 401:
-                console.log("access token invalid, refresh token.")
-                const renewedToken = await renewAccessTokenAsync();
-                console.log("Renewd TRoken", renewedToken)
-                if (!renewedToken) {
-                    const path = location.pathname.substring(1);
-                    const search = location.search;
-                    const uri = path + search;
-                    const encodedUri = encodeURIComponent(uri);
-
-                    history.push(`/login?redirectTo=${encodedUri}`)
-                    throw "Unauthorized";
-                }
-                return await postWithAuthenticationAsync(url, renewedToken, data);
-            default:
-                console.log("ERROR:", response)
-                return null;
-        }
+        return await handleResponseAsync(response, putWithAuthenticationAsync, url, data);
     }
 
-    /* protected routes */
-    /* use own hook for auth api */
+    /* test hook */
     const getAuthTestAsync = async () => {
         return await getWithAuthenticationAsync('/auth/test', token);
     }
@@ -131,6 +89,10 @@ const useClient = () => {
         return await getWithAuthenticationAsync(`/events/${id}`, token);
     }
 
+    const getEventByIdAsync = async (id) => {
+        return await getWithAuthenticationAsync(`/events/${id}`, token)
+    }
+
     const postEventAsync = async (data) => {
         return await postWithAuthenticationAsync('/events', token, data);
     }
@@ -139,27 +101,25 @@ const useClient = () => {
         return await putWithAuthenticationAsync(`/events/${id}`, token, data);
     }
 
-    const getAttendeeAsync = async (name) => {
-        return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
-    }
-
+    /* expenses */
     const postExpenseAsync = async (eventid, data) => {
         return await postWithAuthenticationAsync(`/events/${eventid}/expenses`, token, data);
     }
 
-    const getEventByIdAsync = async (id) => {
-        return await getWithAuthenticationAsync(`/events/${id}`, token)
+    /* attendees */
+    const getAttendeeAsync = async (name) => {
+        return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
     }
 
     return {
         getAuthTestAsync,
         getEventsAsync,
         getEventAsync,
-        postEventAsync,
-        postExpenseAsync,
-        getAttendeeAsync,
         getEventByIdAsync,
-        putEventAsync
+        postEventAsync,
+        putEventAsync,
+        postExpenseAsync,
+        getAttendeeAsync
     }
 }
 
