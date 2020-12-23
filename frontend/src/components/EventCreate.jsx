@@ -64,10 +64,6 @@ const EventCreate = () => {
         }
     }
 
-    const isValid = (e) => {
-        return e && " is-invalid";
-    }
-
     useEffect(() => {
         (async () => {
             let attendees = [];
