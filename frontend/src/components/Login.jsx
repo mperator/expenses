@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import useAuth from '../hooks/useAuth';
 
 import { Redirect, useLocation } from "react-router-dom";
+import SkeletonLoader from './SkeletonLoader';
 
 function Login() {
     // check if user is logged in the naviaget to Home (or redirekt)
@@ -46,17 +47,17 @@ function Login() {
         const searchParams = new URLSearchParams(location.search);
         let path = 'dashboard', search = null;
         const url = searchParams.get("redirectTo")
-        if(url) {
+        if (url) {
             const split = url.split('?');
-            if(split.length > 0) path = split[0];
-            if(split.length > 1) search = split[1];
+            if (split.length > 0) path = split[0];
+            if (split.length > 1) search = split[1];
         }
         console.log(path, search)
-        return <Redirect to={{ pathname: `/${path}`, search}} />
+        return <Redirect to={{ pathname: `/${path}`, search }} />
     }
 
     if (isLoading) {
-        return <p>Loading ...</p>
+        return <SkeletonLoader />;
     } else {
         return (
             <div className="container">

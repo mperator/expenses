@@ -1,18 +1,18 @@
 import React from 'react'
 import { Route, Redirect, useLocation } from 'react-router-dom'
-
 import useAuth from '../hooks/useAuth'
+import SkeletonLoader from './SkeletonLoader';
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
     const { isLoading, hasToken } = useAuth();
     const location = useLocation();
 
     function render(props) {
-        if(isLoading) {
-            return <p>Loading ...</p>;
+        if (isLoading) {
+            return <SkeletonLoader />;
         }
 
-        if(hasToken) {
+        if (hasToken) {
             return <Component {...props} {...rest} />
         } else {
             const path = location.pathname.substring(1);
