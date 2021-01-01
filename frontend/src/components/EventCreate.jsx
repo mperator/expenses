@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import useClient from '../hooks/useClient'
+import useForm from '../hooks/useForm'
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -10,19 +11,13 @@ const EventCreate = () => {
     const history = useHistory();
     const { postEventAsync, getAttendeeAsync } = useClient();
 
-    const [state, setState] = useState({
+    const { state, error, handleFormChange, setError} = useForm({
         title: "",
         description: "",
         startDate: dayjs(new Date()).format('YYYY-MM-DD'),
         endDate: dayjs(new Date()).format('YYYY-MM-DD')
     });
 
-    const [error, setError] = useState({
-        title: "",
-        description: "",
-        startDate: "",
-        endDate: ""
-    });
 
     const [search, setSearch] = useState({
         query: "",
@@ -31,17 +26,6 @@ const EventCreate = () => {
 
     const [attendees, setAttendees] = useState([]);
 
-    const handleChange = (e) => {
-        setState(s => ({
-            ...s,
-            [e.target.name]: e.target.value
-        }))
-
-        setError(s => ({
-            ...s,
-            [e.target.name]: ""
-        }))
-    }
 
     const handleCreateAsync = async (e) => {
         e.preventDefault();
@@ -100,17 +84,37 @@ const EventCreate = () => {
         }));
     }
 
+    const [text, setText] = useState("Hello World");
+
+    const textElement = useRef();
+
+    function handleChange(e) {
+        setText(e.target.value);
+    }
+
+    function handleClick(e) {
+        e.preventDefault();
+        console.log(textElement.current.value)
+    }
+
+
+    
     return (
         <div className="container mt-4">
             <h2>Create Event</h2>
             <form className="">
-                <FormInput type="text" id="title" label="Title" placeholder="My event title ..." value={state.title} handleChange={handleChange} error={error.title}
+                <p>{text}</p>
+                <input type="text" name="text" value={text} onChange={handleChange} ref={textElement} />
+                <button onClick={handleClick}>Test</button>
+
+
+                <FormInput type="text" id="title" label="Title" placeholder="My event title ..." value={state.title} handleChange={handleFormChange} error={error.title}
                 />
-                <FormInput type="textarea" id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleChange} error={error.description}
+                <FormInput type="textarea" id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleFormChange} error={error.description}
                 />
-                <FormInput type="date" id="startDate" label="Start Date" value={state.startDate} handleChange={handleChange} error={error.startDate}
+                <FormInput type="date" id="startDate" label="Start Date" value={state.startDate} handleChange={handleFormChange} error={error.startDate}
                 />
-                <FormInput type="date" id="endDate" label="End Date" value={state.endDate} handleChange={handleChange} error={error.endDate}
+                <FormInput type="date" id="endDate" label="End Date" value={state.endDate} handleChange={handleFormChange} error={error.endDate}
                 />
 
                 <div className="mb-3">
