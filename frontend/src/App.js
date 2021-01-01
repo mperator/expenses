@@ -8,7 +8,7 @@ import { AuthProvider } from './AuthContext';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
 import Info from './components/Info';
-import EventCreate from './components/EventCreate';
+import EventEditor from './components/EventEditor';
 import ExpenseEdit from './components/ExpenseEdit'
 import EventViewEdit from './components/EventViewEdit';
 import 'placeholder-loading/dist/css/placeholder-loading.css';
@@ -27,7 +27,7 @@ function App() {
 
                     <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                     <ProtectedRoute exact path='/info' component={Info} />
-                    <ProtectedRoute exact path='/event/editor' component={EventCreate} />
+                    <ProtectedRoute exact path='/event/editor/:id?' component={EventEditor} />
                     <ProtectedRoute path='/event/view/:id' component={EventViewEdit} />
                     <ProtectedRoute exact path='/expense/editor' component={ExpenseEdit} />
                 </Router>

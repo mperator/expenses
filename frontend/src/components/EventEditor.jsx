@@ -1,17 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react'
 import useClient from '../hooks/useClient'
 import useForm from '../hooks/useForm'
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import FormInput from './layout/FormInput'
 import dayjs from 'dayjs'
 
-const EventCreate = () => {
+const EventEditor = () => {
     const history = useHistory();
+    const params = useParams();
+
     const { postEventAsync, getAttendeeAsync } = useClient();
 
-    const { state, error, handleFormChange, setError} = useForm({
+    const { state, error, handleFormChange, setError } = useForm({
         title: "",
         description: "",
         startDate: dayjs(new Date()).format('YYYY-MM-DD'),
@@ -97,17 +99,10 @@ const EventCreate = () => {
         console.log(textElement.current.value)
     }
 
-
-    
     return (
         <div className="container mt-4">
             <h2>Create Event</h2>
             <form className="">
-                <p>{text}</p>
-                <input type="text" name="text" value={text} onChange={handleChange} ref={textElement} />
-                <button onClick={handleClick}>Test</button>
-
-
                 <FormInput type="text" id="title" label="Title" placeholder="My event title ..." value={state.title} handleChange={handleFormChange} error={error.title}
                 />
                 <FormInput type="textarea" id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleFormChange} error={error.description}
@@ -118,7 +113,7 @@ const EventCreate = () => {
                 />
 
                 <div className="mb-3">
-                    <label htmlFor="search" className="form-label">Search</label>
+                    <label htmlFor="search" className="form-label">Attendees</label>
                     <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder="Search for users ..." autoComplete="off"></input>
 
                     <div className="list-group">
@@ -147,19 +142,15 @@ const EventCreate = () => {
                         <div>{a.name}</div>
                     ))}
                 </div>
-                <div className="row justify-content-start">
-                    <div className="col-1">
-                        <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
-                    </div>
-                    <div className="col-1">
-                        <Link to="/dashboard">
-                            <button type="button" className="btn btn-primary">Back</button>
-                        </Link>
-                    </div>
+
+                {/* <div class="d-grid gap-2 d-md-flex justify-content-md-end"> */}
+                <div class="d-grid gap-2 d-flex justify-content-end">
+                    <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
+                    <Link className="btn btn-outline-secondary" to="/dashboard">Cancel</Link>
                 </div>
             </form>
         </div>
     )
 }
 
-export default EventCreate
+export default EventEditor
