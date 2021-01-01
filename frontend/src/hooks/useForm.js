@@ -42,7 +42,8 @@ const useForm = (form) => {
         state,
         error,
         handleFormChange,
-        setError
+        setError,
+        setForm: setState
     };
 }
 

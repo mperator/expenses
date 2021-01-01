@@ -7,19 +7,46 @@ import { Link } from 'react-router-dom';
 import FormInput from './layout/FormInput'
 import dayjs from 'dayjs'
 
+// TODO: what happens if parms.id is invalid?
 const EventEditor = () => {
+    const { getEventAsync, putEventAsync, postEventAsync, getAttendeeAsync } = useClient();
     const history = useHistory();
     const params = useParams();
 
-    const { postEventAsync, getAttendeeAsync } = useClient();
-
-    const { state, error, handleFormChange, setError } = useForm({
+    const { state, error, handleFormChange, setError, setForm } = useForm({
         title: "",
         description: "",
         startDate: dayjs(new Date()).format('YYYY-MM-DD'),
         endDate: dayjs(new Date()).format('YYYY-MM-DD')
     });
 
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // load event using the incoming id
+        if (params.id) {
+            (async () => {
+                // try catch ignore or redirect when failing
+                const event = await getEventAsync(params.id);
+                // TODO: on error navigate back?
+
+                setForm({
+                    title: event.title,
+                    description: event.description,
+                    startDate: dayjs(event.startDate).format('YYYY-MM-DD'),
+                    endDate: dayjs(event.endDate).format('YYYY-MM-DD'),
+                });
+
+                setAttendees(
+                    event.attendees
+                );
+
+                setLoading(false);
+            })();
+        } else {
+            setLoading(false);
+        }
+    }, [])
 
     const [search, setSearch] = useState({
         query: "",
@@ -27,29 +54,6 @@ const EventEditor = () => {
     });
 
     const [attendees, setAttendees] = useState([]);
-
-
-    const handleCreateAsync = async (e) => {
-        e.preventDefault();
-        try {
-            await postEventAsync({
-                title: state.title,
-                description: state.description,
-                startDate: state.startDate,
-                endDate: state.endDate,
-                attendees: attendees
-            });
-            history.goBack();
-        } catch (error) {
-            setError(s => ({
-                title: (error.Title && error.Title[0]) || "",
-                description: (error.Description && error.Description[0]) || "",
-                startDate: (error.StartDate && error.StartDate[0]) || "",
-                endDate: (error.EndDate && error.EndDate[0]) || ""
-            }))
-        }
-    }
-
     useEffect(() => {
         (async () => {
             let attendees = [];
@@ -86,48 +90,86 @@ const EventEditor = () => {
         }));
     }
 
-    const [text, setText] = useState("Hello World");
-
-    const textElement = useRef();
-
-    function handleChange(e) {
-        setText(e.target.value);
+    const createAsync = async () => {
+        try {
+            await postEventAsync({
+                title: state.title,
+                description: state.description,
+                startDate: state.startDate,
+                endDate: state.endDate,
+                attendees: attendees
+            });
+            history.goBack();
+        } catch (error) {
+            setError(s => ({
+                title: (error.Title && error.Title[0]) || "",
+                description: (error.Description && error.Description[0]) || "",
+                startDate: (error.StartDate && error.StartDate[0]) || "",
+                endDate: (error.EndDate && error.EndDate[0]) || ""
+            }))
+        }
     }
 
-    function handleClick(e) {
+    const updateAsync = async () => {
+        try {
+            await putEventAsync(params.id, {
+                title: state.title,
+                description: state.description,
+                startDate: state.startDate,
+                endDate: state.endDate,
+                attendees: attendees
+            });
+            history.goBack();
+        } catch (error) {
+            setError(s => ({
+                title: (error.Title && error.Title[0]) || "",
+                description: (error.Description && error.Description[0]) || "",
+                startDate: (error.StartDate && error.StartDate[0]) || "",
+                endDate: (error.EndDate && error.EndDate[0]) || ""
+            }))
+        }
+    }
+
+    const handleSubmitAsync = async (e) => {
         e.preventDefault();
-        console.log(textElement.current.value)
+
+        if (params.id) {
+            await updateAsync();
+        } else {
+            await createAsync();
+        }
     }
 
     return (
         <div className="container mt-4">
-            <h2>Create Event</h2>
-            <form className="">
-                <FormInput type="text" id="title" label="Title" placeholder="My event title ..." value={state.title} handleChange={handleFormChange} error={error.title}
-                />
-                <FormInput type="textarea" id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleFormChange} error={error.description}
-                />
-                <FormInput type="date" id="startDate" label="Start Date" value={state.startDate} handleChange={handleFormChange} error={error.startDate}
-                />
-                <FormInput type="date" id="endDate" label="End Date" value={state.endDate} handleChange={handleFormChange} error={error.endDate}
-                />
+            <h2>{params.id ? "Update Event" : "Create Event"}</h2>
+            {loading ? <p>Loading ...</p> :
+                <form className="">
+                    <FormInput type="text" id="title" label="Title" placeholder="My event title ..." value={state.title} handleChange={handleFormChange} error={error.title}
+                    />
+                    <FormInput type="textarea" id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleFormChange} error={error.description}
+                    />
+                    <FormInput type="date" id="startDate" label="Start Date" value={state.startDate} handleChange={handleFormChange} error={error.startDate}
+                    />
+                    <FormInput type="date" id="endDate" label="End Date" value={state.endDate} handleChange={handleFormChange} error={error.endDate}
+                    />
 
-                <div className="mb-3">
-                    <label htmlFor="search" className="form-label">Attendees</label>
-                    <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder="Search for users ..." autoComplete="off"></input>
+                    <div className="mb-3">
+                        <label htmlFor="search" className="form-label">Attendees</label>
+                        <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder="Search for users ..." autoComplete="off"></input>
 
-                    <div className="list-group">
-                        {search.attendees.map(a => (
-                            <button key={a.id} type="button" className="list-group-item list-group-item-action"
-                                onClick={e => { e.preventDefault(); selectAttendee(a); }}
-                            >{a.name}</button>
-                        ))}
+                        <div className="list-group">
+                            {search.attendees.map(a => (
+                                <button key={a.id} type="button" className="list-group-item list-group-item-action"
+                                    onClick={e => { e.preventDefault(); selectAttendee(a); }}
+                                >{a.name}</button>
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                {/* TODO */}
-                {/* https://medium.com/swlh/creating-real-time-autocompletion-with-react-the-complete-guide-39a3bee7e38c */}
-                {/* <div className="mb-3">
+                    {/* TODO */}
+                    {/* https://medium.com/swlh/creating-real-time-autocompletion-with-react-the-complete-guide-39a3bee7e38c */}
+                    {/* <div className="mb-3">
                     <label for="exampleDataList" className="form-label">Datalist example</label>
                     <input className="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..."/>
                     <datalist id="datalistOptions">
@@ -137,18 +179,18 @@ const EventEditor = () => {
                     </datalist>
                 </div> */}
 
-                <div className="mb-3">
-                    {attendees.map(a => (
-                        <div>{a.name}</div>
-                    ))}
-                </div>
+                    <div className="mb-3">
+                        {attendees.map(a => (
+                            <div>{a.name}</div>
+                        ))}
+                    </div>
 
-                {/* <div class="d-grid gap-2 d-md-flex justify-content-md-end"> */}
-                <div class="d-grid gap-2 d-flex justify-content-end">
-                    <button className="btn btn-primary" type="submit" onClick={handleCreateAsync}>Create</button>
-                    <Link className="btn btn-outline-secondary" to="/dashboard">Cancel</Link>
-                </div>
-            </form>
+                    {/* <div class="d-grid gap-2 d-md-flex justify-content-md-end"> */}
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{params.id ? "Update" : "Create"}</button>
+                        <Link className="btn btn-outline-secondary" to="/dashboard">Cancel</Link>
+                    </div>
+                </form>}
         </div>
     )
 }
