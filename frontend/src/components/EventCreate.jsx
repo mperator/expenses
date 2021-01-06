@@ -152,7 +152,7 @@ const EventCreate = () => {
                     </div>
                     <div className="col-auto">
                         <Link to="/dashboard">
-                            <button type="button" className="btn btn-light">Cancel</button>
+                            <button type="button" className="btn btn-outline-secondary">Cancel</button>
                         </Link>
                     </div>
                 </div>
