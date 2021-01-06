@@ -165,7 +165,7 @@ const ExpenseEdit = () => {
                 </div>
 
                 <div className="mb-3">
-                    <h3 className="mb-3" >Teilnehmer</h3>
+                    <h3 className="mb-3" >Attendees</h3>
                     {state.participants.map((p, i) => (
                         <div key={p.id} className="row mb-2">
                             <label className="col-sm-3 col-form-label">{p.name}</label>
@@ -181,11 +181,14 @@ const ExpenseEdit = () => {
                         </div>
                     ))}
                 </div>
-
-                <div className="col-12 text-right">
-                    <button className="btn btn-primary me-1" type="submit" onClick={handleSubmitAsync}>Create</button>
-                    <button className="btn btn-outline-secondary" type="submit" onClick={e => { e.preventDefault(); history.goBack() }}
-                    >Cancel</button>
+                <div className="row justify-content-end mb-3">
+                    <div className="col-auto">
+                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Create</button>
+                    </div>
+                    <div className="col-auto">
+                        <button className="btn btn-outline-secondary" type="submit" onClick={e => { e.preventDefault(); history.goBack() }}
+                        >Cancel</button>
+                    </div>
                 </div>
             </form>
         </div>
