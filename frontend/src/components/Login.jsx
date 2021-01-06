@@ -77,20 +77,19 @@ function Login() {
                                     <input type="password" className="form-control" id="password" name="password" value={state.password} onChange={handleChange} />
                                 </div>
                             </div>
-
                             {/* <div className="row mb-3">
-                    <div className="col-sm-10 offset-sm-2">
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" id="gridCheck1" />
-                            <label className="form-check-label" for="gridCheck1">Remember</label>
-                        </div>
-                    </div>
-                </div> */}
+                                <div className="col-sm-10 offset-sm-2">
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" id="gridCheck1" />
+                                        <label className="form-check-label" for="gridCheck1">Remember</label>
+                                    </div>
+                                </div>
+                            </div> */}
                             <div className="position-relative">
-                                <button type="submit" className="btn btn-primary position-absolute top-0 right-0" onClick={handleSubmitAsync}>Sign in</button>
+                                <button type="submit" className="btn btn-primary float-end" onClick={handleSubmitAsync}>Sign in</button>
                             </div>
 
-                            <p>{state.error}</p>
+                            <p className="text-danger">{state.error}</p>
                         </form>
                     </div>
                     <div className="col" />
