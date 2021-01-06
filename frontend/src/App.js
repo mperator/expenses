@@ -11,6 +11,7 @@ import Info from './components/Info';
 import EventCreate from './components/EventCreate';
 import ExpenseEdit from './components/ExpenseEdit'
 import EventViewEdit from './components/EventViewEdit';
+import 'placeholder-loading/dist/css/placeholder-loading.css';
 
 function App() {
 
