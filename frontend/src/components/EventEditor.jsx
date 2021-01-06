@@ -91,6 +91,8 @@ const EventEditor = () => {
     }
 
     const createAsync = async () => {
+        console.log("hello create")
+        
         try {
             await postEventAsync({
                 title: state.title,
@@ -111,6 +113,8 @@ const EventEditor = () => {
     }
 
     const updateAsync = async () => {
+        console.log("hello update")
+
         try {
             await putEventAsync(params.id, {
                 title: state.title,
@@ -186,7 +190,7 @@ const EventEditor = () => {
                     </div>
 
                     {/* <div class="d-grid gap-2 d-md-flex justify-content-md-end"> */}
-                    <div class="d-grid gap-2 d-flex justify-content-end">
+                    <div className="d-grid gap-2 d-flex justify-content-end">
                         <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{params.id ? "Update" : "Create"}</button>
                         <Link className="btn btn-outline-secondary" to="/dashboard">Cancel</Link>
                     </div>
