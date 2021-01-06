@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import useClient from '../hooks/useClient'
 import { useHistory, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import dayjs from 'dayjs'
 
@@ -26,9 +27,6 @@ const EventDetails = () => {
 
     function calculateExpenseSummary() {
         console.log(event.expenses)
-        
-        
-        
         console.log("AAAA Hello")
         
         return 10;
@@ -43,7 +41,7 @@ const EventDetails = () => {
 
                 <p>{!loading && calculateExpenseSummary()}</p>
 
-            <button className="btn btn-outline-primary">Edit...</button>
+            <Link className="btn btn-outline-primary" to={`/event/editor/${params.id}`}>Edit...</Link>
             <button className="btn btn-outline-danger">Delete</button>
 
             <h2>{event.title}</h2>
