@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Landing from './components/Landing'
 import Dashboard from './components/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute';
@@ -20,15 +20,17 @@ function App() {
             <AuthProvider>
                 <Router>
                     <Navigation />
-                    <Route exact path='/' render={props => <Landing {...props} />} />
-                    <Route exact path='/login' component={Login} />
+                    <Switch>
+                        <Route exact path='/' render={props => <Landing {...props} />} />
+                        <Route exact path='/login' component={Login} />
 
-                    <ProtectedRoute exact path='/dashboard' component={Dashboard} />
-                    <ProtectedRoute exact path='/info' component={Info} />
-                    <ProtectedRoute exact path='/event/:id' component={EventDetails} />
-                    <ProtectedRoute exact path='/event/editor/:id?' component={EventEditor} />
-                    <ProtectedRoute path='/event/view/:id' component={EventViewEdit} />
-                    <ProtectedRoute exact path='/expense/editor' component={ExpenseEdit} />
+                        <ProtectedRoute exact path='/dashboard' component={Dashboard} />
+                        <ProtectedRoute exact path='/info' component={Info} />
+                        <ProtectedRoute exact path='/event/editor/:id?' component={EventEditor} />
+                        <ProtectedRoute exact path='/event/:id' component={EventDetails} />
+                        <ProtectedRoute exact path='/event/view/:id' component={EventViewEdit} />
+                        <ProtectedRoute exact path='/expense/editor' component={ExpenseEdit} />
+                    </Switch>
                 </Router>
             </AuthProvider>
         </div>
