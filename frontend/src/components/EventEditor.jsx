@@ -92,7 +92,7 @@ const EventEditor = () => {
 
     const createAsync = async () => {
         console.log("hello create")
-        
+
         try {
             await postEventAsync({
                 title: state.title,
@@ -144,6 +144,11 @@ const EventEditor = () => {
         }
     }
 
+    const handleDeleteAttendee = (id) => {
+        let updatedAttendees = attendees.filter(a => a.id !== id);
+        setAttendees([...updatedAttendees]);
+    }
+
     return (
         <div className="container mt-4">
             <h2>{params.id ? "Update Event" : "Create Event"}</h2>
@@ -174,22 +179,28 @@ const EventEditor = () => {
                     {/* TODO */}
                     {/* https://medium.com/swlh/creating-real-time-autocompletion-with-react-the-complete-guide-39a3bee7e38c */}
                     {/* <div className="mb-3">
-                    <label for="exampleDataList" className="form-label">Datalist example</label>
-                    <input className="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..."/>
-                    <datalist id="datalistOptions">
-                        {search.attendees.map(a => (
-                            <option key={a.id} value={a.name}/>
-                        ))}
-                    </datalist>
-                </div> */}
-
+                        <label for="exampleDataList" className="form-label">Datalist example</label>
+                        <input className="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..." />
+                        <datalist id="datalistOptions">
+                            {search.attendees.map(a => (
+                                <option key={a.id} value={a.name} />
+                            ))}
+                        </datalist>
+                    </div> */}
                     <div className="mb-3">
-                        {attendees.map(a => (
-                            <div>{a.name}</div>
-                        ))}
+                        <ul className="list-group">
+                            {attendees.map(a => (
+                                <li key={a.id} onClick={() => handleDeleteAttendee(a.id)} className="list-group-item d-flex justify-content-between align-items-center">
+                                    {a.name}
+                                    <button type="button" className="btn" >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
+                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                                        </svg>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-
-                    {/* <div class="d-grid gap-2 d-md-flex justify-content-md-end"> */}
                     <div className="d-grid gap-2 d-flex justify-content-end">
                         <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{params.id ? "Update" : "Create"}</button>
                         <Link className="btn btn-outline-secondary" to="/dashboard">Cancel</Link>
