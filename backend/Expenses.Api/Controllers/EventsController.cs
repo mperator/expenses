@@ -13,6 +13,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expenses.Api.Controllers
 {
+    public class EventsFilter
+    {
+        public string Title { get; set; }
+    }
     //TODO: implement clear error messages and return them to the user
     //FIXME: just for dev purpose
     //[Authorize]
@@ -35,14 +39,28 @@ namespace Expenses.Api.Controllers
         /// <returns>A list of events</returns>
         /// <response code="200">On success</response>
         [HttpGet]
-        public async Task<ActionResult<List<EventReadModel>>> GetEventsAsync()
+        public async Task<ActionResult<List<EventReadModel>>> GetEventsAsync([FromQuery] EventsFilter filter)
         {
-            return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
-                .Include(ev => ev.Creator)
-                .Include(ev => ev.Expenses)
-                .Include(ev => ev.Attendees)
-                .AsSplitQuery()
-                .ToListAsync()));
+            if (filter?.Title != null)
+            {
+                return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
+                    .Include(ev => ev.Creator)
+                    .Include(ev => ev.Expenses)
+                    .Include(ev => ev.Attendees)
+                    .AsSplitQuery()
+                    .Where(e => e.Title.Contains(filter.Title))
+                    .ToListAsync()));
+                
+            }
+            else
+            {
+                return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
+                    .Include(ev => ev.Creator)
+                    .Include(ev => ev.Expenses)
+                    .Include(ev => ev.Attendees)
+                    .AsSplitQuery()
+                    .ToListAsync()));
+            }
         }
         /// <summary>
         /// Get a single event by its ID
@@ -64,7 +82,7 @@ namespace Expenses.Api.Controllers
                 .AsSplitQuery()
                 .SingleOrDefaultAsync(ev => ev.Id == id);
             if (foundEvent == null) return NotFound();
-            
+
             return Ok(_mapper.Map<EventReadModel>(foundEvent));
         }
         /// <summary>
@@ -94,7 +112,7 @@ namespace Expenses.Api.Controllers
             };
             savedEvent.Attendees = new List<User>();
             savedEvent.Attendees.Add(user);
-            foreach(var a in eventModel.Attendees)
+            foreach (var a in eventModel.Attendees)
             {
                 var attendee = await _userManager.FindByIdAsync(a.Id);
                 savedEvent.Attendees.Add(attendee);
