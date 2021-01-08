@@ -50,7 +50,7 @@ namespace Expenses.Api.Controllers
                     .AsSplitQuery()
                     .Where(e => e.Title.Contains(filter.Title))
                     .ToListAsync()));
-                
+
             }
             else
             {
@@ -162,6 +162,8 @@ namespace Expenses.Api.Controllers
             //dbEvent.Creator = update.Creator;
             //dbEvent.Currency = update.Currency;
 
+            // reset the attendee list so all attendee updates can be saved
+            dbEvent.Attendees = new List<User>();
             foreach (var a in model.Attendees)
             {
                 var attendee = await _userManager.FindByIdAsync(a.Id);
