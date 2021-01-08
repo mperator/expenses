@@ -83,6 +83,10 @@ const useClient = () => {
         return await getWithAuthenticationAsync('/events', token);
     }
 
+    const getFilteredEventsAsync = async (title) => {
+        return await getWithAuthenticationAsync(`/events?title=${title}`, token)
+    }
+
     const getEventAsync = async (id) => {
         return await getWithAuthenticationAsync(`/events/${id}`, token);
     }
@@ -117,7 +121,8 @@ const useClient = () => {
         postEventAsync,
         putEventAsync,
         postExpenseAsync,
-        getAttendeeAsync
+        getAttendeeAsync,
+        getFilteredEventsAsync
     }
 }
 
