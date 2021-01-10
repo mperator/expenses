@@ -11,7 +11,6 @@ import Info from './components/Info';
 import EventDetails from './components/EventDetails';
 import EventEditor from './components/EventEditor';
 import ExpenseEditor from './components/ExpenseEditor'
-import EventViewEdit from './components/EventViewEdit';
 import 'placeholder-loading/dist/css/placeholder-loading.css';
 
 function App() {
@@ -28,7 +27,6 @@ function App() {
                         <ProtectedRoute exact path='/info' component={Info} />
                         <ProtectedRoute exact path='/event/editor/:id?' component={EventEditor} />
                         <ProtectedRoute exact path='/event/:id' component={EventDetails} />
-                        <ProtectedRoute exact path='/event/view/:id' component={EventViewEdit} />
                         <ProtectedRoute exact path='/expense/editor' component={ExpenseEditor} />
                     </Switch>
                 </Router>
