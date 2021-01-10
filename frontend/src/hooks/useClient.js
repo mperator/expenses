@@ -73,6 +73,16 @@ const useClient = () => {
         return await handleResponseAsync(response, putWithAuthenticationAsync, url, data);
     }
 
+    async function deleteWithAuthenticationAsync(url, token) {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `${token}`,
+            }
+        })
+        return await handleResponseAsync(response, deleteWithAuthenticationAsync, url);
+    }
+
     /* test hook */
     const getAuthTestAsync = async () => {
         return await getWithAuthenticationAsync('/auth/test', token);
@@ -112,6 +122,10 @@ const useClient = () => {
         return await getWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
     }
 
+    const deleteExpenseAsync = async (eventId, expenseId) => {
+        return await deleteWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
+    }
+
     /* attendees */
     const getAttendeeAsync = async (name) => {
         return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
@@ -126,6 +140,7 @@ const useClient = () => {
         putEventAsync,
         postExpenseAsync,
         getExpenseAsync,
+        deleteExpenseAsync,
         getAttendeeAsync,
         getFilteredEventsAsync
     }
