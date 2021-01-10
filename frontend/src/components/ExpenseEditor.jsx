@@ -18,7 +18,7 @@ Es fehlt eine tabelle issuer/expense/amount
 
 */
 
-const ExpenseEdit = () => {
+const ExpenseEditor = () => {
     const history = useHistory();
     const eventId = useQuery().get('eventId');
     const { getEventAsync, postExpenseAsync } = useClient();
@@ -195,4 +195,4 @@ const ExpenseEdit = () => {
     )
 }
 
-export default ExpenseEdit
+export default ExpenseEditor
