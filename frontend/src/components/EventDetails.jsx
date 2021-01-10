@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import useClient from '../hooks/useClient';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 const EventDetails = () => {
     const { getEventAsync } = useClient();
-    const history = useHistory();
     const params = useParams();
 
     const [loading, setLoading] = useState(true);
@@ -114,7 +113,7 @@ const EventDetails = () => {
                                     <div id="flush-collapseOne" className="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                         <div className="accordion-body">
                                             <ul className="list-group">
-                                                {event.expenses.length == 0 ? "no expenses yet ... go and add one"
+                                                {event.expenses.length === 0 ? "no expenses yet ... go and add one"
                                                     : event.expenses.map(e => (
                                                         <li key={e.id} className="list-group-item">
                                                             <p className="mb-0 fs-5">{e.title}</p>
