@@ -73,6 +73,7 @@ namespace Expenses.Api.Controllers
         public async Task<ActionResult<ExpenseReadModel>> GetExpenseById(int eventId, int expenseId)
         {
             var dbExpense = await _dbContext.ExpenseData
+                .Include(ex => ex.ExpensesUsers)
                 .FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
             if (dbExpense == null) return NotFound();
 
