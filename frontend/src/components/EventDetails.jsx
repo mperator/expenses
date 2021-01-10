@@ -116,9 +116,9 @@ const EventDetails = () => {
                                                 {event.expenses.length === 0 ? "no expenses yet ... go and add one"
                                                     : event.expenses.map(e => (
                                                         <li key={e.id} className="list-group-item">
-                                                            <p className="mb-0 fs-5">{e.title}</p>
-                                                            <p className="fs-3 fw-bold mb-0">{e.amount}€</p>
-                                                            <p style={{ fontSize: '0.8rem' }}>{dayjs(e.date).format('DD/MM/YYYY')}</p>
+                                                            <p className="mb-0 fs-6">{e.title}</p>
+                                                            <p className="fs-4 fw-bold mb-0">{e.amount}€</p>
+                                                            <p style={{ fontSize: '0.7rem' }}>{dayjs(e.date).format('DD/MM/YYYY')}</p>
                                                         </li>
                                                     ))
                                                 }
