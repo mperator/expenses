@@ -108,6 +108,10 @@ const useClient = () => {
         return await postWithAuthenticationAsync(`/events/${eventid}/expenses`, token, data);
     }
 
+    const getExpenseAsync = async (eventId, expenseId) => {
+        return await getWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
+    }
+
     /* attendees */
     const getAttendeeAsync = async (name) => {
         return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
@@ -121,6 +125,7 @@ const useClient = () => {
         postEventAsync,
         putEventAsync,
         postExpenseAsync,
+        getExpenseAsync,
         getAttendeeAsync,
         getFilteredEventsAsync
     }
