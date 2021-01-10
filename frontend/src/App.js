@@ -11,6 +11,7 @@ import Info from './components/Info';
 import EventDetails from './components/EventDetails';
 import EventEditor from './components/EventEditor';
 import ExpenseEditor from './components/ExpenseEditor'
+import ExpenseDetails from './components/ExpenseDetails';
 import 'placeholder-loading/dist/css/placeholder-loading.css';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
                         <ProtectedRoute exact path='/event/editor/:id?' component={EventEditor} />
                         <ProtectedRoute exact path='/event/:id' component={EventDetails} />
                         <ProtectedRoute exact path='/expense/editor' component={ExpenseEditor} />
+                        <ProtectedRoute exact path='/expense/:id' component={ExpenseDetails} />
                     </Switch>
                 </Router>
             </AuthProvider>
