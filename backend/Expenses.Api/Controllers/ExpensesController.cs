@@ -45,7 +45,8 @@ namespace Expenses.Api.Controllers
         [HttpGet()]
         public async Task<ActionResult> GetExpensesAsync(int eventId)
         {
-            var dbEvent = await _dbContext.EventData.Include(ev => ev.Expenses)
+            var dbEvent = await _dbContext.EventData
+                .Include(ev => ev.Expenses)
                 .SingleOrDefaultAsync(ev => ev.Id == eventId);
 
             if (dbEvent == null) return BadRequest();
@@ -73,7 +74,7 @@ namespace Expenses.Api.Controllers
         public async Task<ActionResult<ExpenseReadModel>> GetExpenseById(int eventId, int expenseId)
         {
             var dbExpense = await _dbContext.ExpenseData
-                //.Include(ex => ex.ExpensesUsers)
+                .Include(ex => ex.ExpensesUsers)
                 .FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
             if (dbExpense == null) return NotFound();
 
