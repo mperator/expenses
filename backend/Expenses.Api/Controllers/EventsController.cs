@@ -77,13 +77,17 @@ namespace Expenses.Api.Controllers
 
             var foundEvent = await _dbContext.EventData
                 .Include(ev => ev.Creator)
-                .Include(e => e.Attendees)
+                .Include(ev => ev.Attendees)
                 .Include(ev => ev.Expenses)
+                    .ThenInclude(ex => ex.ExpensesUsers)
                 .AsSplitQuery()
                 .SingleOrDefaultAsync(ev => ev.Id == id);
             if (foundEvent == null) return NotFound();
 
-            return Ok(_mapper.Map<EventReadModel>(foundEvent));
+
+            var test = _mapper.Map<EventReadModel>(foundEvent);
+
+            return Ok(test);
         }
         /// <summary>
         /// Creates a new event
