@@ -4,6 +4,7 @@ import { useHistory, useLocation, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import useClient from '../hooks/useClient';
 import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
+import { mapToStyles } from '@popperjs/core/lib/modifiers/computeStyles';
 
 export default function ExpenseDetails() {
     const { getExpenseAsync, deleteExpenseAsync } = useClient();
@@ -80,6 +81,15 @@ export default function ExpenseDetails() {
                     {/* FIXME: add dynamic username using useAuth hook */}
                     <p className="card-text mb-0">Paid by Testimann: {expense.amount}€</p>
                     <p className="card-text"><small className="text-muted">added on {dayjs(expense.date).format('DD/MM/YYYY')}</small></p>
+                </div>
+
+                <div className="card-body">
+                    {expense.expensesUsers && expense.expensesUsers.map(eu => (
+                        <>
+                            <div>{eu.userId}</div>
+                            <div>{eu.amount}</div>
+                        </>
+                    ))}
                 </div>
             </div>
             {/* <!-- Modal --> */}
