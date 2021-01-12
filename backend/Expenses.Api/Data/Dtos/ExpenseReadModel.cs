@@ -17,7 +17,7 @@ namespace Expenses.Api.Data.Dtos
         public string IssuerId { get; set; }
         public string Issuer { get; set; }
         public int EventId { get; set; }
-        public ICollection<ExpenseUser> ExpensesUsers { get; set; }
+        public ICollection<ExpenseUserReadModel> ExpensesUsers { get; set; }
 
         #endregion
     }
