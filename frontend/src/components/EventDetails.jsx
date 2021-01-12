@@ -18,16 +18,52 @@ const EventDetails = () => {
                 // try catch ignore or redirect when failing
                 const event = await getEventAsync(params.id);
                 setEvent(event)
+
+                // getExpense for every event
+
                 setLoading(false);
             })();
         }
     }, [])
 
     function calculateExpenseSummary() {
-        console.log(event.expenses)
-        console.log("AAAA Hello")
+        const expenses = event.expenses;
+        if(expenses.length > 0)
+            return expenses.map(a => a.amount).reduce((a,c) => a + c);
+        else 
+            return 0;
+    }
 
-        return 10;
+    function calculateUserDebt(userId) {
+        let dept = 0;
+
+        for(const expense of event.expenses) {
+            if(expense.issuerId != userId)  {
+                const selfAmount = expense.expensesUsers
+                    .filter(e => e.userId == userId)
+                    .map(e => e.amount)
+                    .reduce((a,c) => a + c)
+                const tempDept = expense.amount - selfAmount;
+                dept -= tempDept;
+            }
+        }
+        return dept;
+    }
+
+    function calculateUserLoan(userId) {
+        let loan = 0;
+
+        for(const expense of event.expenses) {
+            if(expense.issuerId == userId)  {
+                const selfAmount = expense.expensesUsers
+                    .filter(e => e.userId == userId)
+                    .map(e => e.amount)
+                    .reduce((a,c) => a + c)
+                const tempLoan = expense.amount - selfAmount;
+                loan += tempLoan;
+            }
+        }        
+        return loan;
     }
 
     //TODO: if total expense is negative show font in red and vice versa
@@ -82,7 +118,7 @@ const EventDetails = () => {
                                             <h4>Total expenses:</h4>
                                         </div>
                                         <div className="col-auto">
-                                            <h4>-200€</h4>
+                                            <h4>{calculateExpenseSummary()}€</h4>
                                         </div>
                                     </div>
                                 </li>
@@ -94,10 +130,10 @@ const EventDetails = () => {
                                             </div>
                                             <div className="col-auto">
                                                 <div className="col-auto">
-                                                    -50€
+                                                    Dept: {calculateUserDebt(a.id)}€
                                                 </div>
                                                 <div className="col-auto">
-                                                    75.10€
+                                                    Loan: {calculateUserLoan(a.id)}€
                                                 </div>
                                             </div>
                                         </div>
