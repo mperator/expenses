@@ -3,6 +3,7 @@ import useClient from '../hooks/useClient';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
+import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
 
 const EventDetails = () => {
     const { getEventAsync } = useClient();
@@ -28,21 +29,21 @@ const EventDetails = () => {
 
     function calculateExpenseSummary() {
         const expenses = event.expenses;
-        if(expenses.length > 0)
-            return expenses.map(a => a.amount).reduce((a,c) => a + c);
-        else 
+        if (expenses.length > 0)
+            return expenses.map(a => a.amount).reduce((a, c) => a + c);
+        else
             return 0;
     }
 
     function calculateUserDebt(userId) {
         let dept = 0;
 
-        for(const expense of event.expenses) {
-            if(expense.issuerId != userId)  {
+        for (const expense of event.expenses) {
+            if (expense.issuerId != userId) {
                 const selfAmount = expense.expensesUsers
                     .filter(e => e.userId == userId)
                     .map(e => e.amount)
-                    .reduce((a,c) => a + c)
+                    .reduce((a, c) => a + c)
                 const tempDept = expense.amount - selfAmount;
                 dept -= tempDept;
             }
@@ -53,17 +54,26 @@ const EventDetails = () => {
     function calculateUserLoan(userId) {
         let loan = 0;
 
-        for(const expense of event.expenses) {
-            if(expense.issuerId == userId)  {
+        for (const expense of event.expenses) {
+            if (expense.issuerId == userId) {
                 const selfAmount = expense.expensesUsers
                     .filter(e => e.userId == userId)
                     .map(e => e.amount)
-                    .reduce((a,c) => a + c)
+                    .reduce((a, c) => a + c)
                 const tempLoan = expense.amount - selfAmount;
                 loan += tempLoan;
             }
-        }        
+        }
         return loan;
+    }
+
+    const handleDeleteButton = () => {
+        const confirmDeletionModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+        confirmDeletionModal.toggle();
+    }
+
+    const deleteEvent = () => {
+        console.log("implement deleting event!!!!");
     }
 
     //TODO: if total expense is negative show font in red and vice versa
@@ -87,7 +97,7 @@ const EventDetails = () => {
                                             <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                                         </svg>
                                     </Link>
-                                    <button className="btn btn-outline-danger">
+                                    <button className="btn btn-outline-danger" onClick={handleDeleteButton}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="0.8em" height="0.8em" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
                                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
                                         </svg>
@@ -170,6 +180,24 @@ const EventDetails = () => {
                                     <path fillRule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                                 </svg>
                             </Link>
+                        </div>
+                    </div>
+                    {/* <!-- Modal --> */}
+                    <div className="modal fade" id="deleteConfirmationModal" tabIndex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="deleteConfirmationModalLabel">Confirm deletion</h5>
+                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    Do you want to delete the selected event?
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button type="button" className="btn btn-primary" onClick={deleteEvent}>Yes</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </>}
