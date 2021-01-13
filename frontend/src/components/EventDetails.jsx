@@ -44,8 +44,8 @@ const EventDetails = () => {
                     .filter(e => e.userId == userId)
                     .map(e => e.amount)
                     .reduce((a, c) => a + c)
-                const tempDept = expense.amount - selfAmount;
-                dept -= tempDept;
+
+                dept -= selfAmount;
             }
         }
         return dept;
