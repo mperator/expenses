@@ -157,7 +157,7 @@ const EventDetails = () => {
                                             <h6>Expenses</h6>
                                         </button>
                                     </h2>
-                                    <div id="flush-collapseOne" className="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                    <div id="flush-collapseOne" className="accordion-collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                         <div className="accordion-body">
                                             <ul className="list-group">
                                                 {event.expenses.length === 0 ? "no expenses yet ... go and add one"
