@@ -8,7 +8,9 @@ namespace Expenses.Api.Profiles
     {
         public ExpenseUserProfile()
         {
-            CreateMap<ExpenseUser, ExpenseUserReadModel>().ReverseMap();
+            CreateMap<ExpenseUser, ExpenseUserReadModel>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+            CreateMap<ExpenseReadModel, ExpenseUser>();
         }
 
     }

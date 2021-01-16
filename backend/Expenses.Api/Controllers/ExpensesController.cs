@@ -75,6 +75,9 @@ namespace Expenses.Api.Controllers
         {
             var dbExpense = await _dbContext.ExpenseData
                 .Include(ex => ex.ExpensesUsers)
+                    .ThenInclude(eu => eu.User)
+                .Include(ex => ex.Issuer)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
             if (dbExpense == null) return NotFound();
 
