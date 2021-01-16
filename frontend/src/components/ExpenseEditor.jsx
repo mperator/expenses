@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import React, { useState, useEffect } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import useClient from '../hooks/useClient'
@@ -24,12 +25,11 @@ const ExpenseEditor = () => {
     const { getEventAsync, postExpenseAsync } = useClient();
 
     const [state, setState] = useState({
-        date: '2020-12-08',
+        date: dayjs(new Date()).format('YYYY-MM-DD'),
         title: '',
         description: '',
         amount: 0,
-        participants: [
-        ]
+        participants: []
     });
 
     const [error, setError] = useState({
