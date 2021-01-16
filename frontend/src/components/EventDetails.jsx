@@ -39,9 +39,9 @@ const EventDetails = () => {
         let dept = 0;
 
         for (const expense of event.expenses) {
-            if (expense.issuerId != userId) {
+            if (expense.issuerId !== userId) {
                 const selfAmount = expense.expensesUsers
-                    .filter(e => e.userId == userId)
+                    .filter(e => e.userId === userId)
                     .map(e => e.amount)
                     .reduce((a, c) => a + c)
 
@@ -55,9 +55,9 @@ const EventDetails = () => {
         let loan = 0;
 
         for (const expense of event.expenses) {
-            if (expense.issuerId == userId) {
+            if (expense.issuerId === userId) {
                 const selfAmount = expense.expensesUsers
-                    .filter(e => e.userId == userId)
+                    .filter(e => e.userId === userId)
                     .map(e => e.amount)
                     .reduce((a, c) => a + c)
                 const tempLoan = expense.amount - selfAmount;
