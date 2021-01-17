@@ -40,9 +40,11 @@ const EventDetails = () => {
                 const selfAmount = expense.expensesUsers
                     .filter(e => e.userId === userId)
                     .map(e => e.amount)
-                    .reduce((a, c) => a + c)
+                    // sets 0 as intial value, in case the array is empty
+                    .reduce((a, c) => a + c, 0)
 
                 dept -= selfAmount;
+
             }
         }
         return dept;
