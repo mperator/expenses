@@ -149,6 +149,10 @@ const EventEditor = () => {
         setAttendees([...updatedAttendees]);
     }
 
+    const handleCancel = () => {
+        history.goBack();
+    }
+
     return (
         <div className="container mt-4">
             <h2>{params.id ? "Update Event" : "Create Event"}</h2>
@@ -203,7 +207,7 @@ const EventEditor = () => {
                     </div>
                     <div className="d-grid gap-2 d-flex justify-content-end">
                         <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{params.id ? "Update" : "Create"}</button>
-                        <Link className="btn btn-outline-secondary" to="/dashboard">Cancel</Link>
+                        <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>Cancel</button>
                     </div>
                 </form>}
         </div>
