@@ -4,7 +4,7 @@ import { useHistory, useLocation, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import useClient from '../hooks/useClient';
 import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
-import { mapToStyles } from '@popperjs/core/lib/modifiers/computeStyles';
+// import { mapToStyles } from '@popperjs/core/lib/modifiers/computeStyles';
 
 export default function ExpenseDetails() {
     const { getExpenseAsync, deleteExpenseAsync } = useClient();
@@ -54,6 +54,11 @@ export default function ExpenseDetails() {
         errorToast.show();
     }
 
+    const formatToCapitalize = (string) => {
+        if (typeof string !== 'string') return ''
+        return string.charAt(0).toUpperCase() + string.slice(1)
+    }
+
     return (
         <div className="container mt-4">
             <div className="card">
@@ -78,17 +83,15 @@ export default function ExpenseDetails() {
                     </div>
                 </div>
                 <div className="card-body">
-                    {/* FIXME: add dynamic username using useAuth hook */}
-                    <p className="card-text mb-0">Paid by Testimann: {expense.amount}€</p>
+                    <p className="card-text mb-0">Paid by {formatToCapitalize(expense.issuer)}: {expense.amount}€</p>
                     <p className="card-text"><small className="text-muted">added on {dayjs(expense.date).format('DD/MM/YYYY')}</small></p>
                 </div>
-
                 <div className="card-body">
                     {expense.expensesUsers && expense.expensesUsers.map(eu => (
-                        <>
-                            <div>{eu.userId}</div>
-                            <div>{eu.amount}</div>
-                        </>
+                        <div key={eu.userId} className="row">
+                            <div className="col-auto text-capitalize">{eu.userName}</div>
+                            <div className="col-auto">{eu.amount}€</div>
+                        </div>
                     ))}
                 </div>
             </div>
