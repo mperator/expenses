@@ -88,18 +88,19 @@ const ExpenseEditor = () => {
         }))
     }
 
-    const handleParticipantAmountChange = (e, i) => {
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    const handleParticipantAmountChange = async (e, i) => {
+        const value = e.target.type === 'checkbox' ? e.target.checked : !e.target.checked;
         const participants = state.participants;
         participants[i][e.target.name] = value;
+
         setState({
             ...state,
             participants
-        })
+        }, handleSplit(e))
     }
 
     const handleSplit = (e) => {
-        e.preventDefault();
+        if (e.target.type !== 'checkbox') e.preventDefault();
 
         const participants = state.participants;
         const amount = state.amount;
