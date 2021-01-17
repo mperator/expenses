@@ -22,12 +22,14 @@ Es fehlt eine tabelle issuer/expense/amount
 const ExpenseEditor = () => {
     const history = useHistory();
     const eventId = useQuery().get('eventId');
-    const { getEventAsync, postExpenseAsync } = useClient();
+    const expenseId = useQuery().get('expenseId');
+    const { getEventAsync, postExpenseAsync, getExpenseAsync } = useClient();
 
     const [state, setState] = useState({
         date: dayjs(new Date()).format('YYYY-MM-DD'),
         title: '',
         description: '',
+        //TODO: change to empty string! and check evaluation
         amount: 0,
         participants: []
     });
@@ -42,20 +44,37 @@ const ExpenseEditor = () => {
     });
 
     useEffect(() => {
-        if (!eventId) console.log("error");
-
-        // load event with id
-        (async () => {
-            const event = await getEventAsync(eventId);
-            const participants = event.attendees.map(a => ({ id: a.id, isParticipating: true, name: a.name, amount: 0 }));
-            setState({
-                ...state,
-                participants
-            })
-        })();
-
-        // load data
+        // load event with id and set participants in case no expenseId is given
+        if (eventId && !expenseId) {
+            (async () => {
+                const event = await getEventAsync(eventId);
+                const participants = event.attendees.map(a => ({ id: a.id, isParticipating: true, name: a.name, amount: 0 }));
+                setState({
+                    ...state,
+                    participants
+                })
+            })();
+        }
     }, [eventId])
+
+    useEffect(() => {
+        // load expense in case expenseId is given
+        if (expenseId) {
+            (async () => {
+                const expense = await getExpenseAsync(eventId, expenseId);
+                const participants = expense.expensesUsers.map(eu => ({ id: eu.userId, isParticipating: true, name: eu.name, amount: eu.amount }));
+
+                setState({
+                    ...state,
+                    date: dayjs(expense.date).format('YYYY-MM-DD'),
+                    title: expense.title,
+                    description: expense.description,
+                    amount: expense.amount,
+                    participants
+                })
+            })();
+        }
+    }, [expenseId])
 
     const handleFormChange = (e) => {
         setState(s => ({
@@ -183,7 +202,7 @@ const ExpenseEditor = () => {
                 </div>
                 <div className="row justify-content-end mb-3">
                     <div className="col-auto">
-                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Create</button>
+                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{expenseId ? "Save" : "Create"}</button>
                     </div>
                     <div className="col-auto">
                         <button className="btn btn-outline-secondary" type="submit" onClick={e => { e.preventDefault(); history.goBack() }}
