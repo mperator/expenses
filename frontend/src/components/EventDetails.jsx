@@ -19,15 +19,12 @@ const EventDetails = () => {
                 // try catch ignore or redirect when failing
                 const event = await getEventAsync(params.id);
                 setEvent(event)
-
-                // getExpense for every event
-
                 setLoading(false);
             })();
         }
     }, [])
 
-    function calculateExpenseSummary() {
+    const calculateExpenseSummary = () => {
         const expenses = event.expenses;
         if (expenses.length > 0)
             return expenses.map(a => a.amount).reduce((a, c) => a + c);
@@ -35,7 +32,7 @@ const EventDetails = () => {
             return 0;
     }
 
-    function calculateUserDebt(userId) {
+    const calculateUserDebt = (userId) => {
         let dept = 0;
 
         for (const expense of event.expenses) {
@@ -51,7 +48,7 @@ const EventDetails = () => {
         return dept;
     }
 
-    function calculateUserLoan(userId) {
+    const calculateUserLoan = (userId) => {
         let loan = 0;
 
         for (const expense of event.expenses) {
