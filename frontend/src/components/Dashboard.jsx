@@ -81,9 +81,14 @@ const Dashboard = () => {
                     </form>
                         : null}
                     <div className="mt-3">
-                        {events && events.map(e => (
-                            <Event key={e.id} {...e} />
-                        ))}
+                        {
+                            events.length !== 0 ?
+                                events && events.map(e => (
+                                    <Event key={e.id} {...e} />
+                                ))
+                                : <div>
+                                    No events found. Sorry about that. Go and create a new one</div>
+                        }
                     </div>
                 </div>
             }
