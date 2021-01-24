@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import React, { useState, useEffect } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import useClient from '../hooks/useClient'
+import Toast from './layout/Toast';
+import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
 
 /*
 - Datum
@@ -125,14 +127,15 @@ const ExpenseEditor = () => {
     const handleSubmitAsync = async (e) => {
         e.preventDefault();
         try {
-            await postExpenseAsync(eventId, {
+            const response = await postExpenseAsync(eventId, {
                 date: state.date,
                 title: state.title,
                 description: state.description,
                 amount: state.amount,
                 participants: state.participants,
             });
-            history.goBack();
+            if (response === null) triggerErrorToast();
+            else history.goBack();
         } catch (error) {
             setError(s => ({
                 date: (error.Date && error.Date[0]) || "",
@@ -153,65 +156,69 @@ const ExpenseEditor = () => {
         return e && " is-invalid";
     }
 
+    const triggerErrorToast = () => {
+        const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+        errorToast.show();
+    }
+
     return (
-        <div className="container mt-4">
-            <h2>Expense</h2>
-            <form>
-                <div className="mb-3">
-                    <label htmlFor="date" className="form-label">Date</label>
-                    <input type="date" className={"form-control" + isValid(error.date)} id="date" name="date" value={state.date} onChange={handleFormChange} />
-                    {error.date && <div className="invalid-feedback">{error.date}</div>}
-                </div>
-
-                <div className="mb-3">
-                    <label htmlFor="title" className="form-label">Title</label>
-                    <input type="text" className={"form-control" + isValid(error.title)} id="title" name="title" value={state.title} onChange={handleFormChange} />
-                    {error.title && <div className="invalid-feedback">{error.title}</div>}
-                </div>
-
-                <div className="mb-3">
-                    <label htmlFor="description" className="form-label">Description</label>
-                    <textarea type="form-control" className={"form-control" + isValid(error.description)} id="description" name="description" value={state.description} onChange={handleFormChange} />
-                    {error.description && <div className="invalid-feedback">{error.description}</div>}
-                </div>
-
-                <div className="mb-3">
-                    <label htmlFor="amount" className="form-label">Amount</label>
-                    <div className="input-group">
-                        <input type="text" className="form-control text-right" aria-label="amount" id="amount" name="amount" value={state.amount} onChange={handleFormChange} />
-                        <button type="button" className="btn btn-outline-primary" onClick={handleSplit}>Split</button>
-                        <span className="input-group-text">€</span>
+        <>
+            <div className="container mt-4">
+                <h2>Expense</h2>
+                <form>
+                    <div className="mb-3">
+                        <label htmlFor="date" className="form-label">Date</label>
+                        <input type="date" className={"form-control" + isValid(error.date)} id="date" name="date" value={state.date} onChange={handleFormChange} />
+                        {error.date && <div className="invalid-feedback">{error.date}</div>}
                     </div>
-                </div>
-
-                <div className="mb-3">
-                    <h3 className="mb-3" >Attendees</h3>
-                    {state.participants.map((p, i) => (
-                        <div key={p.id} className="row mb-2">
-                            <label className="col-sm-3 col-form-label">{p.name}</label>
-                            <div className="col-sm-9">
-                                <div className="input-group">
-                                    <div className="input-group-text">
-                                        <input className="form-check-input" type="checkbox" aria-label="Checkbox for following text input" id="isParticipating" name="isParticipating" checked={p.isParticipating} onChange={e => handleParticipantAmountChange(e, i)} />
+                    <div className="mb-3">
+                        <label htmlFor="title" className="form-label">Title</label>
+                        <input type="text" className={"form-control" + isValid(error.title)} id="title" name="title" value={state.title} onChange={handleFormChange} />
+                        {error.title && <div className="invalid-feedback">{error.title}</div>}
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="description" className="form-label">Description</label>
+                        <textarea type="form-control" className={"form-control" + isValid(error.description)} id="description" name="description" value={state.description} onChange={handleFormChange} />
+                        {error.description && <div className="invalid-feedback">{error.description}</div>}
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="amount" className="form-label">Amount</label>
+                        <div className="input-group">
+                            <input type="text" className="form-control text-right" aria-label="amount" id="amount" name="amount" value={state.amount} onChange={handleFormChange} />
+                            <button type="button" className="btn btn-outline-primary" onClick={handleSplit}>Split</button>
+                            <span className="input-group-text">€</span>
+                        </div>
+                    </div>
+                    <div className="mb-3">
+                        <h3 className="mb-3" >Attendees</h3>
+                        {state.participants.map((p, i) => (
+                            <div key={p.id} className="row mb-2">
+                                <label className="col-sm-3 col-form-label">{p.name}</label>
+                                <div className="col-sm-9">
+                                    <div className="input-group">
+                                        <div className="input-group-text">
+                                            <input className="form-check-input" type="checkbox" aria-label="Checkbox for following text input" id="isParticipating" name="isParticipating" checked={p.isParticipating} onChange={e => handleParticipantAmountChange(e, i)} />
+                                        </div>
+                                        <input type="text" className="form-control text-right" aria-label="Text input with checkbox" id="splitAmount" name="amount" value={p.amount} onChange={e => handleParticipantAmountChange(e, i)} />
+                                        <span className="input-group-text">€</span>
                                     </div>
-                                    <input type="text" className="form-control text-right" aria-label="Text input with checkbox" id="splitAmount" name="amount" value={p.amount} onChange={e => handleParticipantAmountChange(e, i)} />
-                                    <span className="input-group-text">€</span>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+                    <div className="row justify-content-end mb-3">
+                        <div className="col-auto">
+                            <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{expenseId ? "Save" : "Create"}</button>
                         </div>
-                    ))}
-                </div>
-                <div className="row justify-content-end mb-3">
-                    <div className="col-auto">
-                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{expenseId ? "Save" : "Create"}</button>
+                        <div className="col-auto">
+                            <button className="btn btn-outline-secondary" type="submit" onClick={e => { e.preventDefault(); history.goBack() }}
+                            >Cancel</button>
+                        </div>
                     </div>
-                    <div className="col-auto">
-                        <button className="btn btn-outline-secondary" type="submit" onClick={e => { e.preventDefault(); history.goBack() }}
-                        >Cancel</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+            <Toast idString="errorToast" />
+        </>
     )
 }
 
