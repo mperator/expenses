@@ -1,66 +1,36 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
-using Expenses.Api.Data;
-using Expenses.Api.Data.Dtos;
-using Expenses.Api.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+using Expenses.Application.Events.Queries;
+using Expenses.Application.Events.Queries.GetEvents;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Expenses.Api.Controllers
 {
-    public class EventsFilter
-    {
-        public string Title { get; set; }
-    }
     //TODO: implement clear error messages and return them to the user
     //FIXME: just for dev purpose
     //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class EventsController : Controller
+    public class EventsController : ApiControllerBase
     {
-        private readonly AppDbContext _dbContext;
-        private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
-        public EventsController(AppDbContext dbContext, IMapper mapper, UserManager<User> userManager)
-        {
-            _dbContext = dbContext;
-            _mapper = mapper;
-            _userManager = userManager;
-        }
+        //private readonly AppDbContext _dbContext;
+        //private readonly IMapper _mapper;
+        //private readonly UserManager<User> _userManager;
+        //public EventsController(AppDbContext dbContext, IMapper mapper, UserManager<User> userManager)
+        //{
+        //    _dbContext = dbContext;
+        //    _mapper = mapper;
+        //    _userManager = userManager;
+        //}
         /// <summary>
         /// Gets a list of events
         /// </summary>
         /// <returns>A list of events</returns>
         /// <response code="200">On success</response>
         [HttpGet]
-        public async Task<ActionResult<List<EventReadModel>>> GetEventsAsync([FromQuery] EventsFilter filter)
+        public async Task<ActionResult<List<EventReadModel>>> GetEventsAsync()
         {
-            if (filter?.Title != null)
-            {
-                return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
-                    .Include(ev => ev.Creator)
-                    .Include(ev => ev.Expenses)
-                    .Include(ev => ev.Attendees)
-                    .AsSplitQuery()
-                    .Where(e => e.Title.Contains(filter.Title))
-                    .ToListAsync()));
-
-            }
-            else
-            {
-                return Ok(_mapper.Map<List<EventReadModel>>(await _dbContext.EventData
-                    .Include(ev => ev.Creator)
-                    .Include(ev => ev.Expenses)
-                    .Include(ev => ev.Attendees)
-                    .AsSplitQuery()
-                    .ToListAsync()));
-            }
+            return await Mediator.Send(new GetEventsQuery());
         }
         /// <summary>
         /// Get a single event by its ID
@@ -70,25 +40,21 @@ namespace Expenses.Api.Controllers
         /// <response code="200">On success</response>
         /// <response code="400">No ID given</response>
         /// <response code="404">No resource found for the given ID</response>
-        [HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
-        public async Task<ActionResult<EventReadModel>> GetEventByIdAsync(int? id)
-        {
-            if (id == null) return BadRequest();
+        //[HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
+        //public async Task<ActionResult<EventReadModel>> GetEventByIdAsync(int? id)
+        //{
+        //    if (id == null) return BadRequest();
 
-            var foundEvent = await _dbContext.EventData
-                .Include(ev => ev.Creator)
-                .Include(ev => ev.Attendees)
-                .Include(ev => ev.Expenses)
-                    .ThenInclude(ex => ex.ExpensesUsers)
-                .AsSplitQuery()
-                .SingleOrDefaultAsync(ev => ev.Id == id);
-            if (foundEvent == null) return NotFound();
-
-
-            var test = _mapper.Map<EventReadModel>(foundEvent);
-
-            return Ok(test);
-        }
+        //    var foundEvent = await _dbContext.EventData
+        //        .Include(ev => ev.Creator)
+        //        .Include(e => e.Attendees)
+        //        .Include(ev => ev.Expenses)
+        //        .AsSplitQuery()
+        //        .SingleOrDefaultAsync(ev => ev.Id == id);
+        //    if (foundEvent == null) return NotFound();
+            
+        //    return Ok(_mapper.Map<EventReadModel>(foundEvent));
+        //}
         /// <summary>
         /// Creates a new event
         /// </summary>
@@ -96,43 +62,43 @@ namespace Expenses.Api.Controllers
         /// <returns>Created event object</returns>
         /// <response code="400">Mapping failed or model isn't valid</response>
         /// <response code="201">Returns created event object</response>
-        [HttpPost]
-        public async Task<ActionResult<EventReadModel>> CreateEventAsync([FromBody] EventWriteModel eventModel)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var newEvent = _mapper.Map<Event>(eventModel);
-            if (newEvent == null) return BadRequest();
+        //[HttpPost]
+        //public async Task<ActionResult<EventReadModel>> CreateEventAsync([FromBody] EventWriteModel eventModel)
+        //{
+        //    if (!ModelState.IsValid) return BadRequest(ModelState);
+        //    var newEvent = _mapper.Map<Event>(eventModel);
+        //    if (newEvent == null) return BadRequest();
 
-            var user = await _userManager.GetUserAsync(User);
+        //    var user = await _userManager.GetUserAsync(User);
 
-            Event savedEvent = new Event
-            {
-                Title = newEvent.Title,
-                Description = newEvent.Description,
-                Creator = user,
-                Currency = "Euro",
-                StartDate = newEvent.StartDate,
-                EndDate = newEvent.EndDate
-            };
-            savedEvent.Attendees = new List<User>();
-            savedEvent.Attendees.Add(user);
-            foreach (var a in eventModel.Attendees)
-            {
-                var attendee = await _userManager.FindByIdAsync(a.Id);
-                savedEvent.Attendees.Add(attendee);
-            }
+        //    Event savedEvent = new Event
+        //    {
+        //        Title = newEvent.Title,
+        //        Description = newEvent.Description,
+        //        Creator = user,
+        //        Currency = "Euro",
+        //        StartDate = newEvent.StartDate,
+        //        EndDate = newEvent.EndDate
+        //    };
+        //    savedEvent.Attendees = new List<User>();
+        //    savedEvent.Attendees.Add(user);
+        //    foreach(var a in eventModel.Attendees)
+        //    {
+        //        var attendee = await _userManager.FindByIdAsync(a.Id);
+        //        savedEvent.Attendees.Add(attendee);
+        //    }
 
-            _dbContext.EventData.Add(savedEvent);
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                new InvalidOperationException(e.Message);
-            }
-            return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
-        }
+        //    _dbContext.EventData.Add(savedEvent);
+        //    try
+        //    {
+        //        await _dbContext.SaveChangesAsync();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        new InvalidOperationException(e.Message);
+        //    }
+        //    return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
+        //}
         /// <summary>
         /// Update an event by replacing it
         /// </summary>
@@ -141,43 +107,41 @@ namespace Expenses.Api.Controllers
         /// <response code="400">Model isn't valid or mapping failed</response>
         /// <response code="404">No event to update found for the given ID </response>
         /// <response code="204">On success</response>
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateEventAsync(int id, [FromBody] EventUpdateModel model)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult> UpdateEventAsync(int id, [FromBody] EventUpdateModel model)
+        //{
+        //    if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var update = _mapper.Map<Event>(model);
+        //    var update = _mapper.Map<Event>(model);
 
-            if (update == null) return BadRequest();
+        //    if (update == null) return BadRequest();
 
-            var dbEvent = await _dbContext.EventData
-                .Include(ev => ev.Creator)
-                .Include(e => e.Attendees)
-                .Include(ev => ev.Expenses)
-                .AsSplitQuery()
-                .FirstOrDefaultAsync(ev => ev.Id == id);
+        //    var dbEvent = await _dbContext.EventData
+        //        .Include(ev => ev.Creator)
+        //        .Include(e => e.Attendees)
+        //        .Include(ev => ev.Expenses)
+        //        .AsSplitQuery()
+        //        .FirstOrDefaultAsync(ev => ev.Id == id);
 
-            if (dbEvent == null) return NotFound();
+        //    if (dbEvent == null) return NotFound();
 
-            dbEvent.Title = update.Title;
-            dbEvent.StartDate = update.StartDate;
-            dbEvent.EndDate = update.EndDate;
-            dbEvent.Description = update.Description;
-            //dbEvent.Creator = update.Creator;
-            //dbEvent.Currency = update.Currency;
+        //    dbEvent.Title = update.Title;
+        //    dbEvent.StartDate = update.StartDate;
+        //    dbEvent.EndDate = update.EndDate;
+        //    dbEvent.Description = update.Description;
+        //    //dbEvent.Creator = update.Creator;
+        //    //dbEvent.Currency = update.Currency;
 
-            // reset the attendee list so all attendee updates can be saved
-            dbEvent.Attendees = new List<User>();
-            foreach (var a in model.Attendees)
-            {
-                var attendee = await _userManager.FindByIdAsync(a.Id);
-                dbEvent.Attendees.Add(attendee);
-            }
+        //    foreach (var a in model.Attendees)
+        //    {
+        //        var attendee = await _userManager.FindByIdAsync(a.Id);
+        //        dbEvent.Attendees.Add(attendee);
+        //    }
 
-            await _dbContext.SaveChangesAsync();
+        //    await _dbContext.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
         /// <summary>
         /// Delete an event using its ID
         /// </summary>
@@ -185,20 +149,20 @@ namespace Expenses.Api.Controllers
         /// <response code="400">No ID given</response>
         /// <response code="404">No event to delete found for the given ID</response>
         /// <response code="204">On success</response>
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteEventByIdAsync(int? id)
-        {
-            if (id == null) return BadRequest();
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult> DeleteEventByIdAsync(int? id)
+        //{
+        //    if (id == null) return BadRequest();
 
-            var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == id);
+        //    var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == id);
 
-            if (dbEvent == null) return NotFound();
+        //    if (dbEvent == null) return NotFound();
 
-            _dbContext.Remove(dbEvent);
-            await _dbContext.SaveChangesAsync();
+        //    _dbContext.Remove(dbEvent);
+        //    await _dbContext.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
     }
 }
