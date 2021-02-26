@@ -15,7 +15,7 @@ namespace Expenses.Application.Common.Interfaces
 
         //Task<Result> DeleteUserAsync(string userId);
 
-        Task<Result> ConfirmEmail(string email, string token);
+        Task<Result> ConfirmEmailAsync(string email, string token);
 
         Task<(Result Result, TokenModel TokenModel)> HandleRefreshTokenAsync(string refreshToken);
 
