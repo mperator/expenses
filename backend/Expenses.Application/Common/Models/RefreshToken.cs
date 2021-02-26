@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Expenses.Infrastructure.Identity
+namespace Expenses.Application.Common.Models
 {
+    // TODO is this the right place?
     [Owned]
     public class RefreshToken
     {
