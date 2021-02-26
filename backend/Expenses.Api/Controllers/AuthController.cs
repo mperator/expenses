@@ -1,25 +1,13 @@
-﻿using Expenses.Api.Data;
-using Expenses.Api.Entities;
+﻿using Expenses.Api.Entities;
 using Expenses.Api.Models;
 using Expenses.Api.Options;
-using Expenses.Api.Services;
 using Expenses.Application.Common.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+using Expenses.Application.Common.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Expenses.Api.Controllers
 {
@@ -100,56 +88,17 @@ namespace Expenses.Api.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Returns access and refresh token.</returns>
-        //[HttpPost("login")]
-        //public async Task<ActionResult<TokenModel>> LoginAsync([FromBody] LoginModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPost("login")]
+        public async Task<ActionResult<Expenses.Application.Common.Models.TokenModel>> LoginAsync([FromBody] LoginModel model)
+        {
+            var (result, token, refreshToken) = await _identityService.LoginAsync(model.Username, model.Email, model.Password);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
 
-        //    User user = null;
-        //    if (user == null && !string.IsNullOrEmpty(model.Username))
-        //        user = await _userManager.FindByNameAsync(model.Username);
-        //    else if (user == null && !string.IsNullOrEmpty(model.Email))
-        //        user = await _userManager.FindByEmailAsync(model.Email);
-        //    else
-        //    {
-        //        return BadRequest("Could not login.");
-        //    }
+            SetRefreshTokenInCookie(refreshToken);
 
-        //    // Check if eemail confirmation is enabled.
-        //    if (await _featureManager.IsEnabledAsync("EmailConfirmation"))
-        //    {
-        //        // check if user email is confirmend
-        //        if (!await _userManager.IsEmailConfirmedAsync(user))
-        //        {
-        //            return BadRequest("Please confirm email");
-        //        }
-        //    }
-
-        //    if (!await _userManager.CheckPasswordAsync(user, model.Password))
-        //    {
-        //        return BadRequest("Could not login.");
-        //    }
-
-        //    var refreshToken = CreateRefreshToken();
-        //    user.RefreshTokens.Add(refreshToken);
-        //    var result = await _userManager.UpdateAsync(user);
-        //    if (!result.Succeeded)
-        //    {
-        //        return BadRequest(result.Errors.First());
-        //    };
-
-        //    SetRefreshTokenInCookie(refreshToken);
-
-        //    // Create token
-        //    var token = GenerateToken(user);
-        //    token.RefreshToken = refreshToken.Token;
-        //    token.RefreshTokenExpires = refreshToken.Expires;
-
-        //    return token;
-        //}
+            return token;
+        }
 
         /// <summary>
         /// Log out user. Revokes all refresh tokens.
@@ -232,72 +181,22 @@ namespace Expenses.Api.Controllers
         //return Ok(newAccessToken);
         //}
 
-        /// <summary>
-        /// Generate an access token for user.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        //private TokenModel GenerateToken(User user)
-        //{
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        //    };
+       
 
-        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
-        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        //    var expires = DateTime.UtcNow.AddSeconds(_options.AccessTokenExpiryTimeInSeconds);
 
-        //    var token = new JwtSecurityToken(
-        //        issuer: _options.Issuer,
-        //        audience: _options.Audience,
-        //        claims,
-        //        expires: expires,
-        //        signingCredentials: creds
-        //    );
-
-        //    var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-        //    return new TokenModel
-        //    {
-        //        TokenType = "Bearer",
-        //        AccessToken = accessToken,
-        //        Expires = expires
-        //    };
-        //}
-
-        /// <summary>
-        /// Generate a refresh token for user.
-        /// </summary>
-        /// <returns></returns>
-        //private RefreshToken CreateRefreshToken()
-        //{
-        //    var randomNumber = new byte[32];
-        //    using (var generator = new RNGCryptoServiceProvider())
-        //    {
-        //        generator.GetBytes(randomNumber);
-        //        return new RefreshToken
-        //        {
-        //            Token = Convert.ToBase64String(randomNumber),
-        //            Expires = DateTime.UtcNow.AddSeconds(_options.RefreshTokenExpiryTimeInSeconds),
-        //            Created = DateTime.UtcNow
-        //        };
-        //    }
-        //}
 
         /// <summary>
         /// Set RefreshToken in Cookie.
         /// </summary>
         /// <param name="refreshToken"></param>
-        //private void SetRefreshTokenInCookie(RefreshToken refreshToken)
-        //{
-        //    var cookieOptions = new CookieOptions
-        //    {
-        //        HttpOnly = true,
-        //        Expires = refreshToken.Expires,
-        //    };
-        //    Response.Cookies.Append("X-RefreshToken", refreshToken.Token, cookieOptions);
-        //}
+        private void SetRefreshTokenInCookie(Expenses.Application.Common.Models.RefreshToken refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = refreshToken.Expires,
+            };
+            Response.Cookies.Append("X-RefreshToken", refreshToken.Token, cookieOptions);
+        }
     }
 }
