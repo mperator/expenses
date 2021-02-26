@@ -80,7 +80,6 @@ namespace Expenses.Api.Controllers
 
             if (result.Succeeded) return NoContent();
             else return BadRequest(result.Errors);
-
         }
 
         // TODO: Better create post.
@@ -89,17 +88,11 @@ namespace Expenses.Api.Controllers
         [HttpGet("confirmEmail", Name = nameof(ConfirmEmail))]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-                return BadRequest("Invalid link.");
-
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors.First());
-            }
-
-            return NoContent();
+            var result = await _identityService.ConfirmEmailAsync(email, token);
+            if (result.Succeeded)
+                return NoContent();
+            else
+                return BadRequest(result.Errors);
         }
 
         /// <summary>
@@ -207,36 +200,36 @@ namespace Expenses.Api.Controllers
         /// <returns></returns>
         //private async Task<IActionResult> HandleRefreshTokenAsync(string refreshToken)
         //{
-            //var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
-            //if (user == null)
-            //{
-            //    return Unauthorized("Token did not match any users.");
-            //}
+        //var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+        //if (user == null)
+        //{
+        //    return Unauthorized("Token did not match any users.");
+        //}
 
-            //// check if token is active
-            //var token = user.RefreshTokens.Single(x => x.Token == refreshToken);
-            //if (!token.IsActive)
-            //{
-            //    return Unauthorized("Token expired.");
-            //}
+        //// check if token is active
+        //var token = user.RefreshTokens.Single(x => x.Token == refreshToken);
+        //if (!token.IsActive)
+        //{
+        //    return Unauthorized("Token expired.");
+        //}
 
-            //token.Revoked = DateTime.UtcNow;
+        //token.Revoked = DateTime.UtcNow;
 
-            //// generate new refresh and access token
+        //// generate new refresh and access token
 
-            //var newRefreshToken = CreateRefreshToken();
-            //user.RefreshTokens.Add(newRefreshToken);
-            //_context.Update(user);
+        //var newRefreshToken = CreateRefreshToken();
+        //user.RefreshTokens.Add(newRefreshToken);
+        //_context.Update(user);
 
-            //SetRefreshTokenInCookie(newRefreshToken);
+        //SetRefreshTokenInCookie(newRefreshToken);
 
-            //// Create token
-            //var newAccessToken = GenerateToken(user);
-            //newAccessToken.RefreshToken = newRefreshToken.Token;
-            //newAccessToken.RefreshTokenExpires = newRefreshToken.Expires;
-            //await _context.SaveChangesAsync();
+        //// Create token
+        //var newAccessToken = GenerateToken(user);
+        //newAccessToken.RefreshToken = newRefreshToken.Token;
+        //newAccessToken.RefreshTokenExpires = newRefreshToken.Expires;
+        //await _context.SaveChangesAsync();
 
-            //return Ok(newAccessToken);
+        //return Ok(newAccessToken);
         //}
 
         /// <summary>
