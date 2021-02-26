@@ -17,13 +17,16 @@ namespace Expenses.Application.Common.Interfaces
 
         Task<Result> ConfirmEmail(string email, string token);
 
- 
         Task<(Result Result, TokenModel TokenModel)> HandleRefreshTokenAsync(string refreshToken);
 
         Task<(Result Result, TokenModel TokenModel)> LoginAsync(string username, string email, string password);
 
         Task<bool> LogoutAsync();
 
-        Task<Result> RegisterAsync(string firstName, string lastName, string username, string email, string password);
+        Task<Result> RegisterAsync(string firstName, string lastName, string username, string email,
+            string password, string confirmationLink);
+        Task<bool> IsInRoleAsync(string userId, string role);
+        Task<string> GetUserNameAsync(string userId);
+        Task<bool> AuthorizeAsync(string userId, string policyName);
     }
 }
