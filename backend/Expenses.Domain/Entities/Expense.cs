@@ -1,5 +1,6 @@
 ﻿using Expenses.Domain.Common;
 using System;
+using System.Collections.Generic;
 
 namespace Expenses.Domain.Entities
 {
@@ -16,6 +17,8 @@ namespace Expenses.Domain.Entities
         public User Issuer { get; set; }
         public int EventId { get; set; }
         public Event Event { get; set; }
+        //FIXME: wie soll das besser abgebildet werden, ausserhalb von domain?
+        public ICollection<ExpenseUser> ExpensesUsers { get; set; }
 
         #endregion
     }
