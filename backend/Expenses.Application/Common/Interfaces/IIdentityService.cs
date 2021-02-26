@@ -19,7 +19,8 @@ namespace Expenses.Application.Common.Interfaces
 
         Task<(Result Result, TokenModel TokenModel)> HandleRefreshTokenAsync(string refreshToken);
 
-        Task<(Result Result, TokenModel TokenModel)> LoginAsync(string username, string email, string password);
+
+        Task<(Result Result, TokenModel TokenModel, RefreshToken refreshToken)> LoginAsync(string username, string email, string password);
 
         Task<bool> LogoutAsync();
 
