@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Expenses.Application.Common.Mappings;
+using Expenses.Domain.Entities;
+using System;
 using System.Collections.Generic;
 
-namespace Expenses.Api.Data.Dtos
+namespace Expenses.Application.Events.Queries.GetEvents
 {
-    public class EventReadModel
+    public class EventReadModel : IMapFrom<Event>
     {
         #region Properties
 
