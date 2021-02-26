@@ -2,12 +2,10 @@
 using Expenses.Application.Common.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.FeatureManagement;
-using NETCore.MailKit.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IEmailService = Expenses.Application.Common.Interfaces.IEmailService;
 
 namespace Expenses.Infrastructure.Identity
 {
@@ -25,9 +23,17 @@ namespace Expenses.Infrastructure.Identity
             _emailService = emailService;
         }
 
-        public Task<Result> ConfirmEmail(string email, string token)
+        public async Task<Result> ConfirmEmailAsync(string email, string token)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Result.Failure(new List<string> { "Invalid link." });
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+                return Result.Failure(result.Errors.Select(e => e.Description));
+
+            return Result.Success();
         }
 
         public Task<(Result Result, TokenModel TokenModel)> HandleRefreshTokenAsync(string refreshToken)
