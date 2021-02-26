@@ -5,11 +5,14 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Api", "Expenses.Api\Expenses.Api.csproj", "{001D5FC1-4418-4C7C-BC9D-EC272A8DB810}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Domain", "Expenses.Domain\Expenses.Domain.csproj", "{DBBB45B5-57DE-4966-A37F-5D891D7441CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Domain", "Expenses.Domain\Expenses.Domain.csproj", "{DBBB45B5-57DE-4966-A37F-5D891D7441CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Application", "Expenses.Application\Expenses.Application.csproj", "{0DD08ECA-314D-408B-8B4C-3EB0C2AF87A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application", "Expenses.Application\Expenses.Application.csproj", "{0DD08ECA-314D-408B-8B4C-3EB0C2AF87A7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{001D5FC1-4418-4C7C-BC9D-EC272A8DB810} = {001D5FC1-4418-4C7C-BC9D-EC272A8DB810}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Infrastructure", "Expenses.Infrastructure\Expenses.Infrastructure.csproj", "{6C61E7A3-9B54-4FA9-B98C-8433D356F892}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure", "Expenses.Infrastructure\Expenses.Infrastructure.csproj", "{6C61E7A3-9B54-4FA9-B98C-8433D356F892}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

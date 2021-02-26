@@ -9,12 +9,12 @@ namespace Expenses.Api.Profiles
     {
         public EventProfile()
         {
-            CreateMap<Event, EventReadModel>();
+            //CreateMap<Event, EventReadModel>();
 
-            CreateMap<EventWriteModel, Event>();
-            CreateMap<EventUpdateModel, Event>();
-            CreateMap<Event, EventUpdateModel>().ReverseMap();
-            CreateMap<DateTimeOffset, string>().ConvertUsing(dt => dt.ToString("u"));
+            //CreateMap<EventWriteModel, Event>();
+            //CreateMap<EventUpdateModel, Event>();
+            //CreateMap<Event, EventUpdateModel>().ReverseMap();
+            //CreateMap<DateTimeOffset, string>().ConvertUsing(dt => dt.ToString("u"));
         }
     }
 }

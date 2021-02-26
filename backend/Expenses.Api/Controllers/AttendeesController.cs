@@ -10,37 +10,37 @@ using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
 {
-    public class AttendeesFilter
-    {
-        public string Name { get; set; }
-    }
+    //public class AttendeesFilter
+    //{
+    //    public string Name { get; set; }
+    //}
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AttendeesController : ControllerBase
-    {
-        private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
+    //[Route("api/[controller]")]
+    //[ApiController]
+    //public class AttendeesController : ControllerBase
+    //{
+    //    private readonly UserManager<User> _userManager;
+    //    private readonly IMapper _mapper;
 
-        public AttendeesController(UserManager<User> userManager, IMapper mapper)
-        {
-            _userManager = userManager;
-            _mapper = mapper;
-        }
+    //    public AttendeesController(UserManager<User> userManager, IMapper mapper)
+    //    {
+    //        _userManager = userManager;
+    //        _mapper = mapper;
+    //    }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AttendeeReadModel>>> GetAttendeesAsync([FromQuery] AttendeesFilter filter)
-        {
-            var query = _userManager.Users;
-            if (filter?.Name != null)
-                query = query.Where(u =>
-                u.FirstName.Contains(filter.Name) ||
-                u.LastName.Contains(filter.Name) ||
-                u.UserName.Contains(filter.Name));
+    //    [HttpGet]
+    //    public async Task<ActionResult<IEnumerable<AttendeeReadModel>>> GetAttendeesAsync([FromQuery] AttendeesFilter filter)
+    //    {
+    //        var query = _userManager.Users;
+    //        if (filter?.Name != null)
+    //            query = query.Where(u =>
+    //            u.FirstName.Contains(filter.Name) ||
+    //            u.LastName.Contains(filter.Name) ||
+    //            u.UserName.Contains(filter.Name));
 
-            var users = await query.ToListAsync();
+    //        var users = await query.ToListAsync();
             
-            return Ok(_mapper.Map<IEnumerable<AttendeeReadModel>>(users));
-        }
-    }
+    //        return Ok(_mapper.Map<IEnumerable<AttendeeReadModel>>(users));
+    //    }
+    //}
 }
