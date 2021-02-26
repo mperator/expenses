@@ -1,13 +1,12 @@
-﻿using Expenses.Domain.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Expenses.Domain.Entities
 {
-    public class User : AuditableEntity
+    public class User
     {
-        #region Properties
-
+        public string Id { get; set; }
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -16,6 +15,10 @@ namespace Expenses.Domain.Entities
 
         public IList<Event> Events { get; set; }
 
-        #endregion
+        public ICollection<ExpenseUser> ExpensesUsers { get; set; }
+
+        public string Username { get; set; }
+
+        public string Email { get; set; }
     }
 }
