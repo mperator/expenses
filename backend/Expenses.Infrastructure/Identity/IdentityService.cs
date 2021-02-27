@@ -246,28 +246,11 @@ namespace Expenses.Infrastructure.Identity
             return (Result.Success(), newAccessToken, newRefreshToken);
         }
 
-
-
-
-
-
-
-
-
-
         public async Task<bool> IsInRoleAsync(string userId, string role)
         {
             //var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 
             //return await _userManager.IsInRoleAsync(user, role);
-            throw new NotImplementedException();
-        }
-
-        public async Task<string> GetUserNameAsync(string userId)
-        {
-            //var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
-
-            //return user.UserName;
             throw new NotImplementedException();
         }
 
