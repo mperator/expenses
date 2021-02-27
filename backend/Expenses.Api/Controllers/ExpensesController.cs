@@ -2,6 +2,7 @@
 using Expenses.Api.Data;
 using Expenses.Api.Data.Dtos;
 using Expenses.Api.Entities;
+using Expenses.Application.Features.Expenses.Queries.GetExpenseById;
 using Expenses.Application.Features.Expenses.Queries.GetExpenses;
 using Expenses.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
@@ -51,7 +52,7 @@ namespace Expenses.Api.Controllers
         }
 
         /// <summary>
-        /// Get a single expense using its ID
+        /// Get a single expense using its id.
         /// </summary>
         /// <param name="eventId">ID of the event to which the expense belongs</param>
         /// <param name="expenseId">ID of the expense</param>
@@ -61,12 +62,9 @@ namespace Expenses.Api.Controllers
         [HttpGet("{expenseId}", Name = nameof(GetExpenseById))]
         public async Task<ActionResult<ExpenseReadModel>> GetExpenseById(int eventId, int expenseId)
         {
-            var dbExpense = await _dbContext.ExpenseData
-                .FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
-            if (dbExpense == null) return NotFound();
-
-            return Ok(_mapper.Map<ExpenseReadModel>(dbExpense));
+            return Ok(await Mediator.Send(new GetExpenseByIdQuery { EventId = eventId, ExpenseId = expenseId }));
         }
+
         /// <summary>
         /// Create an expense
         /// </summary>
