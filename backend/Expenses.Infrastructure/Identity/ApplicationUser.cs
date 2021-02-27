@@ -23,5 +23,19 @@ namespace Expenses.Infrastructure.Identity
         public ICollection<ExpenseUser> ExpensesUsers { get; set; }
 
         #endregion
+
+        public static implicit operator User(ApplicationUser applicationUser)
+        {
+            return new User {
+                FirstName = applicationUser.FirstName,
+                LastName = applicationUser.LastName,
+                DateOfBirth = applicationUser.DateOfBirth,
+                Email = applicationUser.Email,
+                Events = applicationUser.Events,
+                ExpensesUsers = applicationUser.ExpensesUsers,
+                Id = applicationUser.Id,
+                Username = applicationUser.UserName
+            };
+        }
     }
 }

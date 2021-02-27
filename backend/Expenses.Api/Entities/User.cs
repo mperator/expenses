@@ -6,20 +6,20 @@ namespace Expenses.Api.Entities
 {
     public class User : IdentityUser
     {
-        #region Properties
+        //#region Properties
 
-        public string FirstName { get; set; }
+        //public string FirstName { get; set; }
 
-        public string LastName { get; set; }
+        //public string LastName { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+        //public DateTime? DateOfBirth { get; set; }
 
-        public ICollection<RefreshToken> RefreshTokens { get; set; }
+        //public ICollection<RefreshToken> RefreshTokens { get; set; }
 
-        public ICollection<Event> Events {get; set;}
+        //public ICollection<Event> Events {get; set;}
 
-        public ICollection<ExpenseUser> ExpensesUsers { get; set; }
+        //public ICollection<ExpenseUser> ExpensesUsers { get; set; }
 
-        #endregion
+        //#endregion
     }
 }
