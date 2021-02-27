@@ -4,12 +4,13 @@ using Expenses.Application.Events.Queries.GetEventById;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Expenses.Api.Controllers
 {
     //TODO: implement clear error messages and return them to the user
     //FIXME: just for dev purpose
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EventsController : ApiControllerBase
