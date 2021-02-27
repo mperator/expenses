@@ -1,5 +1,6 @@
 ﻿using Expenses.Application.Common.Interfaces;
 using Expenses.Infrastructure.Identity;
+using Expenses.Infrastructure.Options;
 using Expenses.Infrastructure.Persistence;
 using Expenses.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -74,6 +75,8 @@ namespace Expenses.Infrastructure
             //            ClockSkew = TimeSpan.Zero
             //        };
             //    });
+
+            services.Configure<JwtTokenOptions>(configuration.GetSection("JwtToken"));
 
             //services.AddAuthorization(options =>
             //{
