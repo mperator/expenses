@@ -100,7 +100,7 @@ namespace Expenses.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("refreshToken")]
-        public async Task<IActionResult> RefreshTokenAsync([FromBody] RefreshTokenModel model)
+        public async Task<ActionResult<TokenModel>> RefreshTokenAsync([FromBody] RefreshTokenModel model)
         {
             var result = await _identityService.HandleRefreshTokenAsync(model.Token);
 
@@ -108,7 +108,7 @@ namespace Expenses.Api.Controllers
             else
             {
                 SetRefreshTokenInCookie(result.RefreshToken);
-                return Ok(result.TokenModel.AccessToken);
+                return Ok(result.TokenModel);
             }
         }
 
@@ -117,7 +117,7 @@ namespace Expenses.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("refreshTokenSilent")]
-        public async Task<IActionResult> RefreshTokenByCookieAsync()
+        public async Task<ActionResult<TokenModel>> RefreshTokenByCookieAsync()
         {
             var result = await _identityService.HandleRefreshTokenAsync(Request.Cookies["X-RefreshToken"]);
 
@@ -125,7 +125,7 @@ namespace Expenses.Api.Controllers
             else
             {
                 SetRefreshTokenInCookie(result.RefreshToken);
-                return Ok(result.TokenModel.AccessToken);
+                return Ok(result.TokenModel);
             }
         }
 
