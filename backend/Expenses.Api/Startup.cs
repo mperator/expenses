@@ -1,4 +1,3 @@
-using Expenses.Api.Services;
 using Expenses.Application;
 using Expenses.Application.Common.Interfaces;
 using Expenses.Infrastructure;
@@ -26,15 +25,15 @@ namespace Expenses.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+            services.AddInfrastructure(Configuration);
+
             services.AddApplication();
             
-            services.AddInfrastructure(Configuration);
             //TODO: do we need this seriously?
             //services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
-            services.AddHttpContextAccessor();
             //TODO: do we need this seriously?
             //services.AddHealthChecks()
             //    .AddDbContextCheck<AppDbContext>();
