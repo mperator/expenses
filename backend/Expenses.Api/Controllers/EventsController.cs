@@ -6,25 +6,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Expenses.Application.Events.Commands.UpdateEvent;
 using Microsoft.AspNetCore.Authorization;
+using Expenses.Application.Events.Commands.DeleteEvent;
 
 namespace Expenses.Api.Controllers
 {
     //TODO: implement clear error messages and return them to the user
-    //FIXME: just for dev purpose
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EventsController : ApiControllerBase
     {
-        //private readonly AppDbContext _dbContext;
-        //private readonly IMapper _mapper;
-        //private readonly UserManager<User> _userManager;
-        //public EventsController(AppDbContext dbContext, IMapper mapper, UserManager<User> userManager)
-        //{
-        //    _dbContext = dbContext;
-        //    _mapper = mapper;
-        //    _userManager = userManager;
-        //}
         /// <summary>
         /// Gets a list of events
         /// </summary>
@@ -93,20 +84,11 @@ namespace Expenses.Api.Controllers
         /// <response code="400">No ID given</response>
         /// <response code="404">No event to delete found for the given ID</response>
         /// <response code="204">On success</response>
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult> DeleteEventByIdAsync(int? id)
-        //{
-        //    if (id == null) return BadRequest();
-
-        //    var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == id);
-
-        //    if (dbEvent == null) return NotFound();
-
-        //    _dbContext.Remove(dbEvent);
-        //    await _dbContext.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteEventByIdAsync(int id)
+        {
+            await Mediator.Send(new DeleteEventCommand { Id = id });
+            return NoContent();
+        }
     }
 }
