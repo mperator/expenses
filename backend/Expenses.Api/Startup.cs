@@ -1,4 +1,3 @@
-using Expenses.Api.Options;
 using Expenses.Api.Services;
 using Expenses.Application;
 using Expenses.Application.Common.Interfaces;
@@ -39,9 +38,6 @@ namespace Expenses.Api
             //TODO: do we need this seriously?
             //services.AddHealthChecks()
             //    .AddDbContextCheck<AppDbContext>();
-            //TODO: do we need this here? actually we only need it in infrastructre?
-            services.Configure<JwtTokenOptions>(Configuration.GetSection("JwtToken"));
-            //services.Configure<SmtpServerOptions>(Configuration.GetSection("SmtpServer"));
 
             //services.AddIdentity<User, IdentityRole>()
             //    .AddEntityFrameworkStores<AppDbContext>()
