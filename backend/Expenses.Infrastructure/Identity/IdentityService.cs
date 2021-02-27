@@ -1,6 +1,7 @@
 ﻿using Expenses.Application.Common.Interfaces;
 using Expenses.Application.Common.Models;
 using Expenses.Infrastructure.Options;
+using Expenses.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
@@ -21,17 +22,20 @@ namespace Expenses.Infrastructure.Identity
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IFeatureManager _featureManager;
         private readonly IEmailService _emailService;
+        private readonly AppDbContext _context;
         private readonly JwtTokenOptions _options;
 
         public IdentityService(
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
             IFeatureManager featureManager,
             IEmailService emailService,
-            IOptions<JwtTokenOptions> options)
+            IOptions<JwtTokenOptions> options,
+            AppDbContext context)
         {
             _userManager = userManager;
             _featureManager = featureManager;
             _emailService = emailService;
+            _context = context;
             _options = options.Value;
         }
 
@@ -48,14 +52,10 @@ namespace Expenses.Infrastructure.Identity
             return Result.Success();
         }
 
-        public Task<(Result Result, TokenModel TokenModel)> HandleRefreshTokenAsync(string refreshToken)
-        {
-            throw new NotImplementedException();
-        }
-       
         public async Task<(Result Result, TokenModel TokenModel, RefreshToken refreshToken)> LoginAsync(string username, string email, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            // only username and password is mandatory
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return (Result.Failure(new List<string> { "Invalid model." }), null, null);
 
             ApplicationUser user = null;
@@ -105,9 +105,9 @@ namespace Expenses.Infrastructure.Identity
             return true;
         }
 
-        
 
-        public async Task<Result> RegisterAsync(string firstName, string lastName, string username, 
+
+        public async Task<Result> RegisterAsync(string firstName, string lastName, string username,
             string email, string password, string registerLink)
         {
             if (firstName == null || lastName == null || username == null || email == null || password == null)
@@ -117,7 +117,7 @@ namespace Expenses.Infrastructure.Identity
 
             if (await _userManager.FindByNameAsync(username) != null)
                 return Result.Failure(new List<string> { "Username is invalid or already taken." });
-            if (await _userManager.FindByEmailAsync(email) != null) 
+            if (await _userManager.FindByEmailAsync(email) != null)
                 return Result.Failure(new List<string> { "Email is invalid or already taken." });
 
             // add user to context send user an email he needs to verify
@@ -205,6 +205,47 @@ namespace Expenses.Infrastructure.Identity
             };
         }
 
+        /// <summary>
+        /// Check if request is allowd to generate new refresh and access tokens.
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns></returns>
+        public async Task<(Result Result, TokenModel TokenModel, RefreshToken RefreshToken)> HandleRefreshTokenAsync(string refreshToken)
+        {
+            var user = _userManager.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+            if (user == null)
+            {
+                // return error and null
+                return (Result.Failure(new List<string> { "Token did not match any users." }), null, null);
+            }
+
+            // check if token is active
+            var token = user.RefreshTokens.Single(x => x.Token == refreshToken);
+            if (!token.IsActive)
+            {
+                return (Result.Failure(new List<string> { "Token expired." }), null, null);
+            }
+
+            token.Revoked = DateTime.UtcNow;
+
+            // generate new refresh and access token
+
+            var newRefreshToken = CreateRefreshToken();
+            user.RefreshTokens.Add(newRefreshToken);
+            _context.Update(user);
+
+            //SetRefreshTokenInCookie(newRefreshToken);
+
+            // Create token
+            var newAccessToken = GenerateToken(user);
+            //FIXME: was ist mit all den anderen props?
+            newAccessToken.RefreshToken = newRefreshToken.Token;
+            newAccessToken.RefreshTokenExpires = newRefreshToken.Expires;
+            await _context.SaveChangesAsync();
+
+            return (Result.Success(), newAccessToken, newRefreshToken);
+        }
+
 
 
 
@@ -242,6 +283,6 @@ namespace Expenses.Infrastructure.Identity
             throw new NotImplementedException();
         }
 
-        
+
     }
 }
