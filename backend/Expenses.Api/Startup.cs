@@ -1,5 +1,4 @@
 using Expenses.Application;
-using Expenses.Application.Common.Interfaces;
 using Expenses.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,40 +26,14 @@ namespace Expenses.Api
         {
             services.AddHttpContextAccessor();
             services.AddInfrastructure(Configuration);
-
             services.AddApplication();
             
             //TODO: do we need this seriously?
             //services.AddDatabaseDeveloperPageExceptionFilter();
 
-
             //TODO: do we need this seriously?
             //services.AddHealthChecks()
             //    .AddDbContextCheck<AppDbContext>();
-
-            //services.AddIdentity<User, IdentityRole>()
-            //    .AddEntityFrameworkStores<AppDbContext>()
-            //    .AddDefaultTokenProviders();
-
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            ValidateIssuer = true,
-            //            ValidateAudience = true,
-            //            ValidateIssuerSigningKey = true,
-            //            ValidIssuer = Configuration["JwtToken:Issuer"],
-            //            ValidAudience = Configuration["JwtToken:Audience"],
-            //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtToken:SecretKey"])),
-            //            ValidateLifetime = true,
-            //            ClockSkew = TimeSpan.Zero
-            //        };
-            //    });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
