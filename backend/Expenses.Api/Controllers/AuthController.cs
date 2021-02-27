@@ -1,13 +1,8 @@
-﻿using Expenses.Api.Entities;
-using Expenses.Api.Models;
-using Expenses.Api.Options;
+﻿using Expenses.Api.Models;
 using Expenses.Application.Common.Interfaces;
-using Expenses.Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.FeatureManagement;
 using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
@@ -19,20 +14,7 @@ namespace Expenses.Api.Controllers
     {
         // https://www.codewithmukesh.com/blog/refresh-tokens-in-aspnet-core/
 
-        private readonly UserManager<User> _userManager;
-        private readonly IFeatureManager _featureManager;
-        private readonly JwtTokenOptions _options;
         private readonly IIdentityService _identityService;
-
-        //public AuthController(
-        //    UserManager<User> userManager,
-        //    IFeatureManager featureManager,
-        //    IOptions<JwtTokenOptions> options)
-        //{
-        //    _userManager = userManager;
-        //    _featureManager = featureManager;
-        //    _options = options.Value;
-        //}
 
         public AuthController(IIdentityService identityService)
         {
@@ -143,11 +125,6 @@ namespace Expenses.Api.Controllers
                 SetRefreshTokenInCookie(result.RefreshToken);
             return Ok(result.TokenModel.AccessToken);
         }
-
-
-
-
-
 
         /// <summary>
         /// Set RefreshToken in Cookie.
