@@ -3,17 +3,17 @@ using Expenses.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
 {
-    [Produces("application/json")]
     [ApiController]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         // https://www.codewithmukesh.com/blog/refresh-tokens-in-aspnet-core/
-
         private readonly IIdentityService _identityService;
 
         public AuthController(IIdentityService identityService)
@@ -25,14 +25,12 @@ namespace Expenses.Api.Controllers
         /// Endpoint to test authorization. For demo purpose only.
         /// </summary>
         /// <returns></returns>
-        //[Authorize]
-        //[HttpGet("test")]
-        //public async Task<string> TestAsync()
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-
-        //    return $"Secret for {user.FirstName} {user.LastName} {Guid.NewGuid()}";
-        //}
+        [Authorize]
+        [HttpGet("test")]
+        public async Task<string> TestAsync()
+        {
+            return $"Secret {Guid.NewGuid()}";
+        }
 
         /// <summary>
         /// Register a new user.
@@ -91,7 +89,6 @@ namespace Expenses.Api.Controllers
         public async Task<IActionResult> LogoutAsync()
         {
             var result = await _identityService.LogoutAsync(User);
-
             if (result) Response.Cookies.Delete("X-RefreshToken");
 
             return NoContent();
