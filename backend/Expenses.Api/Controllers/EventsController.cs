@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Expenses.Application.Events.Commands.CreateEvent;
 using Expenses.Application.Events.Queries;
 using Expenses.Application.Events.Queries.GetEvents;
 using Microsoft.AspNetCore.Mvc;
@@ -52,53 +53,22 @@ namespace Expenses.Api.Controllers
         //        .AsSplitQuery()
         //        .SingleOrDefaultAsync(ev => ev.Id == id);
         //    if (foundEvent == null) return NotFound();
-            
+
         //    return Ok(_mapper.Map<EventReadModel>(foundEvent));
         //}
+
         /// <summary>
         /// Creates a new event
         /// </summary>
-        /// <param name="eventModel">Event which shall be created</param>
+        /// <param name="eventCommand">Event which shall be created</param>
         /// <returns>Created event object</returns>
         /// <response code="400">Mapping failed or model isn't valid</response>
         /// <response code="201">Returns created event object</response>
-        //[HttpPost]
-        //public async Task<ActionResult<EventReadModel>> CreateEventAsync([FromBody] EventWriteModel eventModel)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
-        //    var newEvent = _mapper.Map<Event>(eventModel);
-        //    if (newEvent == null) return BadRequest();
-
-        //    var user = await _userManager.GetUserAsync(User);
-
-        //    Event savedEvent = new Event
-        //    {
-        //        Title = newEvent.Title,
-        //        Description = newEvent.Description,
-        //        Creator = user,
-        //        Currency = "Euro",
-        //        StartDate = newEvent.StartDate,
-        //        EndDate = newEvent.EndDate
-        //    };
-        //    savedEvent.Attendees = new List<User>();
-        //    savedEvent.Attendees.Add(user);
-        //    foreach(var a in eventModel.Attendees)
-        //    {
-        //        var attendee = await _userManager.FindByIdAsync(a.Id);
-        //        savedEvent.Attendees.Add(attendee);
-        //    }
-
-        //    _dbContext.EventData.Add(savedEvent);
-        //    try
-        //    {
-        //        await _dbContext.SaveChangesAsync();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        new InvalidOperationException(e.Message);
-        //    }
-        //    return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
-        //}
+        [HttpPost]
+        public async Task<ActionResult<int>> CreateEventAsync([FromBody] CreateEventCommand eventCommand)
+        {
+            return await Mediator.Send(eventCommand);
+        }
         /// <summary>
         /// Update an event by replacing it
         /// </summary>

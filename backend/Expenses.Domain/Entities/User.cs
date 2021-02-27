@@ -20,5 +20,6 @@ namespace Expenses.Domain.Entities
         public string Username { get; set; }
 
         public string Email { get; set; }
+
     }
 }

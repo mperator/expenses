@@ -29,7 +29,6 @@ namespace Expenses.Application.Common.Interfaces
         Task<Result> RegisterAsync(string firstName, string lastName, string username, string email,
             string password, string confirmationLink);
         Task<bool> IsInRoleAsync(string userId, string role);
-        Task<string> GetUserNameAsync(string userId);
         Task<bool> AuthorizeAsync(string userId, string policyName);
     }
 }
