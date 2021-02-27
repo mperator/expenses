@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Expenses.Application.Common.Interfaces
@@ -8,5 +9,6 @@ namespace Expenses.Application.Common.Interfaces
         Task<User> FindByIdAsync(string id);
 
         Task<User> GetCurrentUserAsync();
+        Task<IEnumerable<User>> GetUsersAsync(string name);
     }
 }
