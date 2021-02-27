@@ -110,70 +110,40 @@ namespace Expenses.Api.Controllers
         {
             var result = await _identityService.LogoutAsync(User);
 
-            if(result) Response.Cookies.Delete("X-RefreshToken");
+            if (result) Response.Cookies.Delete("X-RefreshToken");
 
             return NoContent();
         }
-
+        //TODO: do we need to get rid of the models?
         /// <summary>
         /// Refresh token by token value in body.
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        //[HttpPost("refreshToken")]
-        //public async Task<IActionResult> RefreshTokenAsync([FromBody] RefreshTokenModel model)
-        //{
-        //    return await HandleRefreshTokenAsync(model.Token);
-        //}
+        [HttpPost("refreshToken")]
+        public async Task<IActionResult> RefreshTokenAsync([FromBody] RefreshTokenModel model)
+        {
+            var result = await _identityService.HandleRefreshTokenAsync(model.Token);
+
+            if (!result.Result.Succeeded) return Unauthorized(result.Result.Errors);
+            else return Ok(result.TokenModel.AccessToken);
+        }
 
         /// <summary>
         /// Refresh token silent by token in cookie.
         /// </summary>
         /// <returns></returns>
-        //[HttpPost("refreshTokenSilent")]
-        //public async Task<IActionResult> RefreshTokenByCookieAsync()
-        //{
-        //    return await HandleRefreshTokenAsync(Request.Cookies["X-RefreshToken"]);
-        //}
+        [HttpPost("refreshTokenSilent")]
+        public async Task<IActionResult> RefreshTokenByCookieAsync()
+        {
+            var result = await _identityService.HandleRefreshTokenAsync(Request.Cookies["X-RefreshToken"]);
 
-        /// <summary>
-        /// Check if request is allowd to generate new refresh and access tokens.
-        /// </summary>
-        /// <param name="refreshToken"></param>
-        /// <returns></returns>
-        //private async Task<IActionResult> HandleRefreshTokenAsync(string refreshToken)
-        //{
-        //var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
-        //if (user == null)
-        //{
-        //    return Unauthorized("Token did not match any users.");
-        //}
+            if (!result.Result.Succeeded) return Unauthorized(result.Result.Errors);
+            else
+                SetRefreshTokenInCookie(result.RefreshToken);
+            return Ok(result.TokenModel.AccessToken);
+        }
 
-        //// check if token is active
-        //var token = user.RefreshTokens.Single(x => x.Token == refreshToken);
-        //if (!token.IsActive)
-        //{
-        //    return Unauthorized("Token expired.");
-        //}
-
-        //token.Revoked = DateTime.UtcNow;
-
-        //// generate new refresh and access token
-
-        //var newRefreshToken = CreateRefreshToken();
-        //user.RefreshTokens.Add(newRefreshToken);
-        //_context.Update(user);
-
-        //SetRefreshTokenInCookie(newRefreshToken);
-
-        //// Create token
-        //var newAccessToken = GenerateToken(user);
-        //newAccessToken.RefreshToken = newRefreshToken.Token;
-        //newAccessToken.RefreshTokenExpires = newRefreshToken.Expires;
-        //await _context.SaveChangesAsync();
-
-        //return Ok(newAccessToken);
-        //}
 
 
 
