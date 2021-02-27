@@ -23,7 +23,6 @@
 	  <Folder Include="Features\Expenses\Commands\CreateExpense\" />
 	  <Folder Include="Features\Expenses\Commands\DeleteExpense\" />
 	  <Folder Include="Features\Expenses\Commands\UpdateExpense\" />
-	  <Folder Include="Features\Expenses\Queries\GetExpenseById\" />
 	</ItemGroup>
 
 </Project>
