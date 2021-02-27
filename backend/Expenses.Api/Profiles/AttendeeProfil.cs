@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Expenses.Api.Data.Dtos;
-using Expenses.Api.Entities;
 
 namespace Expenses.Api.Profiles
 {
@@ -8,9 +6,9 @@ namespace Expenses.Api.Profiles
     {
         public AttendeeProfil()
         {
-            CreateMap<User, AttendeeReadModel>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
-            CreateMap<AttendeeWriteModel, User>();
+            //CreateMap<User, AttendeeReadModel>()
+            //    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+            //CreateMap<AttendeeWriteModel, User>();
         }
     }
 }
