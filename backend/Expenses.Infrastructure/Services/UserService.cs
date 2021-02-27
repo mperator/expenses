@@ -3,6 +3,9 @@ using Expenses.Domain.Entities;
 using Expenses.Infrastructure.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Expenses.Infrastructure.Services
@@ -27,6 +30,18 @@ namespace Expenses.Infrastructure.Services
         public async Task<User> GetCurrentUserAsync()
         {
             return await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+        }
+
+        public async Task<IEnumerable<User>> GetUsersAsync(string name)
+        {
+            var query = _userManager.Users;
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(u =>
+                    u.FirstName.Contains(name) ||
+                    u.LastName.Contains(name) ||
+                    u.UserName.Contains(name));
+
+            return (await query.ToListAsync()).Select(s => (User)s);
         }
     }
 }
