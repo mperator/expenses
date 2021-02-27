@@ -3,6 +3,7 @@ using Expenses.Api.Models;
 using Expenses.Api.Options;
 using Expenses.Application.Common.Interfaces;
 using Expenses.Application.Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -103,23 +104,16 @@ namespace Expenses.Api.Controllers
         /// <summary>
         /// Log out user. Revokes all refresh tokens.
         /// </summary>
-        //[Authorize]
-        //[HttpPost("logout")]
-        //public async Task<IActionResult> LogoutAsync()
-        //{
-        //    // delete cookie invalidate all refresh tokens
-        //    var user = await _userManager.GetUserAsync(User);
-        //    var activeTokens = user.RefreshTokens.Where(x => x.IsActive);
-        //    foreach (var token in activeTokens)
-        //    {
-        //        token.Revoked = DateTime.UtcNow;
-        //    }
-        //    await _userManager.UpdateAsync(user);
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            var result = await _identityService.LogoutAsync(User);
 
-        //    Response.Cookies.Delete("X-RefreshToken");
+            if(result) Response.Cookies.Delete("X-RefreshToken");
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         /// <summary>
         /// Refresh token by token value in body.
@@ -181,7 +175,7 @@ namespace Expenses.Api.Controllers
         //return Ok(newAccessToken);
         //}
 
-       
+
 
 
 

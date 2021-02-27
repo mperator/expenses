@@ -1,4 +1,5 @@
 ﻿using Expenses.Application.Common.Models;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Expenses.Application.Common.Interfaces
@@ -22,7 +23,7 @@ namespace Expenses.Application.Common.Interfaces
 
         Task<(Result Result, TokenModel TokenModel, RefreshToken refreshToken)> LoginAsync(string username, string email, string password);
 
-        Task<bool> LogoutAsync();
+        Task<bool> LogoutAsync(ClaimsPrincipal requestingUser);
 
         Task<Result> RegisterAsync(string firstName, string lastName, string username, string email,
             string password, string confirmationLink);
