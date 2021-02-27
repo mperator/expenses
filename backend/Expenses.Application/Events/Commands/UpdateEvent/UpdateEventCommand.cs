@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,6 +43,8 @@ namespace Expenses.Application.Events.Commands.UpdateEvent
                 .Include(ev => ev.Expenses)
                 .AsSingleQuery()
                 .FirstOrDefaultAsync(ev => ev.Id == request.Id);
+
+            //TODO: throw not found exception for user
 
             dbEvent.Title = request.Title;
             dbEvent.StartDate = request.StartDate;
