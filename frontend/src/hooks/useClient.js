@@ -73,6 +73,16 @@ const useClient = () => {
         return await handleResponseAsync(response, putWithAuthenticationAsync, url, data);
     }
 
+    async function deleteWithAuthenticationAsync(url, token) {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `${token}`,
+            }
+        })
+        return await handleResponseAsync(response, deleteWithAuthenticationAsync, url);
+    }
+
     /* test hook */
     const getAuthTestAsync = async () => {
         return await getWithAuthenticationAsync('/auth/test', token);
@@ -81,6 +91,10 @@ const useClient = () => {
     /* events */
     const getEventsAsync = async () => {
         return await getWithAuthenticationAsync('/events', token);
+    }
+
+    const getFilteredEventsAsync = async (title) => {
+        return await getWithAuthenticationAsync(`/events?title=${title}`, token)
     }
 
     const getEventAsync = async (id) => {
@@ -104,6 +118,14 @@ const useClient = () => {
         return await postWithAuthenticationAsync(`/events/${eventid}/expenses`, token, data);
     }
 
+    const getExpenseAsync = async (eventId, expenseId) => {
+        return await getWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
+    }
+
+    const deleteExpenseAsync = async (eventId, expenseId) => {
+        return await deleteWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
+    }
+
     /* attendees */
     const getAttendeeAsync = async (name) => {
         return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
@@ -117,7 +139,10 @@ const useClient = () => {
         postEventAsync,
         putEventAsync,
         postExpenseAsync,
-        getAttendeeAsync
+        getExpenseAsync,
+        deleteExpenseAsync,
+        getAttendeeAsync,
+        getFilteredEventsAsync
     }
 }
 
