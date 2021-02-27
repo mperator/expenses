@@ -21,13 +21,15 @@ namespace Expenses.Application.Common.Behaviours
 
         public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
+            //FIXME: refactor
             var requestName = typeof(TRequest).Name;
             var userId = _currentUserService.UserId ?? string.Empty;
             string userName = string.Empty;
 
+            //TODO:
             if (!string.IsNullOrEmpty(userId))
             {
-                userName = await _identityService.GetUserNameAsync(userId);
+                //userName = await _identityService.GetUserNameAsync(userId);
             }
 
             _logger.LogInformation("CleanArchitecture Request: {Name} {@UserId} {@UserName} {@Request}",
