@@ -39,7 +39,7 @@ namespace Expenses.Api
             //TODO: do we need this seriously?
             //services.AddHealthChecks()
             //    .AddDbContextCheck<AppDbContext>();
-
+            //TODO: do we need this here? actually we only need it in infrastructre?
             services.Configure<JwtTokenOptions>(Configuration.GetSection("JwtToken"));
             //services.Configure<SmtpServerOptions>(Configuration.GetSection("SmtpServer"));
 
