@@ -108,7 +108,11 @@ namespace Expenses.Api.Controllers
             var result = await _identityService.HandleRefreshTokenAsync(model.Token);
 
             if (!result.Result.Succeeded) return Unauthorized(result.Result.Errors);
-            else return Ok(result.TokenModel.AccessToken);
+            else
+            {
+                SetRefreshTokenInCookie(result.RefreshToken);
+                return Ok(result.TokenModel.AccessToken);
+            }
         }
 
         /// <summary>
@@ -122,8 +126,10 @@ namespace Expenses.Api.Controllers
 
             if (!result.Result.Succeeded) return Unauthorized(result.Result.Errors);
             else
+            {
                 SetRefreshTokenInCookie(result.RefreshToken);
-            return Ok(result.TokenModel.AccessToken);
+                return Ok(result.TokenModel.AccessToken);
+            }
         }
 
         /// <summary>
