@@ -2,6 +2,8 @@
 using Expenses.Api.Data;
 using Expenses.Api.Data.Dtos;
 using Expenses.Api.Entities;
+using Expenses.Application.Features.Expenses.Queries.GetExpenses;
+using Expenses.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,177 +15,167 @@ using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
 {
-    //[Authorize]
-    //[ApiController]
-    //[Route("api/events/{eventId}/[controller]")]
-    //public class ExpensesController : Controller
-    //{
-    //    private readonly AppDbContext _dbContext;
-    //    private readonly IMapper _mapper;
-    //    private readonly UserManager<User> _userManager;
+    [Authorize]
+    [ApiController]
+    [Route("api/events/{eventId}/[controller]")]
+    public class ExpensesController : ApiControllerBase
+    {
+        private readonly AppDbContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
 
-    //    #region Constructor
+        #region Constructor
 
-    //    public ExpensesController(AppDbContext dbContext, IMapper mapper, UserManager<User> userManager)
-    //    {
-    //        _mapper = mapper;
-    //        _dbContext = dbContext;
-    //        _userManager = userManager;
-    //    }
+        public ExpensesController(AppDbContext dbContext, IMapper mapper, UserManager<User> userManager)
+        {
+            _mapper = mapper;
+            _dbContext = dbContext;
+            _userManager = userManager;
+        }
 
-    //    #endregion
+        #endregion
 
-    //    #region Methods
+        #region Methods
 
-    //    /// <summary>
-    //    /// Get a list of all expenses belonging to an event
-    //    /// </summary>
-    //    /// <param name="eventId">ID of the event to which the expense belongs</param>
-    //    /// <returns>A list of expenses</returns>
-    //    /// <response code="400">No expense found for the given expense and event id</response>
-    //    /// <response code="200">On success</response>
-    //    [HttpGet()]
-    //    public async Task<ActionResult> GetExpensesAsync(int eventId)
-    //    {
-    //        var dbEvent = await _dbContext.EventData.Include(ev => ev.Expenses)
-    //            .SingleOrDefaultAsync(ev => ev.Id == eventId);
+        /// <summary>
+        /// Get a list of all expenses belonging to an event.
+        /// </summary>
+        /// <param name="eventId">ID of the event to which the expense belongs</param>
+        /// <returns>A list of expenses</returns>
+        /// <response code="400">No expense found for the given expense and event id</response>
+        /// <response code="200">On success</response>
+        [HttpGet()]
+        public async Task<ActionResult<IEnumerable<GetExpensesExpenseModel>>> GetExpensesAsync(int eventId)
+        {
+            return Ok(await Mediator.Send(new GetExpensesQuery { EventId = eventId }));
+        }
 
-    //        if (dbEvent == null) return BadRequest();
+        /// <summary>
+        /// Get a single expense using its ID
+        /// </summary>
+        /// <param name="eventId">ID of the event to which the expense belongs</param>
+        /// <param name="expenseId">ID of the expense</param>
+        /// <returns>A single expense object</returns>
+        /// <response code="404">No expense found for the given expense and event id</response>
+        /// <response code="200">On success</response>
+        [HttpGet("{expenseId}", Name = nameof(GetExpenseById))]
+        public async Task<ActionResult<ExpenseReadModel>> GetExpenseById(int eventId, int expenseId)
+        {
+            var dbExpense = await _dbContext.ExpenseData
+                .FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
+            if (dbExpense == null) return NotFound();
 
-    //        var eventExpensesList = dbEvent.Expenses;
-    //        // there are no expenses for this event yet
-    //        if (eventExpensesList == null) return Ok(new List<ExpenseReadModel>());
-    //        List<ExpenseReadModel> expenses = new();
-    //        foreach (var expense in eventExpensesList)
-    //        {
-    //            expenses.Add(_mapper.Map<ExpenseReadModel>(expense));
-    //        }
-            
-    //        return Ok(expenses);
-    //    }
-    //    /// <summary>
-    //    /// Get a single expense using its ID
-    //    /// </summary>
-    //    /// <param name="eventId">ID of the event to which the expense belongs</param>
-    //    /// <param name="expenseId">ID of the expense</param>
-    //    /// <returns>A single expense object</returns>
-    //    /// <response code="404">No expense found for the given expense and event id</response>
-    //    /// <response code="200">On success</response>
-    //    [HttpGet("{expenseId}", Name = nameof(GetExpenseById))]
-    //    public async Task<ActionResult<ExpenseReadModel>> GetExpenseById(int eventId, int expenseId)
-    //    {
-    //        var dbExpense = await _dbContext.ExpenseData
-    //            .FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
-    //        if (dbExpense == null) return NotFound();
+            return Ok(_mapper.Map<ExpenseReadModel>(dbExpense));
+        }
+        /// <summary>
+        /// Create an expense
+        /// </summary>
+        /// <param name="eventId">ID of the event to which the expense belongs</param>
+        /// <param name="model">Expense which shall be created</param>
+        /// <returns>Created expense object</returns>
+        /// <response code="400">Model isn't valid</response>
+        /// <response code="404">No event found for the given id</response>
+        /// <response code="201">Returns created expense object</response>
+        [HttpPost()]
+        public async Task<ActionResult<ExpenseReadModel>> CreateExpenseAsync(int eventId, [FromBody] ExpenseWriteModel model)
+        {
 
-    //        return Ok(_mapper.Map<ExpenseReadModel>(dbExpense));
-    //    }
-    //    /// <summary>
-    //    /// Create an expense
-    //    /// </summary>
-    //    /// <param name="eventId">ID of the event to which the expense belongs</param>
-    //    /// <param name="model">Expense which shall be created</param>
-    //    /// <returns>Created expense object</returns>
-    //    /// <response code="400">Model isn't valid</response>
-    //    /// <response code="404">No event found for the given id</response>
-    //    /// <response code="201">Returns created expense object</response>
-    //    [HttpPost()]
-    //    public async Task<ActionResult<ExpenseReadModel>> CreateExpenseAsync(int eventId, [FromBody] ExpenseWriteModel model)
-    //    {
-    //        if (!ModelState.IsValid) return BadRequest();
+            throw new NotImplementedException();
 
-    //        var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == eventId);
-    //        if (dbEvent == null) return NotFound();
+            //if (!ModelState.IsValid) return BadRequest();
 
-    //        var user = await _userManager.GetUserAsync(User);
+            //var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == eventId);
+            //if (dbEvent == null) return NotFound();
 
-    //        var expenseToAdd = _mapper.Map<Expense>(model);
-    //        expenseToAdd.EventId = eventId;
-    //        expenseToAdd.Event = dbEvent;
-    //        expenseToAdd.Issuer = user;
-    //        expenseToAdd.IssuerId = user.Id;
-    //        expenseToAdd.Currency = "EUR";
+            //var user = await _userManager.GetUserAsync(User);
 
-    //        _dbContext.ExpenseData.Add(expenseToAdd);
-    //        dbEvent.Expenses.Add(expenseToAdd);
+            //var expenseToAdd = _mapper.Map<Expense>(model);
+            //expenseToAdd.EventId = eventId;
+            //expenseToAdd.Event = dbEvent;
+            //expenseToAdd.Issuer = user;
+            //expenseToAdd.IssuerId = user.Id;
+            //expenseToAdd.Currency = "EUR";
 
-    //        _dbContext.ExpenseUsers.AddRange(model.Participants.Select(e => new ExpenseUser
-    //        {
-    //            Amount = e.Amount,
-    //            Expense = expenseToAdd,
-    //            UserId = e.Id
-    //        }));
+            //_dbContext.ExpenseData.Add(expenseToAdd);
+            //dbEvent.Expenses.Add(expenseToAdd);
 
-    //        try
-    //        {
-    //            await _dbContext.SaveChangesAsync();
-    //        }
-    //        catch (Exception e)
-    //        {
-    //            new InvalidOperationException(e.Message);
-    //        }
+            //_dbContext.ExpenseUsers.AddRange(model.Participants.Select(e => new ExpenseUser
+            //{
+            //    Amount = e.Amount,
+            //    Expense = expenseToAdd,
+            //    UserId = e.Id
+            //}));
 
-    //        return CreatedAtRoute(nameof(GetExpenseById), new { eventId = eventId, expenseId = expenseToAdd.Id }, _mapper.Map<ExpenseReadModel>(expenseToAdd));
-    //    }
-    //    /// <summary>
-    //    /// Update an expense
-    //    /// </summary>
-    //    /// <param name="eventId">ID of the event to which the expense belongs</param>
-    //    /// <param name="expenseId">ID of the expense</param>
-    //    /// <param name="model">Expense data to update</param>
-    //    /// <response code="404">No expense found for the given expense and event id</response>
-    //    /// <response code="204">Update has been succuessful</response>
-    //    [HttpPut("{expenseId}")]
-    //    public async Task<ActionResult<ExpenseReadModel>> UpdateExpenseAsync(int eventId, int expenseId, [FromBody] ExpenseUpdateModel model)
-    //    {
-    //        var update = _mapper.Map<Expense>(model);
-    //        //TODO: make sure that only same user as creator or a user with appropriate role can change event
+            //try
+            //{
+            //    await _dbContext.SaveChangesAsync();
+            //}
+            //catch (Exception e)
+            //{
+            //    new InvalidOperationException(e.Message);
+            //}
 
-    //        var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
-    //        if (dbExpense == null) return NotFound();
+            //return CreatedAtRoute(nameof(GetExpenseById), new { eventId = eventId, expenseId = expenseToAdd.Id }, _mapper.Map<ExpenseReadModel>(expenseToAdd));
+        }
+        /// <summary>
+        /// Update an expense
+        /// </summary>
+        /// <param name="eventId">ID of the event to which the expense belongs</param>
+        /// <param name="expenseId">ID of the expense</param>
+        /// <param name="model">Expense data to update</param>
+        /// <response code="404">No expense found for the given expense and event id</response>
+        /// <response code="204">Update has been succuessful</response>
+        [HttpPut("{expenseId}")]
+        public async Task<ActionResult<ExpenseReadModel>> UpdateExpenseAsync(int eventId, int expenseId, [FromBody] ExpenseUpdateModel model)
+        {
+            var update = _mapper.Map<Expense>(model);
+            //TODO: make sure that only same user as creator or a user with appropriate role can change event
 
-    //        dbExpense.Title = update.Title;
-    //        dbExpense.Description = update.Description;
-    //        dbExpense.Date = update.Date;
-    //        dbExpense.Amount = update.Amount;
+            var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
+            if (dbExpense == null) return NotFound();
 
-    //        try
-    //        {
-    //            await _dbContext.SaveChangesAsync();
-    //        }
-    //        catch (Exception e)
-    //        {
-    //            new InvalidOperationException(e.Message);
-    //        }
+            dbExpense.Title = update.Title;
+            dbExpense.Description = update.Description;
+            dbExpense.Date = update.Date;
+            dbExpense.Amount = update.Amount;
 
-    //        return NoContent();
-    //    }
-    //    /// <summary>
-    //    /// Delete an expense of an event using an expense id
-    //    /// </summary>
-    //    /// <param name="eventId">ID of the event to which the expense belongs</param>
-    //    /// <param name="expenseId">ID of the expense</param>
-    //    /// <response code="204">Expense successfully deleted</response>
-    //    /// <response code="404">No expense found for the given expense and event id</response>
-    //    [HttpDelete("{expenseId}")]
-    //    public async Task<ActionResult> DeleteExpenseAsync(int eventId, int expenseId)
-    //    {
-    //        var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
-    //        if (dbExpense == null) return NotFound();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                new InvalidOperationException(e.Message);
+            }
 
-    //        _dbContext.Remove(dbExpense);
-    //        try
-    //        {
-    //            await _dbContext.SaveChangesAsync();
-    //        }
-    //        catch (Exception e)
-    //        {
-    //            new InvalidOperationException(e.Message);
-    //        }
+            return NoContent();
+        }
+        /// <summary>
+        /// Delete an expense of an event using an expense id
+        /// </summary>
+        /// <param name="eventId">ID of the event to which the expense belongs</param>
+        /// <param name="expenseId">ID of the expense</param>
+        /// <response code="204">Expense successfully deleted</response>
+        /// <response code="404">No expense found for the given expense and event id</response>
+        [HttpDelete("{expenseId}")]
+        public async Task<ActionResult> DeleteExpenseAsync(int eventId, int expenseId)
+        {
+            var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
+            if (dbExpense == null) return NotFound();
 
-    //        return NoContent();
-    //    }
+            _dbContext.Remove(dbExpense);
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                new InvalidOperationException(e.Message);
+            }
 
-    //    #endregion
-    //}
+            return NoContent();
+        }
+
+        #endregion
+    }
 }
