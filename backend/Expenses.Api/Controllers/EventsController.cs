@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Expenses.Application.Events.Commands.CreateEvent;
-using Expenses.Application.Events.Queries;
+﻿using Expenses.Application.Events.Commands.CreateEvent;
 using Expenses.Application.Events.Queries.GetEvents;
+using Expenses.Application.Events.Queries.GetEventById;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
 {
@@ -29,7 +29,7 @@ namespace Expenses.Api.Controllers
         /// <returns>A list of events</returns>
         /// <response code="200">On success</response>
         [HttpGet]
-        public async Task<ActionResult<List<EventReadModel>>> GetEventsAsync()
+        public async Task<ActionResult<List<Application.Events.Queries.GetEvents.EventReadModel>>> GetEventsAsync()
         {
             return await Mediator.Send(new GetEventsQuery());
         }
@@ -41,21 +41,11 @@ namespace Expenses.Api.Controllers
         /// <response code="200">On success</response>
         /// <response code="400">No ID given</response>
         /// <response code="404">No resource found for the given ID</response>
-        //[HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
-        //public async Task<ActionResult<EventReadModel>> GetEventByIdAsync(int? id)
-        //{
-        //    if (id == null) return BadRequest();
-
-        //    var foundEvent = await _dbContext.EventData
-        //        .Include(ev => ev.Creator)
-        //        .Include(e => e.Attendees)
-        //        .Include(ev => ev.Expenses)
-        //        .AsSplitQuery()
-        //        .SingleOrDefaultAsync(ev => ev.Id == id);
-        //    if (foundEvent == null) return NotFound();
-
-        //    return Ok(_mapper.Map<EventReadModel>(foundEvent));
-        //}
+        [HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
+        public async Task<ActionResult<Application.Events.Queries.GetEventById.EventReadModel>> GetEventByIdAsync(int id)
+        {
+            return await Mediator.Send(new GetEventByIdQuery { Id = id });
+        }
 
         /// <summary>
         /// Creates a new event
