@@ -91,9 +91,18 @@ namespace Expenses.Infrastructure.Identity
             return (Result.Success(), token, refreshToken);
         }
 
-        public Task<bool> LogoutAsync()
+        public async Task<bool> LogoutAsync(ClaimsPrincipal requestingUser)
         {
-            throw new NotImplementedException();
+            // delete cookie invalidate all refresh tokens
+            var user = await _userManager.GetUserAsync(requestingUser);
+            var activeTokens = user.RefreshTokens.Where(x => x.IsActive);
+            foreach (var token in activeTokens)
+            {
+                token.Revoked = DateTime.UtcNow;
+            }
+            await _userManager.UpdateAsync(user);
+
+            return true;
         }
 
         
