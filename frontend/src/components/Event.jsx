@@ -10,7 +10,7 @@ const Event = ({ id, title, description, startDate, endDate }) => {
                 <h5 className="card-title">{title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{dayjs(startDate).format('DD/MM/YYYY')} - {dayjs(endDate).format('DD/MM/YYYY')}</h6>
                 <p className="card-text">{description}</p>
-                <Link to={{ pathname: `/event/view/${id}`, state: { id: id } }} className="stretched-link" />
+                <Link to={{ pathname: `/event/${id}`, state: { id: id } }} className="stretched-link" />
             </div>
         </div>
     )

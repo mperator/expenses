@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Expenses.Api.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace Expenses.Api.Data.Dtos
 {
@@ -14,6 +16,8 @@ namespace Expenses.Api.Data.Dtos
         public string Currency { get; set; }
         public string IssuerId { get; set; }
         public string Issuer { get; set; }
+        public int EventId { get; set; }
+        public ICollection<ExpenseUserReadModel> ExpensesUsers { get; set; }
 
         #endregion
     }
