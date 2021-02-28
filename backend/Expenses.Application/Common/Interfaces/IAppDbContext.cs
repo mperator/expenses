@@ -8,9 +8,7 @@ namespace Expenses.Application.Common.Interfaces
     public interface IAppDbContext
     {
         DbSet<Event> Events { get; set; }
-
         DbSet<Expense> Expenses { get; set; }
-        DbSet<ExpenseUser> ExpenseUsers { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

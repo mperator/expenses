@@ -37,7 +37,6 @@ namespace Expenses.Infrastructure.Persistence
 
         public DbSet<Event> Events { get; set; } 
         public DbSet<Expense> Expenses { get; set; }
-        public DbSet<ExpenseUser> ExpenseUsers { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
