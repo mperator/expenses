@@ -4,26 +4,18 @@ using Expenses.Application.Features.Events.Queries.GetEventById;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Expenses.Application.Events.Commands.UpdateEvent;
 using Microsoft.AspNetCore.Authorization;
+using Expenses.Application.Events.Commands.DeleteEvent;
 
 namespace Expenses.Api.Controllers
 {
     //TODO: implement clear error messages and return them to the user
-    //FIXME: just for dev purpose
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EventsController : ApiControllerBase
     {
-        //private readonly AppDbContext _dbContext;
-        //private readonly IMapper _mapper;
-        //private readonly UserManager<User> _userManager;
-        //public EventsController(AppDbContext dbContext, IMapper mapper, UserManager<User> userManager)
-        //{
-        //    _dbContext = dbContext;
-        //    _mapper = mapper;
-        //    _userManager = userManager;
-        //}
         /// <summary>
         /// Gets a list of events
         /// </summary>
@@ -64,45 +56,27 @@ namespace Expenses.Api.Controllers
         /// Update an event by replacing it
         /// </summary>
         /// <param name="id">ID of event which shall be updated</param>
-        /// <param name="model">Event data to update</param>
+        /// <param name="updateEventCommand">Event data to update</param>
         /// <response code="400">Model isn't valid or mapping failed</response>
         /// <response code="404">No event to update found for the given ID </response>
         /// <response code="204">On success</response>
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult> UpdateEventAsync(int id, [FromBody] EventUpdateModel model)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateEventAsync(int id, [FromBody] UpdateEventCommand updateEventCommand)
+        {
 
-        //    var update = _mapper.Map<Event>(model);
+            await Mediator.Send(new UpdateEventCommand
+            {
+                Id = id,
+                Attendees = updateEventCommand.Attendees,
+                Currency = updateEventCommand.Currency,
+                Description = updateEventCommand.Description,
+                EndDate = updateEventCommand.EndDate,
+                StartDate = updateEventCommand.StartDate,
+                Title = updateEventCommand.Title
+            });
 
-        //    if (update == null) return BadRequest();
-
-        //    var dbEvent = await _dbContext.EventData
-        //        .Include(ev => ev.Creator)
-        //        .Include(e => e.Attendees)
-        //        .Include(ev => ev.Expenses)
-        //        .AsSplitQuery()
-        //        .FirstOrDefaultAsync(ev => ev.Id == id);
-
-        //    if (dbEvent == null) return NotFound();
-
-        //    dbEvent.Title = update.Title;
-        //    dbEvent.StartDate = update.StartDate;
-        //    dbEvent.EndDate = update.EndDate;
-        //    dbEvent.Description = update.Description;
-        //    //dbEvent.Creator = update.Creator;
-        //    //dbEvent.Currency = update.Currency;
-
-        //    foreach (var a in model.Attendees)
-        //    {
-        //        var attendee = await _userManager.FindByIdAsync(a.Id);
-        //        dbEvent.Attendees.Add(attendee);
-        //    }
-
-        //    await _dbContext.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
         /// <summary>
         /// Delete an event using its ID
         /// </summary>
@@ -110,20 +84,11 @@ namespace Expenses.Api.Controllers
         /// <response code="400">No ID given</response>
         /// <response code="404">No event to delete found for the given ID</response>
         /// <response code="204">On success</response>
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult> DeleteEventByIdAsync(int? id)
-        //{
-        //    if (id == null) return BadRequest();
-
-        //    var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == id);
-
-        //    if (dbEvent == null) return NotFound();
-
-        //    _dbContext.Remove(dbEvent);
-        //    await _dbContext.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteEventByIdAsync(int id)
+        {
+            await Mediator.Send(new DeleteEventCommand { Id = id });
+            return NoContent();
+        }
     }
 }
