@@ -121,16 +121,18 @@ const EventEditor = () => {
                 endDate: state.endDate,
                 attendees: attendees
             });
-            // show the error toast in case something went wrong and stay on current page
-            if (response === null) triggerErrorToast();
-            else history.goBack();
+            history.goBack();
         } catch (error) {
-            setError(s => ({
-                title: (error.Title && error.Title[0]) || "",
-                description: (error.Description && error.Description[0]) || "",
-                startDate: (error.StartDate && error.StartDate[0]) || "",
-                endDate: (error.EndDate && error.EndDate[0]) || ""
-            }))
+            // show the error toast in case something went wrong and stay on current page
+            console.log(error);
+            triggerErrorToast();
+            //TODO: implement error messages of fluent validation
+            // setError(s => ({
+            //     title: (error.Title && error.Title[0]) || "",
+            //     description: (error.Description && error.Description[0]) || "",
+            //     startDate: (error.StartDate && error.StartDate[0]) || "",
+            //     endDate: (error.EndDate && error.EndDate[0]) || ""
+            // }))
         }
     }
 
