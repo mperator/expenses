@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Expenses.Application.Events.Queries.GetEvents
+namespace Expenses.Application.Features.Events.Queries.GetEvents
 {
     public class GetEventsQuery : IRequest<List<EventReadModel>>
     {

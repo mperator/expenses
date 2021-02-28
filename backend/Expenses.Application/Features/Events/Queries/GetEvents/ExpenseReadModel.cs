@@ -2,7 +2,7 @@
 using Expenses.Domain.Entities;
 using System;
 
-namespace Expenses.Application.Events.Queries.GetEvents
+namespace Expenses.Application.Features.Events.Queries.GetEvents
 {
     public class ExpenseReadModel : IMapFrom<Expense>
     {

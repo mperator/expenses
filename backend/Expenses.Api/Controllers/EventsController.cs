@@ -1,6 +1,6 @@
-﻿using Expenses.Application.Events.Commands.CreateEvent;
-using Expenses.Application.Events.Queries.GetEvents;
-using Expenses.Application.Events.Queries.GetEventById;
+﻿using Expenses.Application.Features.Events.Commands.CreateEvent;
+using Expenses.Application.Features.Events.Queries.GetEvents;
+using Expenses.Application.Features.Events.Queries.GetEventById;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ namespace Expenses.Api.Controllers
         /// <returns>A list of events</returns>
         /// <response code="200">On success</response>
         [HttpGet]
-        public async Task<ActionResult<List<Application.Events.Queries.GetEvents.EventReadModel>>> GetEventsAsync()
+        public async Task<ActionResult<List<Application.Features.Events.Queries.GetEvents.EventReadModel>>> GetEventsAsync()
         {
             return await Mediator.Send(new GetEventsQuery());
         }
@@ -43,7 +43,7 @@ namespace Expenses.Api.Controllers
         /// <response code="400">No ID given</response>
         /// <response code="404">No resource found for the given ID</response>
         [HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
-        public async Task<ActionResult<Application.Events.Queries.GetEventById.EventReadModel>> GetEventByIdAsync(int id)
+        public async Task<ActionResult<Application.Features.Events.Queries.GetEventById.EventReadModel>> GetEventByIdAsync(int id)
         {
             return await Mediator.Send(new GetEventByIdQuery { Id = id });
         }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Expenses.Application.Events.Commands.CreateEvent
+namespace Expenses.Application.Features.Events.Commands.CreateEvent
 {
     // FIXME: should the response type really be an int??
     public class CreateEventCommand : IRequest<int>
