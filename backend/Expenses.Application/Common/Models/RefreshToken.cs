@@ -4,7 +4,7 @@ using System;
 namespace Expenses.Application.Common.Models
 {
     // TODO is this the right place?
-    [Owned]
+    //[Owned] -> test with fluent
     public class RefreshToken
     {
         public string Token { get; set; }

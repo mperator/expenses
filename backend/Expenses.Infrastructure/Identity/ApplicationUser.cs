@@ -22,6 +22,8 @@ namespace Expenses.Infrastructure.Identity
 
         public ICollection<ExpenseUser> ExpensesUsers { get; set; }
 
+        public ICollection<EventUser> EventUsers { get; set; }
+
         #endregion
 
         public static implicit operator User(ApplicationUser applicationUser)

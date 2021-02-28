@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Entities;
+using Expenses.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -16,7 +17,7 @@ namespace Expenses.Infrastructure.Persistence.Configurations
             builder.HasOne(eu => eu.Expense)
                 .WithMany(e => e.ExpensesUsers)
                 .HasForeignKey(eu => eu.ExpenseId);
-            builder.HasOne(eu => eu.User)
+            builder.HasOne<ApplicationUser>()
                 .WithMany(e => e.ExpensesUsers)
                 .HasForeignKey(eu => eu.UserId);
         }

@@ -27,7 +27,7 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenseById
 
         public async Task<GetExpenseByIdExpenseModel> Handle(GetExpenseByIdQuery request, CancellationToken cancellationToken)
         {
-            var expense = await _context.ExpenseData
+            var expense = await _context.Expenses
                 .FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
 
             if (expense == null)
