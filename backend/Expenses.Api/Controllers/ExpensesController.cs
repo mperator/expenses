@@ -2,6 +2,7 @@
 using Expenses.Api.Data;
 using Expenses.Api.Data.Dtos;
 using Expenses.Api.Entities;
+using Expenses.Application.Features.Expenses.Commands.CreateExpense;
 using Expenses.Application.Features.Expenses.Queries.GetExpenseById;
 using Expenses.Application.Features.Expenses.Queries.GetExpenses;
 using Expenses.Infrastructure.Persistence;
@@ -21,23 +22,6 @@ namespace Expenses.Api.Controllers
     [Route("api/events/{eventId}/[controller]")]
     public class ExpensesController : ApiControllerBase
     {
-        private readonly AppDbContext _dbContext;
-        private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
-
-        #region Constructor
-
-        public ExpensesController(AppDbContext dbContext, IMapper mapper, UserManager<User> userManager)
-        {
-            _mapper = mapper;
-            _dbContext = dbContext;
-            _userManager = userManager;
-        }
-
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Get a list of all expenses belonging to an event.
         /// </summary>
@@ -75,46 +59,12 @@ namespace Expenses.Api.Controllers
         /// <response code="404">No event found for the given id</response>
         /// <response code="201">Returns created expense object</response>
         [HttpPost()]
-        public async Task<ActionResult<ExpenseReadModel>> CreateExpenseAsync(int eventId, [FromBody] ExpenseWriteModel model)
+        public async Task<ActionResult<CreateExpenseResponseExpense>> CreateExpenseAsync(int eventId, [FromBody] CreateExpenseRequestExpense model)
         {
-
-            throw new NotImplementedException();
-
-            //if (!ModelState.IsValid) return BadRequest();
-
-            //var dbEvent = await _dbContext.EventData.FirstOrDefaultAsync(ev => ev.Id == eventId);
-            //if (dbEvent == null) return NotFound();
-
-            //var user = await _userManager.GetUserAsync(User);
-
-            //var expenseToAdd = _mapper.Map<Expense>(model);
-            //expenseToAdd.EventId = eventId;
-            //expenseToAdd.Event = dbEvent;
-            //expenseToAdd.Issuer = user;
-            //expenseToAdd.IssuerId = user.Id;
-            //expenseToAdd.Currency = "EUR";
-
-            //_dbContext.ExpenseData.Add(expenseToAdd);
-            //dbEvent.Expenses.Add(expenseToAdd);
-
-            //_dbContext.ExpenseUsers.AddRange(model.Participants.Select(e => new ExpenseUser
-            //{
-            //    Amount = e.Amount,
-            //    Expense = expenseToAdd,
-            //    UserId = e.Id
-            //}));
-
-            //try
-            //{
-            //    await _dbContext.SaveChangesAsync();
-            //}
-            //catch (Exception e)
-            //{
-            //    new InvalidOperationException(e.Message);
-            //}
-
-            //return CreatedAtRoute(nameof(GetExpenseById), new { eventId = eventId, expenseId = expenseToAdd.Id }, _mapper.Map<ExpenseReadModel>(expenseToAdd));
+            var expense = await Mediator.Send(new CreateExpenseCommand { EventId = eventId, Model = model });
+            return CreatedAtRoute(nameof(GetExpenseById), new { eventId, expenseId = expense.Id }, expense);
         }
+
         /// <summary>
         /// Update an expense
         /// </summary>
@@ -126,25 +76,25 @@ namespace Expenses.Api.Controllers
         [HttpPut("{expenseId}")]
         public async Task<ActionResult<ExpenseReadModel>> UpdateExpenseAsync(int eventId, int expenseId, [FromBody] ExpenseUpdateModel model)
         {
-            var update = _mapper.Map<Expense>(model);
-            //TODO: make sure that only same user as creator or a user with appropriate role can change event
+            //var update = _mapper.Map<Expense>(model);
+            ////TODO: make sure that only same user as creator or a user with appropriate role can change event
 
-            var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
-            if (dbExpense == null) return NotFound();
+            //var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
+            //if (dbExpense == null) return NotFound();
 
-            dbExpense.Title = update.Title;
-            dbExpense.Description = update.Description;
-            dbExpense.Date = update.Date;
-            dbExpense.Amount = update.Amount;
+            //dbExpense.Title = update.Title;
+            //dbExpense.Description = update.Description;
+            //dbExpense.Date = update.Date;
+            //dbExpense.Amount = update.Amount;
 
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                new InvalidOperationException(e.Message);
-            }
+            //try
+            //{
+            //    await _dbContext.SaveChangesAsync();
+            //}
+            //catch (Exception e)
+            //{
+            //    new InvalidOperationException(e.Message);
+            //}
 
             return NoContent();
         }
@@ -158,22 +108,20 @@ namespace Expenses.Api.Controllers
         [HttpDelete("{expenseId}")]
         public async Task<ActionResult> DeleteExpenseAsync(int eventId, int expenseId)
         {
-            var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
-            if (dbExpense == null) return NotFound();
+            //var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
+            //if (dbExpense == null) return NotFound();
 
-            _dbContext.Remove(dbExpense);
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                new InvalidOperationException(e.Message);
-            }
+            //_dbContext.Remove(dbExpense);
+            //try
+            //{
+            //    await _dbContext.SaveChangesAsync();
+            //}
+            //catch (Exception e)
+            //{
+            //    new InvalidOperationException(e.Message);
+            //}
 
             return NoContent();
         }
-
-        #endregion
     }
 }
