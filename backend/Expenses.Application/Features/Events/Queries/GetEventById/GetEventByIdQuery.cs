@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Expenses.Application.Events.Queries.GetEventById
+namespace Expenses.Application.Features.Events.Queries.GetEventById
 {
     public class GetEventByIdQuery : IRequest<EventReadModel> {
         public int Id { get; set; }

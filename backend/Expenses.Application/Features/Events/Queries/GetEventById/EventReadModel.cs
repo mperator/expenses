@@ -3,7 +3,7 @@ using Expenses.Domain.Entities;
 using System;
 using System.Collections.Generic;
 
-namespace Expenses.Application.Events.Queries.GetEvents
+namespace Expenses.Application.Features.Events.Queries.GetEventById
 {
     public class EventReadModel : IMapFrom<Event>
     {
