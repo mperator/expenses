@@ -18,7 +18,7 @@ namespace Expenses.Domain.Entities
         public Event Event { get; set; }
         
         //FIXME: wie soll das besser abgebildet werden, ausserhalb von domain?
-        public ICollection<ExpenseUser> ExpensesUsers { get; set; }
+        public ICollection<ExpenseUser> ExpenseUsers { get; set; }
 
         #endregion
     }

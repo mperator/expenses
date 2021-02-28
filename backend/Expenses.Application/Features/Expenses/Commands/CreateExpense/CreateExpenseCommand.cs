@@ -5,6 +5,7 @@ using Expenses.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,15 +51,21 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
             expense.IssuerId = user.Id;
             expense.Currency = "EUR";
 
-            _context.Expenses.Add(expense);
-            @event.Expenses.Add(expense);
-
-            _context.ExpenseUsers.AddRange(model.Participants.Select(e => new ExpenseUser
+            expense.ExpenseUsers = new List<ExpenseUser>();
+            foreach(var p in model.Participants)
             {
-                Amount = e.Amount,
-                Expense = expense,
-                UserId = e.Id
-            }));
+                expense.ExpenseUsers.Add(new ExpenseUser { Expense = expense, UserId = p.Id, Amount = p.Amount });
+            }
+
+            _context.Expenses.Add(expense);
+
+
+            //_context.ExpenseUsers.AddRange(model.Participants.Select(e => new ExpenseUser
+            //{
+            //    Amount = e.Amount,
+            //    Expense = expense,
+            //    UserId = e.Id
+            //}));
 
             try
             {

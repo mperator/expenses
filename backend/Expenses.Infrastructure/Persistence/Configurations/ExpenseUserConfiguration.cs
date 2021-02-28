@@ -15,7 +15,7 @@ namespace Expenses.Infrastructure.Persistence.Configurations
             // https://www.learnentityframeworkcore.com/configuration/many-to-many-relationship-configuration
             builder.HasKey(e => new { e.ExpenseId, e.UserId });
             builder.HasOne(eu => eu.Expense)
-                .WithMany(e => e.ExpensesUsers)
+                .WithMany(e => e.ExpenseUsers)
                 .HasForeignKey(eu => eu.ExpenseId);
             builder.HasOne<ApplicationUser>()
                 .WithMany(e => e.ExpensesUsers)
