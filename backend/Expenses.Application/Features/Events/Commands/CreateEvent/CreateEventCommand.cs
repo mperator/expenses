@@ -50,20 +50,19 @@ namespace Expenses.Application.Features.Events.Commands.CreateEvent
             {
                 Title = request.Title,
                 Description = request.Description,
-                //Creator = user,
+                CreatorId = user.Id,
                 Currency = "Euro",
                 StartDate = request.StartDate,
                 EndDate = request.EndDate
             };
 
-            //savedEvent.Attendees = new List<User>();
-            //savedEvent.Attendees.Add(user);
+            savedEvent.Participants = new List<EventUser>();
+            savedEvent.Participants.Add(new EventUser { Event = savedEvent, UserId = user.Id });
             ////FIXME:
-            //foreach (var a in request.Attendees)
-            //{
-            //    var attendee = await _userService.FindByIdAsync(a.Id);
-            //    savedEvent.Attendees.Add(attendee);
-            //}
+            foreach (var a in request.Attendees)
+            {
+                savedEvent.Participants.Add(new EventUser { Event = savedEvent, UserId = a.Id });
+            }
 
             _context.Events.Add(savedEvent);
             try
