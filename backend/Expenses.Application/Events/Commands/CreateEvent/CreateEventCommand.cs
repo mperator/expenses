@@ -50,21 +50,22 @@ namespace Expenses.Application.Events.Commands.CreateEvent
             {
                 Title = request.Title,
                 Description = request.Description,
-                Creator = user,
+                //Creator = user,
                 Currency = "Euro",
                 StartDate = request.StartDate,
                 EndDate = request.EndDate
             };
-            savedEvent.Attendees = new List<User>();
-            savedEvent.Attendees.Add(user);
-            //FIXME:
-            foreach (var a in request.Attendees)
-            {
-                var attendee = await _userService.FindByIdAsync(a.Id);
-                savedEvent.Attendees.Add(attendee);
-            }
 
-            _context.EventData.Add(savedEvent);
+            //savedEvent.Attendees = new List<User>();
+            //savedEvent.Attendees.Add(user);
+            ////FIXME:
+            //foreach (var a in request.Attendees)
+            //{
+            //    var attendee = await _userService.FindByIdAsync(a.Id);
+            //    savedEvent.Attendees.Add(attendee);
+            //}
+
+            _context.Events.Add(savedEvent);
             try
             {
                 await _context.SaveChangesAsync(cancellationToken);

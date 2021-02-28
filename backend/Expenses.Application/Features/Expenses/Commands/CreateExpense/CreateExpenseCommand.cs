@@ -39,7 +39,7 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
             if (string.IsNullOrEmpty(model.Title)) throw new ValidationException();
             //if (request.Date) throw new ValidationException();
 
-            var @event = await _context.EventData.FirstOrDefaultAsync(ev => ev.Id == request.EventId);
+            var @event = await _context.Events.FirstOrDefaultAsync(ev => ev.Id == request.EventId);
             if (@event == null) throw new NotFoundException("TODO");
 
             var user = await _userService.GetCurrentUserAsync();
@@ -47,11 +47,10 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
             var expense = _mapper.Map<Expense>(model);
             expense.EventId = request.EventId;
             expense.Event = @event;
-            expense.Issuer = user;
             expense.IssuerId = user.Id;
             expense.Currency = "EUR";
 
-            _context.ExpenseData.Add(expense);
+            _context.Expenses.Add(expense);
             @event.Expenses.Add(expense);
 
             _context.ExpenseUsers.AddRange(model.Participants.Select(e => new ExpenseUser

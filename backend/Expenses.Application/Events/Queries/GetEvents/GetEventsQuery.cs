@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Expenses.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,14 +27,16 @@ namespace Expenses.Application.Events.Queries.GetEvents
 
         public async Task<List<EventReadModel>> Handle(GetEventsQuery request, CancellationToken cancellationToken)
         {
-            return new List<EventReadModel>(
-                await _context.EventData
-                .Include(ev => ev.Creator)
-                .Include(ev => ev.Expenses)
-                .Include(ev => ev.Attendees)
-                .AsSingleQuery()
-                .ProjectTo<EventReadModel>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken));
+            throw new Exception();
+
+            //return new List<EventReadModel>(
+            //    await _context.EventData
+            //    .Include(ev => ev.Creator)
+            //    .Include(ev => ev.Expenses)
+            //    .Include(ev => ev.Attendees)
+            //    .AsSingleQuery()
+            //    .ProjectTo<EventReadModel>(_mapper.ConfigurationProvider)
+            //    .ToListAsync(cancellationToken));
         }
     }
 }

@@ -25,13 +25,15 @@ namespace Expenses.Application.Events.Queries.GetEventById
 
         public async Task<EventReadModel> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _context.EventData
-                .Include(ev => ev.Creator)
-                .Include(e => e.Attendees)
-                .Include(ev => ev.Expenses)
-                .AsSingleQuery()
-                .ProjectTo<EventReadModel>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync(ev => ev.Id == request.Id);
+            throw new System.Exception();
+
+            //return await _context.EventData
+            //    .Include(ev => ev.Creator)
+            //    .Include(e => e.Attendees)
+            //    .Include(ev => ev.Expenses)
+            //    .AsSingleQuery()
+            //    .ProjectTo<EventReadModel>(_mapper.ConfigurationProvider)
+            //    .SingleOrDefaultAsync(ev => ev.Id == request.Id);
         }
     }
 }

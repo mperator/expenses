@@ -14,9 +14,9 @@ namespace Expenses.Domain.Entities
         public float Amount { get; set; }
         public string Currency { get; set; }
         public string IssuerId { get; set; }
-        public User Issuer { get; set; }
         public int EventId { get; set; }
         public Event Event { get; set; }
+        
         //FIXME: wie soll das besser abgebildet werden, ausserhalb von domain?
         public ICollection<ExpenseUser> ExpensesUsers { get; set; }
 
