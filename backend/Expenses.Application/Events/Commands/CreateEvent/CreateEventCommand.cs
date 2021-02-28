@@ -3,6 +3,7 @@ using Expenses.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,12 +58,11 @@ namespace Expenses.Application.Events.Commands.CreateEvent
             };
             savedEvent.Attendees = new List<User>();
             savedEvent.Attendees.Add(user);
-
-            //foreach (var a in request.Attendees)
-            //{
-            //    var attendee = await _userService.FindByIdAsync(a.Id);
-            //    savedEvent.Attendees.Add(attendee);
-            //}
+            foreach (var a in request.Attendees.Where(attendee => attendee.Id != user.Id))
+            {
+                var attendee = await _userService.FindByIdAsync(a.Id);
+                savedEvent.Attendees.Add(attendee);
+            }
 
             _context.EventData.Add(savedEvent);
             try
@@ -71,7 +71,7 @@ namespace Expenses.Application.Events.Commands.CreateEvent
             }
             catch (Exception e)
             {
-                new InvalidOperationException(e.Message);
+                throw new InvalidOperationException(e.Message);
             }
             //FIXME:
             //return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
