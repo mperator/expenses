@@ -3,6 +3,7 @@ using Expenses.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,7 +72,7 @@ namespace Expenses.Application.Features.Events.Commands.CreateEvent
             }
             catch (Exception e)
             {
-                new InvalidOperationException(e.Message);
+                throw new InvalidOperationException(e.Message);
             }
             //FIXME:
             //return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
