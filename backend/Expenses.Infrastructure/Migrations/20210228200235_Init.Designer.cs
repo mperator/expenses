@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expenses.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210226194129_ca_ddd")]
-    partial class ca_ddd
+    [Migration("20210228200235_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,30 +21,12 @@ namespace Expenses.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("EventUser", b =>
-                {
-                    b.Property<string>("AttendeesId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("EventsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AttendeesId", "EventsId");
-
-                    b.HasIndex("EventsId");
-
-                    b.ToTable("EventUser");
-                });
-
             modelBuilder.Entity("Expenses.Domain.Entities.Event", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -78,11 +60,24 @@ namespace Expenses.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("EventData");
+                    b.ToTable("Event");
+                });
+
+            modelBuilder.Entity("Expenses.Domain.Entities.EventUser", b =>
+                {
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("EventId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EventUser");
                 });
 
             modelBuilder.Entity("Expenses.Domain.Entities.Expense", b =>
@@ -131,7 +126,7 @@ namespace Expenses.Infrastructure.Migrations
 
                     b.HasIndex("IssuerId");
 
-                    b.ToTable("ExpenseData");
+                    b.ToTable("Expense");
                 });
 
             modelBuilder.Entity("Expenses.Domain.Entities.ExpenseUser", b =>
@@ -145,41 +140,11 @@ namespace Expenses.Infrastructure.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("ExpenseId", "UserId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ExpenseUsers");
-                });
-
-            modelBuilder.Entity("Expenses.Domain.Entities.User", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
+                    b.ToTable("ExpenseUser");
                 });
 
             modelBuilder.Entity("Expenses.Infrastructure.Identity.ApplicationUser", b =>
@@ -437,10 +402,12 @@ namespace Expenses.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -477,10 +444,12 @@ namespace Expenses.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -490,32 +459,28 @@ namespace Expenses.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("EventUser", b =>
-                {
-                    b.HasOne("Expenses.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("AttendeesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expenses.Domain.Entities.Event", null)
-                        .WithMany()
-                        .HasForeignKey("EventsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Expenses.Domain.Entities.Event", b =>
                 {
                     b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("Events")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("Expenses.Domain.Entities.User", "Creator")
-                        .WithMany()
                         .HasForeignKey("CreatorId");
+                });
 
-                    b.Navigation("Creator");
+            modelBuilder.Entity("Expenses.Domain.Entities.EventUser", b =>
+                {
+                    b.HasOne("Expenses.Domain.Entities.Event", "Event")
+                        .WithMany("Participants")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany("EventUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("Expenses.Domain.Entities.Expense", b =>
@@ -526,41 +491,33 @@ namespace Expenses.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Expenses.Domain.Entities.User", "Issuer")
+                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("IssuerId");
 
                     b.Navigation("Event");
-
-                    b.Navigation("Issuer");
                 });
 
             modelBuilder.Entity("Expenses.Domain.Entities.ExpenseUser", b =>
                 {
-                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany("ExpensesUsers")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("Expenses.Domain.Entities.Expense", "Expense")
                         .WithMany("ExpensesUsers")
                         .HasForeignKey("ExpenseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Expenses.Domain.Entities.User", "User")
+                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("ExpensesUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Expense");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Expenses.Infrastructure.Identity.ApplicationUser", b =>
                 {
-                    b.OwnsMany("Expenses.Infrastructure.Identity.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("Expenses.Application.Common.Models.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("ApplicationUserId")
                                 .HasColumnType("nvarchar(450)");
@@ -647,6 +604,8 @@ namespace Expenses.Infrastructure.Migrations
             modelBuilder.Entity("Expenses.Domain.Entities.Event", b =>
                 {
                     b.Navigation("Expenses");
+
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("Expenses.Domain.Entities.Expense", b =>
@@ -654,14 +613,11 @@ namespace Expenses.Infrastructure.Migrations
                     b.Navigation("ExpensesUsers");
                 });
 
-            modelBuilder.Entity("Expenses.Domain.Entities.User", b =>
-                {
-                    b.Navigation("ExpensesUsers");
-                });
-
             modelBuilder.Entity("Expenses.Infrastructure.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("Events");
+
+                    b.Navigation("EventUsers");
 
                     b.Navigation("ExpensesUsers");
                 });

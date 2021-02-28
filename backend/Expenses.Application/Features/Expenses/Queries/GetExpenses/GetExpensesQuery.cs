@@ -28,7 +28,7 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenses
 
         public async Task<IEnumerable<GetExpensesExpenseModel>> Handle(GetExpensesQuery request, CancellationToken cancellationToken)
         {
-            var @event = await _context.EventData
+            var @event = await _context.Events
                 .Include(ev => ev.Expenses)
                 .SingleOrDefaultAsync(ev => ev.Id == request.EventId);
 
