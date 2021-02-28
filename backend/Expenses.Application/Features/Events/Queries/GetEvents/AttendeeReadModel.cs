@@ -1,7 +1,7 @@
 ﻿using Expenses.Application.Common.Mappings;
 using Expenses.Domain.Entities;
 
-namespace Expenses.Application.Events.Queries.GetEventById
+namespace Expenses.Application.Features.Events.Queries.GetEvents
 {
     public class AttendeeReadModel : IMapFrom<User>
     {
