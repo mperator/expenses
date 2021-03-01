@@ -24,7 +24,7 @@ namespace Expenses.Api.Controllers
         /// <response code="400">No expense found for the given expense and event id</response>
         /// <response code="200">On success</response>
         [HttpGet()]
-        public async Task<ActionResult<IEnumerable<GetExpensesExpenseModel>>> GetExpensesAsync(int eventId)
+        public async Task<ActionResult<IEnumerable<GetExpensesResponseExpense>>> GetExpensesAsync(int eventId)
         {
             return Ok(await Mediator.Send(new GetExpensesQuery { EventId = eventId }));
         }

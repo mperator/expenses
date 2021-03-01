@@ -4,7 +4,7 @@ using Expenses.Domain.Entities;
 
 namespace Expenses.Application.Features.Expenses.Queries.GetExpenses
 {
-    public class GetExpensesExpenseUserModel : IMapFrom<ExpenseUser>
+    public class GetExpensesResponseExpenseUser : IMapFrom<ExpenseUser>
     {
         public string UserId { get; set; }
         public string UserName { get; set; }

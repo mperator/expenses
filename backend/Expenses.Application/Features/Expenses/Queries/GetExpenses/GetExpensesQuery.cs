@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Expenses.Application.Features.Expenses.Queries.GetExpenses
 {
-    public class GetExpensesQuery : IRequest<IEnumerable<GetExpensesExpenseModel>>
+    public class GetExpensesQuery : IRequest<IEnumerable<GetExpensesResponseExpense>>
     {
         public int EventId { get; set; }
     }
 
-    public class GetExpensesQueryHandler : IRequestHandler<GetExpensesQuery, IEnumerable<GetExpensesExpenseModel>>
+    public class GetExpensesQueryHandler : IRequestHandler<GetExpensesQuery, IEnumerable<GetExpensesResponseExpense>>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenses
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetExpensesExpenseModel>> Handle(GetExpensesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetExpensesResponseExpense>> Handle(GetExpensesQuery request, CancellationToken cancellationToken)
         {
             var @event = await _context.Events
                 .Include(ev => ev.Expenses)
@@ -36,7 +36,7 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenses
                 throw new NotFoundException($"Event {request.EventId} not found.");
 
             return @event.Expenses == null ? 
-                Enumerable.Empty<GetExpensesExpenseModel>() : @event.Expenses.Select(e => _mapper.Map<GetExpensesExpenseModel>(e));
+                Enumerable.Empty<GetExpensesResponseExpense>() : @event.Expenses.Select(e => _mapper.Map<GetExpensesResponseExpense>(e));
         }
     }
 }
