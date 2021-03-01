@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Expenses.Application.Features.Expenses.Queries.GetExpenseById
 {
-    public class GetExpenseByIdQuery : IRequest<GetExpenseByIdExpenseModel>
+    public class GetExpenseByIdQuery : IRequest<GetExpenseByIdResponseExpense>
     {
         public int EventId { get; set; }
         public int ExpenseId { get; set; }
     }
 
-    public class GetExpenseByIdQueryHandler : IRequestHandler<GetExpenseByIdQuery, GetExpenseByIdExpenseModel>
+    public class GetExpenseByIdQueryHandler : IRequestHandler<GetExpenseByIdQuery, GetExpenseByIdResponseExpense>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenseById
             _mapper = mapper;
         }
 
-        public async Task<GetExpenseByIdExpenseModel> Handle(GetExpenseByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetExpenseByIdResponseExpense> Handle(GetExpenseByIdQuery request, CancellationToken cancellationToken)
         {
             var expense = await _context.Expenses
                 .FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
@@ -33,7 +33,7 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenseById
             if (expense == null)
                 throw new NotFoundException($"No expense found for id {request.ExpenseId} on event {request.EventId}");
 
-            return _mapper.Map<GetExpenseByIdExpenseModel>(expense);
+            return _mapper.Map<GetExpenseByIdResponseExpense>(expense);
         }
     }
 }
