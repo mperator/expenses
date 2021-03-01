@@ -3,9 +3,9 @@ using Expenses.Domain.Entities;
 using System;
 using System.Collections.Generic;
 
-namespace Expenses.Application.Features.Expenses.Queries.GetExpenseById
+namespace Expenses.Application.Features.Expenses.Queries.GetExpenses
 {
-    public class GetExpenseByIdExpenseModel : IMapFrom<Expense>
+    public class GetExpensesResponseExpense : IMapFrom<Expense>
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -16,6 +16,6 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenseById
         public string IssuerId { get; set; }
         public string Issuer { get; set; }
         public int EventId { get; set; }
-        public ICollection<GetExpenseByIdExpenseUserModel> ExpensesUsers { get; set; }
+        public ICollection<GetExpensesResponseExpenseUser> ExpensesUsers { get; set; }
     }
 }
