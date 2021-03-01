@@ -1,18 +1,12 @@
-﻿using AutoMapper;
-using Expenses.Api.Data;
-using Expenses.Api.Data.Dtos;
-using Expenses.Api.Entities;
+﻿using Expenses.Api.Data.Dtos;
 using Expenses.Application.Features.Expenses.Commands.CreateExpense;
+using Expenses.Application.Features.Expenses.Commands.DeleteExpense;
+using Expenses.Application.Features.Expenses.Commands.UpdateExpense;
 using Expenses.Application.Features.Expenses.Queries.GetExpenseById;
 using Expenses.Application.Features.Expenses.Queries.GetExpenses;
-using Expenses.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
@@ -74,30 +68,12 @@ namespace Expenses.Api.Controllers
         /// <response code="404">No expense found for the given expense and event id</response>
         /// <response code="204">Update has been succuessful</response>
         [HttpPut("{expenseId}")]
-        public async Task<ActionResult<ExpenseReadModel>> UpdateExpenseAsync(int eventId, int expenseId, [FromBody] ExpenseUpdateModel model)
+        public async Task<ActionResult<ExpenseReadModel>> UpdateExpenseAsync(int eventId, int expenseId, [FromBody] UpdateExpenseRequestExpense model)
         {
-            //var update = _mapper.Map<Expense>(model);
-            ////TODO: make sure that only same user as creator or a user with appropriate role can change event
-
-            //var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
-            //if (dbExpense == null) return NotFound();
-
-            //dbExpense.Title = update.Title;
-            //dbExpense.Description = update.Description;
-            //dbExpense.Date = update.Date;
-            //dbExpense.Amount = update.Amount;
-
-            //try
-            //{
-            //    await _dbContext.SaveChangesAsync();
-            //}
-            //catch (Exception e)
-            //{
-            //    new InvalidOperationException(e.Message);
-            //}
-
+            var expense = await Mediator.Send(new UpdateExpenseCommand { EventId = eventId, ExpenseId = expenseId, Model = model });
             return NoContent();
         }
+
         /// <summary>
         /// Delete an expense of an event using an expense id
         /// </summary>
@@ -108,19 +84,7 @@ namespace Expenses.Api.Controllers
         [HttpDelete("{expenseId}")]
         public async Task<ActionResult> DeleteExpenseAsync(int eventId, int expenseId)
         {
-            //var dbExpense = await _dbContext.ExpenseData.FirstOrDefaultAsync(ex => ex.EventId == eventId && ex.Id == expenseId);
-            //if (dbExpense == null) return NotFound();
-
-            //_dbContext.Remove(dbExpense);
-            //try
-            //{
-            //    await _dbContext.SaveChangesAsync();
-            //}
-            //catch (Exception e)
-            //{
-            //    new InvalidOperationException(e.Message);
-            //}
-
+            await Mediator.Send(new DeleteExpenseCommand { EventId = eventId, ExpenseId = expenseId });
             return NoContent();
         }
     }
