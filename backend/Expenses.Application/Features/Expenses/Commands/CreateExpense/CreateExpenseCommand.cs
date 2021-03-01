@@ -6,13 +6,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
 {
-    // TODO TESTEN
     public class CreateExpenseCommand : IRequest<CreateExpenseResponseExpense>
     {
         public int EventId { get; set; }
@@ -36,10 +34,6 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
         {
             var model = request.Model;
 
-            // TODO Implement Validation
-            if (string.IsNullOrEmpty(model.Title)) throw new ValidationException();
-            //if (request.Date) throw new ValidationException();
-
             var @event = await _context.Events.FirstOrDefaultAsync(ev => ev.Id == request.EventId);
             if (@event == null) throw new NotFoundException("TODO");
 
@@ -59,14 +53,6 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
 
             _context.Expenses.Add(expense);
 
-
-            //_context.ExpenseUsers.AddRange(model.Participants.Select(e => new ExpenseUser
-            //{
-            //    Amount = e.Amount,
-            //    Expense = expense,
-            //    UserId = e.Id
-            //}));
-
             try
             {
                 await _context.SaveChangesAsync(cancellationToken);
@@ -76,7 +62,6 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
                 throw new InvalidOperationException(e.Message);
             }
 
-            //return CreatedAtRoute(nameof(GetExpenseById), new { eventId = eventId, expenseId = expenseToAdd.Id }, _mapper.Map<ExpenseReadModel>(expenseToAdd));
             return _mapper.Map<CreateExpenseResponseExpense>(expense);
         }
     }
