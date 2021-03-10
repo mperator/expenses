@@ -1,4 +1,4 @@
-﻿namespace Expenses.Application.Events.Commands.UpdateEvent
+﻿namespace Expenses.Application.Features.Events.Commands.UpdateEvent
 {
     public class AttendeeWriteModel
     {
