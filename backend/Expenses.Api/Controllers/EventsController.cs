@@ -4,9 +4,9 @@ using Expenses.Application.Features.Events.Queries.GetEventById;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Expenses.Application.Events.Commands.UpdateEvent;
 using Microsoft.AspNetCore.Authorization;
-using Expenses.Application.Events.Commands.DeleteEvent;
+using Expenses.Application.Features.Events.Commands.UpdateEvent;
+using Expenses.Application.Features.Events.Commands.DeleteEvent;
 
 namespace Expenses.Api.Controllers
 {
