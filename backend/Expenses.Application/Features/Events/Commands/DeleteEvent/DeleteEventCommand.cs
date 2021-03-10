@@ -1,14 +1,10 @@
 ﻿using Expenses.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Expenses.Application.Events.Commands.DeleteEvent
+namespace Expenses.Application.Features.Events.Commands.DeleteEvent
 {
     public class DeleteEventCommand : IRequest
     {
