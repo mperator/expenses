@@ -234,3 +234,28 @@ Weekly Wednesday Meetup 20:00 Uhr
 - Week 6: Release v1
 
 
+
+
+## Domain Aggregate / Entity
+Understanding of domain layer and how to use domain business logic.
+
+API -> Application -> EventService.AddEvent(EventDTO data)
+
+EventService.AddEvent(EventDTO data) {
+
+    var event = Domain.Event.Create(params from DTO, ...);
+        // 1. Creator valid
+        // 2. Datum valid
+        // 3. At least one expense 
+        // 4. Expense split amount valid
+    // IF DOMAIN BUSINISS LOGIC ERROR -> throw Business Exception
+
+    // Infrastructure call persistance
+    IRepository.CreateEvent(event); -> event speichern, user speichern, ...
+}
+
+EventService.AddExpense(EventId, ExpensedataDTO) {
+    var event = IRepository.GetById();
+    event.AddExpense(data, ....)
+    IRepository.Save(event);
+}
