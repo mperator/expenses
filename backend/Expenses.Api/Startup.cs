@@ -1,3 +1,4 @@
+using Expenses.Api.Middlewares;
 using Expenses.Application;
 using Expenses.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -57,6 +58,8 @@ namespace Expenses.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Expenses v1"));
             }
+
+            app.UseMiddleware<HttpExceptionMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseRouting();
