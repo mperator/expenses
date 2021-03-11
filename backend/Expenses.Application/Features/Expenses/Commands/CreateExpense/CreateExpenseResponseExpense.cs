@@ -14,8 +14,6 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
         public float Amount { get; set; }
         public string Currency { get; set; }
         public string IssuerId { get; set; }
-        public string Issuer { get; set; }
-        public int EventId { get; set; }
-        public ICollection<CreateExpenseResponseExpenseUser> ExpensesUsers { get; set; }
+        public IList<CreateExpenseResponseExpenseParticipant> Participants { get; set; }
     }
 }
