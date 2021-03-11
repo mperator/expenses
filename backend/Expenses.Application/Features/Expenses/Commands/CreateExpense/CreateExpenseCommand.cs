@@ -62,7 +62,19 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
                 throw new InvalidOperationException(e.Message);
             }
 
-            return _mapper.Map<CreateExpenseResponseExpense>(expense);
+            // Build return object.
+
+            var response =  _mapper.Map<CreateExpenseResponseExpense>(expense);
+            response.Participants = new List<CreateExpenseResponseExpenseParticipant>();
+
+            var users = expense.ExpenseUsers;
+            foreach (var expenseUser in expense.ExpenseUsers)
+            {
+                var participant = await _userService.FindByIdAsync(expenseUser.UserId);
+                response.Participants.Add(new CreateExpenseResponseExpenseParticipant { Id = participant.Id, Name = participant.Username, Amount = expenseUser.Amount });
+            }
+
+            return response;
         }
     }
 }
