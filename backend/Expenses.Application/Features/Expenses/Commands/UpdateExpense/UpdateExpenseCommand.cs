@@ -10,31 +10,31 @@ using System.Threading.Tasks;
 
 namespace Expenses.Application.Features.Expenses.Commands.UpdateExpense
 {
-    public class UpdateExpenseCommand : IRequest<UpdateExpenseResponseExpense>
+    public class UpdateExpenseCommand : IRequest<Unit>
     {
         public int EventId { get; set; }
         public int ExpenseId { get; set; }
         public UpdateExpenseRequestExpense Model { get; set; }
     }
 
-    public class UpdateExpenseCommandHandler : IRequestHandler<UpdateExpenseCommand, UpdateExpenseResponseExpense>
+    public class UpdateExpenseCommandHandler : IRequestHandler<UpdateExpenseCommand, Unit>
     {
         private readonly IAppDbContext _context;
-        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
         public UpdateExpenseCommandHandler(IAppDbContext context, IUserService userService, IMapper mapper)
         {
             _context = context;
-            _userService = userService;
             _mapper = mapper;
         }
 
-        public async Task<UpdateExpenseResponseExpense> Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
         {
             var model = request.Model;
 
-            var expense = await _context.Expenses.FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
+            var expense = await _context.Expenses
+                .Include(a => a.ExpenseUsers)
+                .FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
             if (expense == null) throw new NotFoundException();
 
             var update = _mapper.Map<Expense>(model);
@@ -54,7 +54,7 @@ namespace Expenses.Application.Features.Expenses.Commands.UpdateExpense
                 new InvalidOperationException(e.Message);
             }
 
-            return _mapper.Map<UpdateExpenseResponseExpense>(expense);
+            return Unit.Value;
         }
     }
 }
