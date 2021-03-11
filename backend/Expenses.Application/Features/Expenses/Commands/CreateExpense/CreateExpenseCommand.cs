@@ -2,10 +2,12 @@
 using Expenses.Application.Common.Exceptions;
 using Expenses.Application.Common.Interfaces;
 using Expenses.Domain.Entities;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,6 +36,25 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
         {
             var model = request.Model;
 
+            // TODO: Domain Business Logic
+            var errors = new List<ValidationFailure>();
+            var sum = model.Participants.Sum(p => p.Amount);
+            if (model.Amount != sum)
+            {
+                var error = new ValidationFailure(nameof(CreateExpenseRequestExpense.Amount), $"Amount {model.Amount} does not match with participant splits sum {sum}.");
+                errors.Add(error);
+            }
+
+            if (model.Participants.Count() != model.Participants.Select(a => a.Id).Distinct().Count())
+            {
+                var error = new ValidationFailure(nameof(CreateExpenseRequestExpense.Participants), $"One or more participants are the same.");
+                errors.Add(error);
+            }
+
+            if (errors.Count > 0)
+                throw new FluentValidation.ValidationException(errors);
+
+
             var @event = await _context.Events.FirstOrDefaultAsync(ev => ev.Id == request.EventId);
             if (@event == null) throw new NotFoundException("TODO");
 
@@ -46,7 +67,7 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
             expense.Currency = "EUR";
 
             expense.ExpenseUsers = new List<ExpenseUser>();
-            foreach(var p in model.Participants)
+            foreach (var p in model.Participants)
             {
                 expense.ExpenseUsers.Add(new ExpenseUser { Expense = expense, UserId = p.Id, Amount = p.Amount });
             }
@@ -64,7 +85,7 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
 
             // Build return object.
 
-            var response =  _mapper.Map<CreateExpenseResponseExpense>(expense);
+            var response = _mapper.Map<CreateExpenseResponseExpense>(expense);
             response.Participants = new List<CreateExpenseResponseExpenseParticipant>();
 
             var users = expense.ExpenseUsers;
