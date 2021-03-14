@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Expenses.Domain.Entities
+namespace Expenses.Domain.EntitiesOld
 {
     public class EventUser
     {

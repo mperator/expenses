@@ -1,5 +1,5 @@
 ﻿using Expenses.Application.Common.Mappings;
-using Expenses.Domain.Entities;
+using Expenses.Domain.EntitiesOld;
 using System;
 using System.Collections.Generic;
 

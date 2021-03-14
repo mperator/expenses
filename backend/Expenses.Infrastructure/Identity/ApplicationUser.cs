@@ -1,5 +1,5 @@
 ﻿using Expenses.Application.Common.Models;
-using Expenses.Domain.Entities;
+using Expenses.Domain.EntitiesOld;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

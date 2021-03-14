@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Expenses.Domain.Entities
+namespace Expenses.Domain.EntitiesOld
 {
     // TODO: Domain Events
     public class Event : AuditableEntity
