@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Entities;
+﻿using Expenses.Domain.EntitiesOld;
 using Expenses.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

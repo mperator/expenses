@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Expenses.Domain.Entities
+namespace Expenses.Domain.EntitiesOld
 {
     public class Expense : AuditableEntity
     {
