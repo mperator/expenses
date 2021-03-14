@@ -1,5 +1,5 @@
 ﻿using Expenses.Application.Common.Interfaces;
-using Expenses.Domain.Entities;
+using Expenses.Domain.EntitiesOld;
 using MediatR;
 using System;
 using System.Collections.Generic;

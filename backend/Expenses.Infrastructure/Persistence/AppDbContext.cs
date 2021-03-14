@@ -1,6 +1,6 @@
 ﻿using Expenses.Application.Common.Interfaces;
 using Expenses.Domain.Common;
-using Expenses.Domain.Entities;
+using Expenses.Domain.EntitiesOld;
 using Expenses.Infrastructure.Identity;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;

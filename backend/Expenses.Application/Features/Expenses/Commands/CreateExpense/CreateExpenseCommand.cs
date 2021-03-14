@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Expenses.Application.Common.Exceptions;
 using Expenses.Application.Common.Interfaces;
-using Expenses.Domain.Entities;
+using Expenses.Domain.EntitiesOld;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
