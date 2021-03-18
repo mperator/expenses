@@ -121,7 +121,7 @@ namespace Expenses.Domain.Tests.Entities
             // arrange
             var expense = GetExpenseWithDefaultValues();
             UserId creditor = expense.CreatorId;
-            UserId debitor1 = expense.CreatorId;
+            UserId debitor1 = new UserId(Guid.NewGuid().ToString());
             UserId debitor2 = new UserId(Guid.NewGuid().ToString());
 
             var credit = new Credit { CreditorId = creditor, Amount = 10 };
@@ -150,7 +150,7 @@ namespace Expenses.Domain.Tests.Entities
             // arrange
             var expense = GetExpenseWithDefaultValues();
             UserId creditor = expense.CreatorId;
-            UserId debitor1 = expense.CreatorId;
+            UserId debitor1 = new UserId(Guid.NewGuid().ToString());
             UserId debitor2 = new UserId(Guid.NewGuid().ToString());
 
             var credit = new Credit { CreditorId = creditor, Amount = 10 };
@@ -174,8 +174,7 @@ namespace Expenses.Domain.Tests.Entities
             // arrange
             var expense = GetExpenseWithDefaultValues();
             UserId creditor = expense.CreatorId;
-            UserId debitor1 = expense.CreatorId;
-            UserId debitor2 = new UserId(Guid.NewGuid().ToString());
+            UserId debitor1 = new UserId(Guid.NewGuid().ToString());
 
             var credit = new Credit { CreditorId = creditor, Amount = 10 };
             var debits = new List<Debit>

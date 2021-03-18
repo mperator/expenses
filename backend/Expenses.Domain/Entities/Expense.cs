@@ -1,7 +1,7 @@
 ﻿using Expenses.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Expenses.Domain.Entities
 {
@@ -30,7 +30,7 @@ namespace Expenses.Domain.Entities
             if (string.IsNullOrWhiteSpace(description)) throw new Exception("Invalid description.");  // TODO: allow null?
             if (date == default) throw new Exception("Invalid date.");
             if (string.IsNullOrWhiteSpace(currency)) throw new Exception("Invalid currency set.");
-            if(currency.Length != 3) throw new Exception("No valid currency string.");
+            if (currency.Length != 3) throw new Exception("No valid currency string.");
 
             CreatorId = creatorId;
             Title = title;
@@ -41,9 +41,11 @@ namespace Expenses.Domain.Entities
 
         public void Split(Credit credit, List<Debit> debits)
         {
-            // != null
+            if (credit == null) throw new Exception("Credit must not be null.");
+            if (debits == null) throw new Exception("Debits must not be null.");
 
-            // TODO validate credit - debits = 0;
+            if (credit.Amount != debits.Sum(d => d.Amount)) throw new Exception("Invalid Amount betwenn credit and debits.");
+            if (debits.Count() != debits.Select(d => d.DebitorId).Distinct().Count()) throw new Exception("Same debotor is not allowed");
 
             _credit = credit;
             _debits = debits.AsReadOnly();
