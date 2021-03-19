@@ -114,22 +114,7 @@ namespace Expenses.Domain.Tests.Entities
             Assert.Equal(description, @event.Description);
         }
 
-        [Fact]
         // https://stackoverflow.com/questions/46653557/whats-the-idiomatic-way-to-verify-collection-size-in-xunit
-        public void AddParticipant_Single()
-        {
-            // arrange
-            var @event = GetValidEvent();
-            var participant = new UserId(Guid.NewGuid().ToString());
-
-            // act
-            @event.AddParticipant(participant);
-
-            // assert
-            Assert.Single(@event.Participants);
-            Assert.Equal(participant.Id, @event.Participants.First().Id);
-        }
-
         [Fact]
         public void AddParticipant_Multiple()
         {
@@ -144,6 +129,7 @@ namespace Expenses.Domain.Tests.Entities
 
             // assert
             Assert.Collection(@event.Participants,
+                i => Assert.Equal(@event.CreatorId.Id, i.Id),
                 i => Assert.Equal(participant1.Id, i.Id),
                 i => Assert.Equal(participant2.Id, i.Id));
         }
@@ -181,9 +167,10 @@ namespace Expenses.Domain.Tests.Entities
             @event.RemoveParticipant(new UserId(participantId3));
 
             // assert
-            Assert.True(@event.Participants.Count() == 2);
+            Assert.True(@event.Participants.Count() == 3);
 
             Assert.Collection(@event.Participants,
+                i => Assert.Equal(@event.CreatorId.Id, i.Id),
                 i => Assert.Equal(participantId1, i.Id),
                 i => Assert.Equal(participantId2, i.Id));
         }
