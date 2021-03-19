@@ -42,7 +42,8 @@ namespace Expenses.Domain.Entities
             EndDate = endDate;
             Currency = currency;
 
-            _participants = new List<UserId>();
+            // Add creator as first participants.
+            _participants = new List<UserId> { creatorId };
             _expenses = new List<Expense>();
         }
 
@@ -61,17 +62,48 @@ namespace Expenses.Domain.Entities
             if (p == null)
                 throw new Exception("Participant not found.");
 
+            // Check if participant takes part in any expense.
+
+            var _1 = _expenses.Select(e => e.CreatorId).FirstOrDefault(a => a.Id == participant.Id) != null;
+            var _2 = _expenses.Select(e => e.Credit.CreditorId).FirstOrDefault(a => a.Id == participant.Id) != null;
+            var _3 = _expenses.SelectMany(e => e.Debits.ToList())?.Select(a => a.DebitorId).FirstOrDefault(a => a.Id == participant.Id) != null;
+
+            if (_1 || _2 || _3)
+                throw new Exception("Participant takes part in expense and cannot be deleted.");
+
             _participants.Remove(p);
         }
 
         public void AddExpense(Expense expense)
         {
+            // Check if split is set.
+            if (expense.Credit == null || expense.Debits == null)
+                throw new Exception("Invalid expense no split set.");
 
+            // Check if creator, creditor and debitor take part in event.
+            var users = new List<UserId> { expense.CreatorId, expense.Credit.CreditorId };
+            users.AddRange(expense.Debits.Select(a => a.DebitorId));
+
+            foreach (var user in users)
+                if (_participants.Find(p => p.Id == user.Id) == null) throw new Exception("User unknown for event.");
+
+            // Check if event date is between event date
+            if (expense.Date.Date < StartDate.Date || expense.Date.Date > EndDate.Date)
+                throw new Exception("Date not between event date.");
+
+            // Check if currency matches.
+            if (expense.Currency != Currency)
+                throw new Exception("Invalid Currency");
+
+            _expenses.Add(expense);
         }
 
         public void RemoveExpense(Expense expense)
         {
+            // usually identified by id but if not saved yet how to identify
+            if (!_expenses.Contains(expense)) throw new Exception("Expnese does not exists");
 
+            _expenses.Remove(expense);
         }
 
         // add expense
