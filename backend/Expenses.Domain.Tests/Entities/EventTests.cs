@@ -192,12 +192,30 @@ namespace Expenses.Domain.Tests.Entities
         public void RemoveParticipant_WhoParticipatesInEvent()
         {
             // arrange
+            var creatorId = Guid.NewGuid().ToString();
+            var participantId1 = Guid.NewGuid().ToString();
+            var participantId2 = Guid.NewGuid().ToString();
+
+            var @event = GetValidEvent(new UserId(creatorId));
+
+            @event.AddParticipant(new UserId(participantId1));
+            @event.AddParticipant(new UserId(participantId2));
+
+            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
+            expense.Split(
+                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new List<Debit>
+                {
+                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
+                    new Debit { DebitorId = new UserId(participantId1), Amount = 5 }
+                });
+            @event.AddExpense(expense);
 
             // act
+            var ex = Record.Exception(() => @event.RemoveParticipant(new UserId(participantId1)));
 
             // assert
-
-            throw new NotImplementedException();
+            Assert.IsType<Exception>(ex);
         }
 
         [Fact]
