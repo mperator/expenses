@@ -190,11 +190,11 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new Credit(new UserId(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
-                    new Debit { DebitorId = new UserId(participantId1), Amount = 5 }
+                    new Debit(new UserId(creatorId), 5),
+                    new Debit(new UserId(participantId1), 5)
                 });
             @event.AddExpense(expense);
 
@@ -240,11 +240,11 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new Credit(new UserId(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
-                    new Debit { DebitorId = new UserId(participantId1), Amount = 5 }
+                    new Debit(new UserId(creatorId), 5),
+                    new Debit(new UserId(participantId1), 5)
                 });
 
             // act
@@ -294,11 +294,11 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(new UserId(unknownCreatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new Credit(new UserId(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
-                    new Debit { DebitorId = new UserId(participantId1), Amount = 5 }
+                    new Debit(new UserId(creatorId), 5),
+                    new Debit(new UserId(participantId1), 5)
                 });
 
             // act
@@ -324,11 +324,11 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new Credit(new UserId(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
-                    new Debit { DebitorId = new UserId(unknownParticipantId), Amount = 5 }
+                    new Debit(new UserId(creatorId), 5),
+                    new Debit(new UserId(unknownParticipantId), 5)
                 });
 
             // act
@@ -354,11 +354,11 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(100), "EUR");
             expense.Split(
-                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new Credit(new UserId(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
-                    new Debit { DebitorId = new UserId(participantId1), Amount = 5 }
+                    new Debit(new UserId(creatorId), 5),
+                    new Debit(new UserId(participantId1), 5)
                 });
 
             // act
@@ -383,11 +383,11 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "USD");
             expense.Split(
-                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new Credit(new UserId(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
-                    new Debit { DebitorId = new UserId(participantId1), Amount = 5 }
+                    new Debit(new UserId(creatorId), 5),
+                    new Debit(new UserId(participantId1), 5)
                 });
 
             // act
@@ -412,11 +412,11 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new Credit(new UserId(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
-                    new Debit { DebitorId = new UserId(participantId1), Amount = 5 }
+                    new Debit(new UserId(creatorId), 5),
+                    new Debit(new UserId(participantId1), 5)
                 });
 
             @event.AddExpense(expense);
@@ -443,11 +443,11 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit { CreditorId = new UserId(creatorId), Amount = 10 },
+                new Credit(new UserId(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit { DebitorId = new UserId(creatorId), Amount = 5 },
-                    new Debit { DebitorId = new UserId(participantId1), Amount = 5 }
+                    new Debit(new UserId(creatorId), 5),
+                    new Debit(new UserId(participantId1), 5)
                 });
 
             // act
