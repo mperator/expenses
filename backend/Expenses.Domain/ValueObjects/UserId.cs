@@ -1,4 +1,6 @@
-﻿namespace Expenses.Domain.ValueObjects
+﻿using System;
+
+namespace Expenses.Domain.ValueObjects
 {
     public class UserId // : valueobjects
     {
@@ -6,6 +8,7 @@
 
         public UserId(string id)
         {
+            if (string.IsNullOrWhiteSpace(id)) throw new Exception("Invelid user id.");
             Id = id;
         }
     }

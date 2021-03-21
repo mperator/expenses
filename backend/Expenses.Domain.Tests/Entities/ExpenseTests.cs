@@ -121,12 +121,12 @@ namespace Expenses.Domain.Tests.Entities
             UserId debitor1 = new UserId(Guid.NewGuid().ToString());
             UserId debitor2 = new UserId(Guid.NewGuid().ToString());
 
-            var credit = new Credit { CreditorId = creditor, Amount = 10 };
+            var credit = new Credit(creditor, 10);
             var debits = new List<Debit>
             {
-                new Debit { DebitorId = creditor, Amount = 2 },
-                new Debit { DebitorId = debitor1, Amount = 2 },
-                new Debit { DebitorId = debitor2, Amount = 6 }
+                new Debit(creditor, 2),
+                new Debit(debitor1, 2),
+                new Debit(debitor2, 6)
             };
 
             // act
@@ -150,12 +150,12 @@ namespace Expenses.Domain.Tests.Entities
             UserId debitor1 = new UserId(Guid.NewGuid().ToString());
             UserId debitor2 = new UserId(Guid.NewGuid().ToString());
 
-            var credit = new Credit { CreditorId = creditor, Amount = 10 };
+            var credit = new Credit(creditor, 10);
             var debits = new List<Debit>
             {
-                new Debit { DebitorId = creditor, Amount = 2 },
-                new Debit { DebitorId = debitor1, Amount = 10 },
-                new Debit { DebitorId = debitor2, Amount = 6 }
+                new Debit(creditor, 2),
+                new Debit(debitor1, 10),
+                new Debit(debitor2, 6)
             };
 
             // act
@@ -173,12 +173,12 @@ namespace Expenses.Domain.Tests.Entities
             UserId creditor = expense.CreatorId;
             UserId debitor1 = new UserId(Guid.NewGuid().ToString());
 
-            var credit = new Credit { CreditorId = creditor, Amount = 10 };
+            var credit = new Credit(creditor, 10);
             var debits = new List<Debit>
             {
-                new Debit { DebitorId = creditor, Amount = 2 },
-                new Debit { DebitorId = debitor1, Amount = 2 },
-                new Debit { DebitorId = debitor1, Amount = 6 }
+                new Debit(creditor, 2),
+                new Debit(debitor1, 2),
+                new Debit(debitor1, 6)
             };
 
             // act
