@@ -1,10 +1,13 @@
-﻿using Expenses.Domain.ValueObjects;
+﻿using Expenses.Domain.Exceptions;
+using Expenses.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Expenses.Domain.Entities
 {
+    // TODO: Do we need an interface for domain logic here?
+    // TODO: Should we relay on System exceptions for basic validaition e.g. ArgumentNullException or InvalidArgumentException
     public class Expense
     {
         private Credit _credit;
@@ -25,12 +28,14 @@ namespace Expenses.Domain.Entities
         public Expense(UserId creatorId, string title, string description, DateTime date, string currency)
         {
             // domain validation
-            if (creatorId == null) throw new Exception("Invalid creator.");
-            if (string.IsNullOrWhiteSpace(title)) throw new Exception("Invalid title.");
-            if (string.IsNullOrWhiteSpace(description)) throw new Exception("Invalid description.");  // TODO: allow null?
-            if (date == default) throw new Exception("Invalid date.");
-            if (string.IsNullOrWhiteSpace(currency)) throw new Exception("Invalid currency set.");
-            if (currency.Length != 3) throw new Exception("No valid currency string.");
+            if (creatorId == null) throw new ExpenseValidationException("CreatorInvalid", "Invalid creator.");
+            if (string.IsNullOrWhiteSpace(title)) throw new ExpenseValidationException("TitleInvalid", "Invalid title.");
+            if (string.IsNullOrWhiteSpace(description)) throw new ExpenseValidationException("DescriptionInvalid", "description.");  // TODO: allow null?
+            if (date == default) throw new ExpenseValidationException("DateInvalid", "Invalid date.");
+            
+            // TODO: Use value object for currency
+            if (string.IsNullOrWhiteSpace(currency)) throw new ExpenseValidationException("CurrencyInvalid", "Invalid currency set.");
+            if (currency.Length != 3) throw new ExpenseValidationException("CurrencyInvalid", "No valid currency string.");
 
             CreatorId = creatorId;
             Title = title;
@@ -41,11 +46,13 @@ namespace Expenses.Domain.Entities
 
         public void Split(Credit credit, List<Debit> debits)
         {
-            if (credit == null) throw new Exception("Credit must not be null.");
-            if (debits == null) throw new Exception("Debits must not be null.");
+            if (credit == null) throw new ExpenseValidationException("CreditInvalid", "Credit must not be null.");
+            if (debits == null || debits.Count == 0) throw new ExpenseValidationException("DebitsInvalid", "Debits must not be null or empty.");
 
-            if (credit.Amount != debits.Sum(d => d.Amount)) throw new Exception("Invalid Amount betwenn credit and debits.");
-            if (debits.Count() != debits.Select(d => d.DebitorId).Distinct().Count()) throw new Exception("Same debotor is not allowed");
+            if (credit.Amount != debits.Sum(d => d.Amount)) throw new ExpenseValidationException("CreditNotDebitsAmount", "Invalid amount betwenn credit and debits.");
+            
+            // TODO: does this matter?
+            if (debits.Count() != debits.Select(d => d.DebitorId).Distinct().Count()) throw new ExpenseValidationException("DebitorSame", "Same debitor is not allowed");
 
             _credit = credit;
             _debits = debits.AsReadOnly();

@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Entities;
+using Expenses.Domain.Exceptions;
 using Expenses.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,29 @@ using Xunit;
 
 namespace Expenses.Domain.Tests.Entities
 {
+    internal static class EventDataGenerator
+    {
+        public static IEnumerable<object[]> GenerateEvent_WithDefaultOrEmptyParameter()
+        {
+            UserId creatorId = new UserId(Guid.NewGuid().ToString());
+            const string title = "title";
+            const string description = "description";
+            DateTime startDate = DateTime.UtcNow;
+            DateTime endDate = DateTime.UtcNow.AddDays(10);
+            const string currency = "EUR";
+
+            yield return new object[] { default, title, description, startDate, endDate, currency, "CreatorIdInvalid" };
+            yield return new object[] { creatorId, default, description, startDate, endDate, currency, "TitleInvalid" };
+            yield return new object[] { creatorId, string.Empty, description, startDate, endDate, currency, "TitleInvalid" };
+            yield return new object[] { creatorId, title, default, startDate, endDate, currency, "DescriptionInvalid" };
+            yield return new object[] { creatorId, title, string.Empty, startDate, endDate, currency, "DescriptionInvalid" };
+            yield return new object[] { creatorId, title, description, default, endDate, currency, "StartDateInvalid" };
+            yield return new object[] { creatorId, title, description, startDate, default, currency, "EndDateInvalid" };
+            yield return new object[] { creatorId, title, description, startDate, endDate, default, "CurrencyInvalid" };
+            yield return new object[] { creatorId, title, description, startDate, endDate, string.Empty, "CurrencyInvalid" };
+        }
+    }
+
     public class EventTests
     {
         [Fact]
@@ -57,15 +81,24 @@ namespace Expenses.Domain.Tests.Entities
             var ex_currency_empty = Record.Exception(() => new Event(creatorId, title, description, startDate, endDate, string.Empty));
 
             // assert
-            Assert.IsType<Exception>(ex_userId);
-            Assert.IsType<Exception>(ex_title_default);
-            Assert.IsType<Exception>(ex_title_empty);
-            Assert.IsType<Exception>(ex_description_default);
-            Assert.IsType<Exception>(ex_description_empty);
-            Assert.IsType<Exception>(ex_startDate);
-            Assert.IsType<Exception>(ex_endDate);
-            Assert.IsType<Exception>(ex_currency_default);
-            Assert.IsType<Exception>(ex_currency_empty);
+            Assert.IsType<EventValidationException>(ex_userId);
+            Assert.IsType<EventValidationException>(ex_title_default);
+            Assert.IsType<EventValidationException>(ex_title_empty);
+            Assert.IsType<EventValidationException>(ex_description_default);
+            Assert.IsType<EventValidationException>(ex_description_empty);
+            Assert.IsType<EventValidationException>(ex_startDate);
+            Assert.IsType<EventValidationException>(ex_endDate);
+            Assert.IsType<EventValidationException>(ex_currency_default);
+            Assert.IsType<EventValidationException>(ex_currency_empty);
+        }
+
+        [Theory]
+        [MemberData(nameof(EventDataGenerator.GenerateEvent_WithDefaultOrEmptyParameter), MemberType = typeof(EventDataGenerator))]
+        public void CreateEvent_WithDefaultOrEmptyParameter1(UserId creatorId, string title, string description, DateTime startDate, DateTime endDate, string currency, string exceptionCode)
+        {
+            // act and assert
+            var exception = Assert.Throws<EventValidationException>(() => new Event(creatorId, title, description, startDate, endDate, currency));
+            Assert.Equal(exceptionCode, exception.Code);
         }
 
         [Fact]
@@ -83,7 +116,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => new Event(default, title, description, startDate, endDate, currency));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
         [Fact]
@@ -146,7 +179,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.AddParticipant(new UserId(participantId)));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
         [Fact]
@@ -202,7 +235,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.RemoveParticipant(new UserId(participantId1)));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
         [Fact]
@@ -222,7 +255,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.RemoveParticipant(new UserId(participantId3)));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
         [Fact]
@@ -275,7 +308,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.AddExpense(expense));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
         [Fact]
@@ -305,7 +338,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.AddExpense(expense));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
         [Fact]
@@ -335,7 +368,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.AddExpense(expense));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
 
@@ -365,7 +398,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.AddExpense(expense));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
         [Fact]
@@ -394,7 +427,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.AddExpense(expense));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
         [Fact]
@@ -454,7 +487,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => @event.RemoveExpense(expense));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<EventValidationException>(ex);
         }
 
 
