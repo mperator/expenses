@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Entities;
+using Expenses.Domain.Exceptions;
 using Expenses.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -50,14 +51,14 @@ namespace Expenses.Domain.Tests.Entities
             var ex_currency_empty = Record.Exception(() => new Expense(userId, title, description, date, string.Empty));
 
             // assert
-            Assert.IsType<Exception>(ex_userId);
-            Assert.IsType<Exception>(ex_title_default);
-            Assert.IsType<Exception>(ex_title_empty);
-            Assert.IsType<Exception>(ex_description_default);
-            Assert.IsType<Exception>(ex_description_empty);
-            Assert.IsType<Exception>(ex_date);
-            Assert.IsType<Exception>(ex_currency_default);
-            Assert.IsType<Exception>(ex_currency_empty);
+            Assert.IsType<ExpenseValidationException>(ex_userId);
+            Assert.IsType<ExpenseValidationException>(ex_title_default);
+            Assert.IsType<ExpenseValidationException>(ex_title_empty);
+            Assert.IsType<ExpenseValidationException>(ex_description_default);
+            Assert.IsType<ExpenseValidationException>(ex_description_empty);
+            Assert.IsType<ExpenseValidationException>(ex_date);
+            Assert.IsType<ExpenseValidationException>(ex_currency_default);
+            Assert.IsType<ExpenseValidationException>(ex_currency_empty);
         }
 
         [Fact]
@@ -109,7 +110,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => GetExpenseWithDefaultValues(currency: "ABCDE"));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<ExpenseValidationException>(ex);
         }
 
         [Fact]
@@ -162,7 +163,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => expense.Split(credit, debits));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<ExpenseValidationException>(ex);
         }
 
         [Fact]
@@ -185,7 +186,7 @@ namespace Expenses.Domain.Tests.Entities
             var ex = Record.Exception(() => expense.Split(credit, debits));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<ExpenseValidationException>(ex);
         }
 
         private static Expense GetExpenseWithDefaultValues(
