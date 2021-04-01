@@ -28,7 +28,7 @@ namespace Expenses.Domain.Entities
 
         public Event(UserId creatorId, string title, string description, DateTime startDate, DateTime endDate, string currency)
         {
-            if (creatorId == null) throw new EventValidationException("CreatorIdInvalid", "Creator id is invalid.");
+            if (creatorId == null) throw new EventValidationException("CreatorIdInvalid", Localization.Language.InvalidCreator);
             if (string.IsNullOrWhiteSpace(title)) throw new EventValidationException("TitleInvalid", "No title set.");
             if (string.IsNullOrWhiteSpace(description)) throw new EventValidationException("DescriptionInvalid", "No description set.");
             if (startDate == default) throw new EventValidationException("StartDateInvalid", "Start date not set.");
