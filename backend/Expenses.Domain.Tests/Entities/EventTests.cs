@@ -4,6 +4,7 @@ using Expenses.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace Expenses.Domain.Tests.Entities
@@ -33,9 +34,27 @@ namespace Expenses.Domain.Tests.Entities
 
     public class EventTests
     {
+        public EventTests()
+        {
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("de-DE");
+        }
+
+
         [Fact]
         public void CreateEvent()
         {
+            var path = System.IO.Path.GetDirectoryName(
+      System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+
+            var a = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, System.AppDomain.CurrentDomain.RelativeSearchPath ?? "");
+
+            Assembly asm = Assembly.GetExecutingAssembly();
+            string path2 = System.IO.Path.GetDirectoryName(asm.Location);
+
+            var x = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+
+
+
             // arrange
             UserId creatorId = new UserId(Guid.NewGuid().ToString());
             const string title = "title";
