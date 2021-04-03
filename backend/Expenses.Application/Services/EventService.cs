@@ -1,28 +1,14 @@
 ﻿using Expenses.Application.Interfaces;
-using System;
+using Expenses.Application.Models;
+using Expenses.Domain.Entities;
+using Expenses.Domain.ValueObjects;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Expenses.Application.Services
 {
-    public class EventCreateModel
-    {
 
-    }
-
-    public class EventUpdateModel
-    {
-
-    }
-
-    public class EventReadModel
-    {
-
-    }
-
-    public class EventService   // entry point for presentation
+    
+    public class EventService : IEventService  // entry point for presentation
     {
         private readonly IEventRepository _repository;
 
@@ -31,50 +17,46 @@ namespace Expenses.Application.Services
             _repository = repository;
         }
 
-
-        //    public void CreateEvent(EventModel eventModel)
-        //    {
-        //        // assume eventModel was validated by API validation or validate here an throw back to api
-
-        //        // convert event model into Event Domain date
-
-        //        // add domainmodel if create into repository
-
-        //        // assume created
-        //    }
-
-        //    public void EventModel GetEventById()
-        //    {
-
-        //    }
-
-        //    // domain business -> do we want to use model no!! only to communicate outside
-
-        //    // if we ask the Warehouse management to work with order -> do we pass in order entity or id -> use of domain events??
-        //}
-
-        public EventReadModel GetEventById()
+        // Create
+        public EventReadModel CreateEvent(EventCreateModel model)
         {
+            UserId creatorId = new UserId(""); // UserService.Current
+
+            // create domain model
+            var @event = new Event(creatorId, model.Title, model.Description, model.StartTime, model.EndTime, model.Currency);
+            
+            foreach(var participant in model.Participants)
+            {
+                var participantId = new UserId(participant.Id);
+                @event.AddParticipant(participantId);
+            }
+
+            // add domain model to repository.
+
+            //_repository.Add(@event);
+            //_repository.Save();
+
+            // everything is ok do return model?
+            // check if event.Id is avialable
+
             return null;
         }
 
-        public IEnumerable<EventReadModel> GetEvents()
+        public EventReadModel GetEventById(int eventId)
         {
+            Event @event; // _reposiory.GetEventById(eventId);
+
+            // Convenrt to read model
+            // return @event;
+
             return null;
         }
 
         public IEnumerable<EventReadModel> GetEventsByFilter()
         {
+            // get all by or curserbased and with filter
+
             return null;
-        }
-
-        // Create
-        public void CreateEvent(EventCreateModel model)
-        {
-            // create domain model
-            // add domain model to repository.
-
-            // save repository
         }
 
         // Update
@@ -95,25 +77,33 @@ namespace Expenses.Application.Services
 
             _repository.Delete(eventId);
             _repository.Save();
-            
+
             // get domain event
             // remove 
             // save
         }
 
-        // Add Participants
-        public void AddParticipantToEvent(int eventId, string participantId)
-        {
-            // get domain
-            // add participant
 
-            // save oarticipant
+        public void AddParticipant(int eventId, string participantId)
+        {
+            Event @event = null; // _repository.GetEventById(eventId);
+            @event.AddParticipant(new UserId(participantId));
+
+            // _repository.Update(@event);
+            //_repository.Save();
+
+            // return nocontent;
         }
 
-        // Remove Participant
-        public void RemoveParticipantFromEvent(int eventId, string participantId)
+        public void RemoveParticipant(int eventId, string participantId)
         {
+            Event @event = null; // _repository.GetEventById(eventId);
+            @event.RemoveParticipant(new UserId(participantId));
 
+            // _repository.Update(@event);
+            //_repository.Save();
+
+            // return nocontent;
         }
     }
 }
