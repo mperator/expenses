@@ -13,7 +13,7 @@ namespace Expenses.Domain.Entities
         private List<UserId> _participants;
         private List<Expense> _expenses;
 
-        public int Id { get; }
+        public int Id { get; private set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public UserId CreatorId { get; }
@@ -38,6 +38,33 @@ namespace Expenses.Domain.Entities
             if (string.IsNullOrWhiteSpace(currency)) throw new EventValidationException("CurrencyInvalid", "Currency not set.");
 
             if (startDate > endDate) throw new EventValidationException("StartDateBehindEndDate", "Start date must be smaller or same like end date.");
+
+            CreatorId = creatorId;
+            Title = title;
+            Description = description;
+            StartDate = startDate;
+            EndDate = endDate;
+            Currency = currency;
+
+            // Add creator as first participants.
+            _participants = new List<UserId> { creatorId };
+            _expenses = new List<Expense>();
+        }
+
+        internal Event(int id, UserId creatorId, string title, string description, DateTime startDate, DateTime endDate, string currency)
+        {
+            if (creatorId == null) throw new EventValidationException("CreatorIdInvalid", Localization.Language.InvalidCreator);
+            if (string.IsNullOrWhiteSpace(title)) throw new EventValidationException("TitleInvalid", "No title set.");
+            if (string.IsNullOrWhiteSpace(description)) throw new EventValidationException("DescriptionInvalid", "No description set.");
+            if (startDate == default) throw new EventValidationException("StartDateInvalid", "Start date not set.");
+            if (endDate == default) throw new EventValidationException("EndDateInvalid", "End Date not set.");
+
+            // TODO: Validate in value object
+            if (string.IsNullOrWhiteSpace(currency)) throw new EventValidationException("CurrencyInvalid", "Currency not set.");
+
+            if (startDate > endDate) throw new EventValidationException("StartDateBehindEndDate", "Start date must be smaller or same like end date.");
+
+            Id = id;
 
             CreatorId = creatorId;
             Title = title;
