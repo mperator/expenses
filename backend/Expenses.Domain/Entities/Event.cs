@@ -74,8 +74,8 @@ namespace Expenses.Domain.Entities
                 throw new EventValidationException("RemoveParticipantNotExists", "Participant was not found.");
 
             // Check if participant takes part in any expense.
-            var _1 = _expenses.Select(e => e.CreatorId).FirstOrDefault(a => a.Id == participant.Id) != null;
-            var _2 = _expenses.Select(e => e.Credit.CreditorId).FirstOrDefault(a => a.Id == participant.Id) != null;
+            var _1 = _expenses.Select(e => e.Creator).FirstOrDefault(a => a.Id == participant.Id) != null;
+            var _2 = _expenses.Select(e => e.Credit.Creditor).FirstOrDefault(a => a.Id == participant.Id) != null;
             var _3 = _expenses.SelectMany(e => e.Debits.ToList())?.Select(a => a.DebitorId).FirstOrDefault(a => a.Id == participant.Id) != null;
 
             if (_1 || _2 || _3)
@@ -94,11 +94,11 @@ namespace Expenses.Domain.Entities
                 throw new EventValidationException("AddExpenseInvalidDebits", "Debits is not set or does not contain elements.");
 
             // Check if creator, creditor and debitor take part in event.
-            var users = new List<User> { expense.CreatorId, expense.Credit.CreditorId };
-            users.AddRange(expense.Debits.Select(a => a.DebitorId));
+            var userIds = new List<string> { expense.Creator.Id, expense.Credit.Creditor.Id };
+            userIds.AddRange(expense.Debits.Select(a => a.DebitorId.Id));
 
-            foreach (var user in users)
-                if (_participants.Find(p => p.Id == user.Id) == null) throw new EventValidationException("AddExpenseUnknownParticipant", "User does not participate in event.");
+            foreach (var id in userIds)
+                if (_participants.Find(p => p.Id == id) == null) throw new EventValidationException("AddExpenseUnknownParticipant", "User does not participate in event.");
 
             // Check if event date is between event date
             if (expense.Date.Date < StartDate.Date || expense.Date.Date > EndDate.Date)
