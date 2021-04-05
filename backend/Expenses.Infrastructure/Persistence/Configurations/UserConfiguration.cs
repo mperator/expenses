@@ -10,8 +10,13 @@ namespace Expenses.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("AspNetUsers");
-            builder.Property(e => e.Id).HasColumnName("Id");
-            builder.HasOne<ApplicationUser>().WithOne().HasForeignKey<User>(x => x.Id);
+
+            builder.Property(e => e.Id)
+                .HasColumnName("Id");
+
+            builder.HasOne<ApplicationUser>()
+                .WithOne()
+                .HasForeignKey<User>(x => x.Id);
         }
     }
 }

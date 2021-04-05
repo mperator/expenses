@@ -19,8 +19,6 @@ namespace Expenses.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Currency)
                 .HasMaxLength(3);
 
-            builder.Ignore(a => a.Expenses);
-
             builder.HasOne<User>(e => e.Creator)
                 .WithMany()
                 .HasForeignKey(x => x.CreatorId);
@@ -33,6 +31,10 @@ namespace Expenses.Infrastructure.Persistence.Configurations
                     eu => eu.HasOne<Event>(e => e.Event).WithMany().HasForeignKey(x => x.EventId))
                 .ToTable("EventUser")
                 .HasKey(e => new { e.EventId, e.UserId });
+
+            builder.HasMany<Expense>(e => e.Expenses)
+                .WithOne()
+                .HasForeignKey("EventId");
         }
     }
 }
