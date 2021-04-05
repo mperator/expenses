@@ -13,7 +13,7 @@ namespace Expenses.Domain.Tests.Entities
     {
         public static IEnumerable<object[]> GenerateEvent_WithDefaultOrEmptyParameter()
         {
-            UserId creatorId = new UserId(Guid.NewGuid().ToString());
+            var creatorId = new User(Guid.NewGuid().ToString());
             const string title = "title";
             const string description = "description";
             DateTime startDate = DateTime.UtcNow;
@@ -43,20 +43,8 @@ namespace Expenses.Domain.Tests.Entities
         [Fact]
         public void CreateEvent()
         {
-            var path = System.IO.Path.GetDirectoryName(
-      System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-
-            var a = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, System.AppDomain.CurrentDomain.RelativeSearchPath ?? "");
-
-            Assembly asm = Assembly.GetExecutingAssembly();
-            string path2 = System.IO.Path.GetDirectoryName(asm.Location);
-
-            var x = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-
-
-
             // arrange
-            var creatorId = (Guid.NewGuid().ToString());
+            var creator = new User(Guid.NewGuid().ToString());
             const string title = "title";
             const string description = "description";
             DateTime startDate = DateTime.UtcNow;
@@ -64,24 +52,24 @@ namespace Expenses.Domain.Tests.Entities
             const string currency = "EUR";
 
             // act
-            var @event = new Event(creatorId, title, description, startDate, endDate, currency);
+            var @event = new Event(creator, title, description, startDate, endDate, currency);
 
             // assert
-            Assert.Equal(creatorId, @event.CreatorId);
+            Assert.Equal(creator.Id, @event.CreatorId);
             Assert.Equal(title, @event.Title);
             Assert.Equal(description, @event.Description);
             Assert.Equal(startDate, @event.StartDate);
             Assert.Equal(endDate, @event.EndDate);
             Assert.Equal(currency, @event.Currency);
 
-            Assert.True(@event.Participants.First() == creatorId);
+            Assert.True(@event.Participants.First().Id == creator.Id);
         }
 
         [Fact]
         public void CreateEvent_WithDefaultOrEmptyParameter()
         {
             // arrange
-            var creatorId = (Guid.NewGuid().ToString());
+            var creator = new User(Guid.NewGuid().ToString());
             const string title = "title";
             const string description = "description";
             DateTime startDate = DateTime.UtcNow;
@@ -90,14 +78,14 @@ namespace Expenses.Domain.Tests.Entities
 
             // act
             var ex_userId = Record.Exception(() => new Event(default, title, description, startDate, endDate, currency));
-            var ex_title_default = Record.Exception(() => new Event(creatorId, default, description, startDate, endDate, currency));
-            var ex_title_empty = Record.Exception(() => new Event(creatorId, string.Empty, description, startDate, endDate, currency));
-            var ex_description_default = Record.Exception(() => new Event(creatorId, title, default, startDate, endDate, currency));
-            var ex_description_empty = Record.Exception(() => new Event(creatorId, title, string.Empty, startDate, endDate, currency));
-            var ex_startDate = Record.Exception(() => new Event(creatorId, title, description, default, endDate, currency));
-            var ex_endDate = Record.Exception(() => new Event(creatorId, title, description, startDate, default, currency));
-            var ex_currency_default = Record.Exception(() => new Event(creatorId, title, description, startDate, endDate, default));
-            var ex_currency_empty = Record.Exception(() => new Event(creatorId, title, description, startDate, endDate, string.Empty));
+            var ex_title_default = Record.Exception(() => new Event(creator, default, description, startDate, endDate, currency));
+            var ex_title_empty = Record.Exception(() => new Event(creator, string.Empty, description, startDate, endDate, currency));
+            var ex_description_default = Record.Exception(() => new Event(creator, title, default, startDate, endDate, currency));
+            var ex_description_empty = Record.Exception(() => new Event(creator, title, string.Empty, startDate, endDate, currency));
+            var ex_startDate = Record.Exception(() => new Event(creator, title, description, default, endDate, currency));
+            var ex_endDate = Record.Exception(() => new Event(creator, title, description, startDate, default, currency));
+            var ex_currency_default = Record.Exception(() => new Event(creator, title, description, startDate, endDate, default));
+            var ex_currency_empty = Record.Exception(() => new Event(creator, title, description, startDate, endDate, string.Empty));
 
             // assert
             Assert.IsType<EventValidationException>(ex_userId);
@@ -113,10 +101,10 @@ namespace Expenses.Domain.Tests.Entities
 
         [Theory]
         [MemberData(nameof(EventDataGenerator.GenerateEvent_WithDefaultOrEmptyParameter), MemberType = typeof(EventDataGenerator))]
-        public void CreateEvent_WithDefaultOrEmptyParameter1(string creatorId, string title, string description, DateTime startDate, DateTime endDate, string currency, string exceptionCode)
+        public void CreateEvent_WithDefaultOrEmptyParameter1(User creator, string title, string description, DateTime startDate, DateTime endDate, string currency, string exceptionCode)
         {
             // act and assert
-            var exception = Assert.Throws<EventValidationException>(() => new Event(creatorId, title, description, startDate, endDate, currency));
+            var exception = Assert.Throws<EventValidationException>(() => new Event(creator, title, description, startDate, endDate, currency));
             Assert.Equal(exceptionCode, exception.Code);
         }
 
@@ -124,7 +112,7 @@ namespace Expenses.Domain.Tests.Entities
         public void CreateEvent_WithInvalidStartAndEndDate()
         {
             // arrange
-            UserId creatorId = new UserId(Guid.NewGuid().ToString());
+            var creator = new User(Guid.NewGuid().ToString());
             const string title = "title";
             const string description = "description";
             DateTime startDate = DateTime.UtcNow;
@@ -172,8 +160,8 @@ namespace Expenses.Domain.Tests.Entities
         {
             // arrange
             var @event = GetValidEventWithRandomCreator();
-            var participant1 = new UserId(Guid.NewGuid().ToString());
-            var participant2 = new UserId(Guid.NewGuid().ToString());
+            var participant1 = new User(Guid.NewGuid().ToString());
+            var participant2 = new User(Guid.NewGuid().ToString());
 
             // act
             @event.AddParticipant(participant1);
@@ -181,9 +169,9 @@ namespace Expenses.Domain.Tests.Entities
 
             // assert
             Assert.Collection(@event.Participants,
-                i => Assert.Equal(@event.CreatorId, i),
-                i => Assert.Equal(participant1.Id, i),
-                i => Assert.Equal(participant2.Id, i));
+                i => Assert.Equal(@event.CreatorId, i.Id),
+                i => Assert.Equal(participant1.Id, i.Id),
+                i => Assert.Equal(participant2.Id, i.Id));
         }
 
         [Fact]
@@ -192,10 +180,10 @@ namespace Expenses.Domain.Tests.Entities
             // arrange
             var @event = GetValidEventWithRandomCreator();
             var participantId = Guid.NewGuid().ToString();
-            @event.AddParticipant(new UserId(participantId));
+            @event.AddParticipant(new User(participantId));
 
             // act
-            var ex = Record.Exception(() => @event.AddParticipant(new UserId(participantId)));
+            var ex = Record.Exception(() => @event.AddParticipant(new User(participantId)));
 
             // assert
             Assert.IsType<EventValidationException>(ex);
@@ -211,20 +199,20 @@ namespace Expenses.Domain.Tests.Entities
             var participantId2 = Guid.NewGuid().ToString();
             var participantId3 = Guid.NewGuid().ToString();
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
-            @event.AddParticipant(new UserId(participantId3));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
+            @event.AddParticipant(new User(participantId3));
 
             // act
-            @event.RemoveParticipant(new UserId(participantId3));
+            @event.RemoveParticipant(new User(participantId3));
 
             // assert
             Assert.True(@event.Participants.Count() == 3);
 
             Assert.Collection(@event.Participants,
-                i => Assert.Equal(@event.CreatorId, i),
-                i => Assert.Equal(participantId1, i),
-                i => Assert.Equal(participantId2, i));
+                i => Assert.Equal(@event.CreatorId, i.Id),
+                i => Assert.Equal(participantId1, i.Id),
+                i => Assert.Equal(participantId2, i.Id));
         }
 
         [Fact]
@@ -235,23 +223,23 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
+            var expense = new Expense(new User(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit(new UserId(creatorId), 10),
+                new Credit(new User(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit(new UserId(creatorId), 5),
-                    new Debit(new UserId(participantId1), 5)
+                    new Debit(new User(creatorId), 5),
+                    new Debit(new User(participantId1), 5)
                 });
             @event.AddExpense(expense);
 
             // act
-            var ex = Record.Exception(() => @event.RemoveParticipant(new UserId(participantId1)));
+            var ex = Record.Exception(() => @event.RemoveParticipant(new User(participantId1)));
 
             // assert
             Assert.IsType<EventValidationException>(ex);
@@ -267,11 +255,11 @@ namespace Expenses.Domain.Tests.Entities
             var participantId2 = Guid.NewGuid().ToString();
             var participantId3 = Guid.NewGuid().ToString();
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
             // act
-            var ex = Record.Exception(() => @event.RemoveParticipant(new UserId(participantId3)));
+            var ex = Record.Exception(() => @event.RemoveParticipant(new User(participantId3)));
 
             // assert
             Assert.IsType<EventValidationException>(ex);
@@ -285,18 +273,18 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
+            var expense = new Expense(new User(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit(new UserId(creatorId), 10),
+                new Credit(new User(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit(new UserId(creatorId), 5),
-                    new Debit(new UserId(participantId1), 5)
+                    new Debit(new User(creatorId), 5),
+                    new Debit(new User(participantId1), 5)
                 });
 
             // act
@@ -316,12 +304,12 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
+            var expense = new Expense(new User(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
 
             // act
             var ex = Record.Exception(() => @event.AddExpense(expense));
@@ -339,18 +327,18 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(unknownCreatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
+            var expense = new Expense(new User(unknownCreatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit(new UserId(creatorId), 10),
+                new Credit(new User(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit(new UserId(creatorId), 5),
-                    new Debit(new UserId(participantId1), 5)
+                    new Debit(new User(creatorId), 5),
+                    new Debit(new User(participantId1), 5)
                 });
 
             // act
@@ -369,18 +357,18 @@ namespace Expenses.Domain.Tests.Entities
             var participantId2 = Guid.NewGuid().ToString();
             var unknownParticipantId = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
+            var expense = new Expense(new User(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit(new UserId(creatorId), 10),
+                new Credit(new User(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit(new UserId(creatorId), 5),
-                    new Debit(new UserId(unknownParticipantId), 5)
+                    new Debit(new User(creatorId), 5),
+                    new Debit(new User(unknownParticipantId), 5)
                 });
 
             // act
@@ -399,18 +387,18 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(100), "EUR");
+            var expense = new Expense(new User(creatorId), "title", "description", DateTime.Now.AddDays(100), "EUR");
             expense.Split(
-                new Credit(new UserId(creatorId), 10),
+                new Credit(new User(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit(new UserId(creatorId), 5),
-                    new Debit(new UserId(participantId1), 5)
+                    new Debit(new User(creatorId), 5),
+                    new Debit(new User(participantId1), 5)
                 });
 
             // act
@@ -428,18 +416,18 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "USD");
+            var expense = new Expense(new User(creatorId), "title", "description", DateTime.Now.AddDays(1), "USD");
             expense.Split(
-                new Credit(new UserId(creatorId), 10),
+                new Credit(new User(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit(new UserId(creatorId), 5),
-                    new Debit(new UserId(participantId1), 5)
+                    new Debit(new User(creatorId), 5),
+                    new Debit(new User(participantId1), 5)
                 });
 
             // act
@@ -457,18 +445,18 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
+            var expense = new Expense(new User(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit(new UserId(creatorId), 10),
+                new Credit(new User(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit(new UserId(creatorId), 5),
-                    new Debit(new UserId(participantId1), 5)
+                    new Debit(new User(creatorId), 5),
+                    new Debit(new User(participantId1), 5)
                 });
 
             @event.AddExpense(expense);
@@ -488,18 +476,18 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(creatorId);
+            var @event = GetValidEvent(new User(creatorId));
 
-            @event.AddParticipant(new UserId(participantId1));
-            @event.AddParticipant(new UserId(participantId2));
+            @event.AddParticipant(new User(participantId1));
+            @event.AddParticipant(new User(participantId2));
 
-            var expense = new Expense(new UserId(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
+            var expense = new Expense(new User(creatorId), "title", "description", DateTime.Now.AddDays(1), "EUR");
             expense.Split(
-                new Credit(new UserId(creatorId), 10),
+                new Credit(new User(creatorId), 10),
                 new List<Debit>
                 {
-                    new Debit(new UserId(creatorId), 5),
-                    new Debit(new UserId(participantId1), 5)
+                    new Debit(new User(creatorId), 5),
+                    new Debit(new User(participantId1), 5)
                 });
 
             // act
@@ -515,18 +503,18 @@ namespace Expenses.Domain.Tests.Entities
             string description = "description",
             string currency = "EUR")
         {
-            var creatorId = (Guid.NewGuid().ToString());
+            var creator = new User(Guid.NewGuid().ToString());
 
-            return GetValidEvent(creatorId, title, description, currency);
+            return GetValidEvent(creator, title, description, currency);
         }
 
         private Event GetValidEvent(
-            string creatorId,
+            User creator,
             string title = "title",
             string description = "description",
             string currency = "EUR")
         {
-            return new Event(creatorId, title, description, DateTime.UtcNow, DateTime.UtcNow.AddDays(10), currency);
+            return new Event(creator, title, description, DateTime.UtcNow, DateTime.UtcNow.AddDays(10), currency);
         }
     }
 }

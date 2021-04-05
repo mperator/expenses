@@ -16,7 +16,7 @@ namespace Expenses.Application.Tests.Services
         public void DeleteEvent_VeryfiyExpectedMethodsInvokedOnlyOnce()
         {
             // Arrange
-            var @event = new Event((Guid.NewGuid().ToString()), "title", "description", DateTime.Now, DateTime.Now.AddDays(10), "EUR");
+            var @event = new Event(new User(Guid.NewGuid().ToString()), "title", "description", DateTime.Now, DateTime.Now.AddDays(10), "EUR");
             // There is no way to mock id without changing domain class. Using custom constructors, virtual properties, or an object builder. Is not an option as well because it provides code manipulation from outside.
             @event.GetType().GetProperty(nameof(Event.Id)).SetValue(@event, 10, null);
 

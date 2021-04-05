@@ -26,9 +26,9 @@ namespace Expenses.Infrastructure.Persistence.Configurations
                 .WithMany()
                 .HasForeignKey(x => x.CreatorId);
 
-            // user class needs navigation property to be able to create migration. Anonymous are not supported.
-            builder.HasMany<User>(a => a.Users)
-                .WithMany("Events")   // write anythin != empty to cheat lol
+            // Configure many to many relationship between user and event.
+            builder.HasMany<User>(a => a.Participants)
+                .WithMany("Events")   // Link to private navigation property.
                 .UsingEntity<EventUser>(
                     eu => eu.HasOne<User>(e => e.User).WithMany().HasForeignKey(x => x.UserId),
                     eu => eu.HasOne<Event>(e => e.Event).WithMany().HasForeignKey(x => x.EventId))
