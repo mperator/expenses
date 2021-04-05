@@ -23,12 +23,12 @@ namespace Expenses.Application.Services
             var creatorId = string.Empty; // UserService.Current
 
             // create domain model
-            var @event = new Event(creatorId, model.Title, model.Description, model.StartTime, model.EndTime, model.Currency);
+            var @event = new Event(new User(creatorId), model.Title, model.Description, model.StartTime, model.EndTime, model.Currency);
             
-            foreach(var participant in model.Participants)
+            foreach(var participantModel in model.Participants)
             {
-                var participantId = new UserId(participant.Id);
-                @event.AddParticipant(participantId);
+                var participant = new User(participantModel.Id);
+                @event.AddParticipant(participant);
             }
 
             // add domain model to repository.
@@ -87,7 +87,7 @@ namespace Expenses.Application.Services
         public void AddParticipant(int eventId, string participantId)
         {
             Event @event = null; // _repository.GetEventById(eventId);
-            @event.AddParticipant(new UserId(participantId));
+            @event.AddParticipant(new User(participantId));
 
             // _repository.Update(@event);
             //_repository.Save();
@@ -98,7 +98,7 @@ namespace Expenses.Application.Services
         public void RemoveParticipant(int eventId, string participantId)
         {
             Event @event = null; // _repository.GetEventById(eventId);
-            @event.RemoveParticipant(new UserId(participantId));
+            @event.RemoveParticipant(new User(participantId));
 
             // _repository.Update(@event);
             //_repository.Save();

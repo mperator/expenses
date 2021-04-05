@@ -15,15 +15,15 @@ namespace Expenses.Domain.Tests.Entities
         [Fact]
         public void CreateExpense()
         {
-            UserId userId = new UserId(Guid.NewGuid().ToString());
+            var user = new User(Guid.NewGuid().ToString());
             const string title = "title";
             const string description = "description";
             DateTime date = DateTime.UtcNow;
             const string currency = "EUR";
 
-            var expense = new Expense(userId, title, description, date, currency);
+            var expense = new Expense(user, title, description, date, currency);
 
-            Assert.Equal(userId.Id, expense.CreatorId.Id);
+            Assert.Equal(user.Id, expense.CreatorId.Id);
             Assert.Equal(title, expense.Title);
             Assert.Equal(description, expense.Description);
             Assert.Equal(date, expense.Date);
@@ -34,7 +34,7 @@ namespace Expenses.Domain.Tests.Entities
         public void CreateExpense_WithDefaultOrEmptyParameter()
         {
             // arrange
-            UserId userId = new UserId(Guid.NewGuid().ToString());
+            var user = new User(Guid.NewGuid().ToString());
             const string title = "title";
             const string description = "description";
             DateTime date = DateTime.UtcNow;
@@ -42,13 +42,13 @@ namespace Expenses.Domain.Tests.Entities
 
             // act
             var ex_userId = Record.Exception(() => new Expense(default, title, description, date, currency));
-            var ex_title_default = Record.Exception(() => new Expense(userId, default, description, date, currency));
-            var ex_title_empty = Record.Exception(() => new Expense(userId, string.Empty, description, date, currency));
-            var ex_description_default = Record.Exception(() => new Expense(userId, title, default, date, currency));
-            var ex_description_empty = Record.Exception(() => new Expense(userId, title, string.Empty, date, currency));
-            var ex_date = Record.Exception(() => new Expense(userId, title, description, default, currency));
-            var ex_currency_default = Record.Exception(() => new Expense(userId, title, description, date, default));
-            var ex_currency_empty = Record.Exception(() => new Expense(userId, title, description, date, string.Empty));
+            var ex_title_default = Record.Exception(() => new Expense(user, default, description, date, currency));
+            var ex_title_empty = Record.Exception(() => new Expense(user, string.Empty, description, date, currency));
+            var ex_description_default = Record.Exception(() => new Expense(user, title, default, date, currency));
+            var ex_description_empty = Record.Exception(() => new Expense(user, title, string.Empty, date, currency));
+            var ex_date = Record.Exception(() => new Expense(user, title, description, default, currency));
+            var ex_currency_default = Record.Exception(() => new Expense(user, title, description, date, default));
+            var ex_currency_empty = Record.Exception(() => new Expense(user, title, description, date, string.Empty));
 
             // assert
             Assert.IsType<ExpenseValidationException>(ex_userId);
@@ -118,9 +118,9 @@ namespace Expenses.Domain.Tests.Entities
         {
             // arrange
             var expense = GetExpenseWithDefaultValues();
-            UserId creditor = expense.CreatorId;
-            UserId debitor1 = new UserId(Guid.NewGuid().ToString());
-            UserId debitor2 = new UserId(Guid.NewGuid().ToString());
+            var creditor = expense.CreatorId;
+            var debitor1 = new User(Guid.NewGuid().ToString());
+            var debitor2 = new User(Guid.NewGuid().ToString());
 
             var credit = new Credit(creditor, 10);
             var debits = new List<Debit>
@@ -147,9 +147,9 @@ namespace Expenses.Domain.Tests.Entities
         {
             // arrange
             var expense = GetExpenseWithDefaultValues();
-            UserId creditor = expense.CreatorId;
-            UserId debitor1 = new UserId(Guid.NewGuid().ToString());
-            UserId debitor2 = new UserId(Guid.NewGuid().ToString());
+            var creditor = expense.CreatorId;
+            var debitor1 = new User(Guid.NewGuid().ToString());
+            var debitor2 = new User(Guid.NewGuid().ToString());
 
             var credit = new Credit(creditor, 10);
             var debits = new List<Debit>
@@ -171,8 +171,8 @@ namespace Expenses.Domain.Tests.Entities
         {
             // arrange
             var expense = GetExpenseWithDefaultValues();
-            UserId creditor = expense.CreatorId;
-            UserId debitor1 = new UserId(Guid.NewGuid().ToString());
+            var creditor = expense.CreatorId;
+            var debitor1 = new User(Guid.NewGuid().ToString());
 
             var credit = new Credit(creditor, 10);
             var debits = new List<Debit>
@@ -195,9 +195,9 @@ namespace Expenses.Domain.Tests.Entities
             string currency = "EUR"
             )
         {
-            var userId = new UserId(Guid.NewGuid().ToString());
+            var user = new User(Guid.NewGuid().ToString());
 
-            return new Expense(userId, title, description, DateTime.UtcNow, currency);
+            return new Expense(user, title, description, DateTime.UtcNow, currency);
         }
     }
 }

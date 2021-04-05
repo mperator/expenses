@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Expenses.Domain.Entities
 {
@@ -12,6 +13,7 @@ namespace Expenses.Domain.Entities
 
         public User(string id)
         {
+            if (string.IsNullOrWhiteSpace(id)) throw new Exception("Invelid user id.");
             Id = id;
         }
     }
