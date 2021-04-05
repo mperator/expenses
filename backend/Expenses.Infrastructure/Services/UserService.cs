@@ -23,13 +23,17 @@ namespace Expenses.Infrastructure.Services
 
         public async Task<User> FindByIdAsync(string id)
         {
-            return await _userManager.FindByIdAsync(id);
+            //return await _userManager.FindByIdAsync(id);
+
+            return null;
         }
 
         //TODO: own identity context
         public async Task<User> GetCurrentUserAsync()
         {
-            return await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            //return await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+            return null;
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync(string name)
@@ -41,7 +45,9 @@ namespace Expenses.Infrastructure.Services
                     u.LastName.Contains(name) ||
                     u.UserName.Contains(name));
 
-            return (await query.ToListAsync()).Select(s => (User)s);
+            //return (await query.ToListAsync()).Select(s => (User)s);
+
+            return null;
         }
     }
 }

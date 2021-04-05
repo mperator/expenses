@@ -34,68 +34,70 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
 
         public async Task<CreateExpenseResponseExpense> Handle(CreateExpenseCommand request, CancellationToken cancellationToken)
         {
-            var model = request.Model;
+            throw new Exception();
 
-            // TODO: Domain Business Logic
-            var errors = new List<ValidationFailure>();
-            var sum = model.Participants.Sum(p => p.Amount);
-            if (model.Amount != sum)
-            {
-                var error = new ValidationFailure(nameof(CreateExpenseRequestExpense.Amount), $"Amount {model.Amount} does not match with participant splits sum {sum}.");
-                errors.Add(error);
-            }
+            //var model = request.Model;
 
-            if (model.Participants.Count() != model.Participants.Select(a => a.Id).Distinct().Count())
-            {
-                var error = new ValidationFailure(nameof(CreateExpenseRequestExpense.Participants), $"One or more participants are the same.");
-                errors.Add(error);
-            }
+            //// TODO: Domain Business Logic
+            //var errors = new List<ValidationFailure>();
+            //var sum = model.Participants.Sum(p => p.Amount);
+            //if (model.Amount != sum)
+            //{
+            //    var error = new ValidationFailure(nameof(CreateExpenseRequestExpense.Amount), $"Amount {model.Amount} does not match with participant splits sum {sum}.");
+            //    errors.Add(error);
+            //}
 
-            if (errors.Count > 0)
-                throw new FluentValidation.ValidationException(errors);
+            //if (model.Participants.Count() != model.Participants.Select(a => a.Id).Distinct().Count())
+            //{
+            //    var error = new ValidationFailure(nameof(CreateExpenseRequestExpense.Participants), $"One or more participants are the same.");
+            //    errors.Add(error);
+            //}
+
+            //if (errors.Count > 0)
+            //    throw new FluentValidation.ValidationException(errors);
 
 
-            var @event = await _context.Events.FirstOrDefaultAsync(ev => ev.Id == request.EventId);
-            if (@event == null) throw new NotFoundException("TODO");
+            //var @event = await _context.Events.FirstOrDefaultAsync(ev => ev.Id == request.EventId);
+            //if (@event == null) throw new NotFoundException("TODO");
 
-            var user = await _userService.GetCurrentUserAsync();
+            //var user = await _userService.GetCurrentUserAsync();
 
-            var expense = _mapper.Map<Expense>(model);
-            expense.EventId = request.EventId;
-            expense.Event = @event;
-            expense.IssuerId = user.Id;
-            expense.Currency = "EUR";
+            //var expense = _mapper.Map<Expense>(model);
+            //expense.EventId = request.EventId;
+            //expense.Event = @event;
+            //expense.IssuerId = user.Id;
+            //expense.Currency = "EUR";
 
-            expense.ExpenseUsers = new List<ExpenseUser>();
-            foreach (var p in model.Participants)
-            {
-                expense.ExpenseUsers.Add(new ExpenseUser { Expense = expense, UserId = p.Id, Amount = p.Amount });
-            }
+            //expense.ExpenseUsers = new List<ExpenseUser>();
+            //foreach (var p in model.Participants)
+            //{
+            //    expense.ExpenseUsers.Add(new ExpenseUser { Expense = expense, UserId = p.Id, Amount = p.Amount });
+            //}
 
-            _context.Expenses.Add(expense);
+            ////_context.Expenses.Add(expense);
 
-            try
-            {
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException(e.Message);
-            }
+            //try
+            //{
+            //    await _context.SaveChangesAsync(cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    throw new InvalidOperationException(e.Message);
+            //}
 
-            // Build return object.
+            //// Build return object.
 
-            var response = _mapper.Map<CreateExpenseResponseExpense>(expense);
-            response.Participants = new List<CreateExpenseResponseExpenseParticipant>();
+            //var response = _mapper.Map<CreateExpenseResponseExpense>(expense);
+            //response.Participants = new List<CreateExpenseResponseExpenseParticipant>();
 
-            var users = expense.ExpenseUsers;
-            foreach (var expenseUser in expense.ExpenseUsers)
-            {
-                var participant = await _userService.FindByIdAsync(expenseUser.UserId);
-                response.Participants.Add(new CreateExpenseResponseExpenseParticipant { Id = participant.Id, Name = participant.Username, Amount = expenseUser.Amount });
-            }
+            //var users = expense.ExpenseUsers;
+            //foreach (var expenseUser in expense.ExpenseUsers)
+            //{
+            //    var participant = await _userService.FindByIdAsync(expenseUser.UserId);
+            //    response.Participants.Add(new CreateExpenseResponseExpenseParticipant { Id = participant.Id, Name = participant.Username, Amount = expenseUser.Amount });
+            //}
 
-            return response;
+            //return response;
         }
     }
 }

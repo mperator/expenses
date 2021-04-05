@@ -7,10 +7,14 @@ using Expenses.Domain.Entities;
 
 namespace Expenses.Infrastructure.Persistence.Configurations
 {
-    public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+    public class UserConfiguration : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.ToTable("AspNetUsers");
+            builder.Property(e => e.Id).HasColumnName("Id");
+            builder.HasOne<ApplicationUser>().WithOne().HasForeignKey<User>(x => x.Id);
+
             // https://docs.microsoft.com/en-us/archive/msdn-magazine/2018/april/data-points-ef-core-2-owned-entities-and-temporary-work-arounds link to complex type
             //builder.OwnsMany(u => u.RefreshTokens);
 

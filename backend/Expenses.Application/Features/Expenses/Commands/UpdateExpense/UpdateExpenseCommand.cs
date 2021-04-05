@@ -30,31 +30,33 @@ namespace Expenses.Application.Features.Expenses.Commands.UpdateExpense
 
         public async Task<Unit> Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
         {
-            var model = request.Model;
-
-            var expense = await _context.Expenses
-                .Include(a => a.ExpenseUsers)
-                .FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
-            if (expense == null) throw new NotFoundException();
-
-            var update = _mapper.Map<Expense>(model);
-            //TODO: make sure that only same user as creator or a user with appropriate role can change event
-
-            expense.Title = update.Title;
-            expense.Description = update.Description;
-            expense.Date = update.Date;
-            expense.Amount = update.Amount;
-
-            try
-            {
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                new InvalidOperationException(e.Message);
-            }
-
             return Unit.Value;
+
+            //var model = request.Model;
+
+            //var expense = await _context.Expenses
+            //    .Include(a => a.ExpenseUsers)
+            //    .FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
+            //if (expense == null) throw new NotFoundException();
+
+            //var update = _mapper.Map<Expense>(model);
+            ////TODO: make sure that only same user as creator or a user with appropriate role can change event
+
+            //expense.Title = update.Title;
+            //expense.Description = update.Description;
+            //expense.Date = update.Date;
+            //expense.Amount = update.Amount;
+
+            //try
+            //{
+            //    await _context.SaveChangesAsync(cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    new InvalidOperationException(e.Message);
+            //}
+
+            //return Unit.Value;
         }
     }
 }
