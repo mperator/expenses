@@ -32,12 +32,15 @@ namespace Expenses.Infrastructure.Persistence.Configurations
                         .HasForeignKey<Credit>("CreditorId");
                 });
 
-            
+            builder.OwnsMany<Debit>(e => e.Debits,
+                d =>
+                {
+                    d.Property(p => p.Amount).HasColumnType("decimal(18,2)").IsRequired();
+                    d.HasOne<User>(a => a.Debitor)
+                        .WithOne()
+                        .HasForeignKey<Debit>("DebitorId");
+                });
 
-
-            builder.Ignore(e => e.Debits);
-            
-            //builder.Ignore(a => a.Expenses);
 
             
 
