@@ -293,7 +293,7 @@ namespace Expenses.Domain.Tests.Entities
             // assert
             Assert.Single(@event.Expenses);
 
-            Assert.Equal(expense.CreatorId.Id, @event.Expenses.First().CreatorId.Id);
+            Assert.Equal(expense.Creator.Id, @event.Expenses.First().Creator.Id);
         }
 
         [Fact]

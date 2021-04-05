@@ -18,17 +18,18 @@ namespace Expenses.Domain.Entities
         public string Description { get; set; }
         public string Currency { get; }
         public DateTime Date { get; set; }
-        public User CreatorId { get; }
+        
+        public User Creator { get; }
 
         public Credit Credit => _credit;
         public IReadOnlyList<Debit> Debits => _debits;
 
         private Expense() { } // EF
 
-        public Expense(User creatorId, string title, string description, DateTime date, string currency)
+        public Expense(User creator, string title, string description, DateTime date, string currency)
         {
             // domain validation
-            if (creatorId == null) throw new ExpenseValidationException("CreatorInvalid", "Invalid creator.");
+            if (creator == null) throw new ExpenseValidationException("CreatorInvalid", "Invalid creator.");
             if (string.IsNullOrWhiteSpace(title)) throw new ExpenseValidationException("TitleInvalid", "Invalid title.");
             if (string.IsNullOrWhiteSpace(description)) throw new ExpenseValidationException("DescriptionInvalid", "description.");  // TODO: allow null?
             if (date == default) throw new ExpenseValidationException("DateInvalid", "Invalid date.");
@@ -37,7 +38,7 @@ namespace Expenses.Domain.Entities
             if (string.IsNullOrWhiteSpace(currency)) throw new ExpenseValidationException("CurrencyInvalid", "Invalid currency set.");
             if (currency.Length != 3) throw new ExpenseValidationException("CurrencyInvalid", "No valid currency string.");
 
-            CreatorId = creatorId;
+            Creator = creator;
             Title = title;
             Description = description;
             Date = date;

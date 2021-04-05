@@ -19,7 +19,6 @@ namespace Expenses.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Currency)
                 .HasMaxLength(3);
 
-            builder.Ignore(a => a.Participants);
             builder.Ignore(a => a.Expenses);
 
             builder.HasOne<User>(e => e.Creator)
