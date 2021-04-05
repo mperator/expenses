@@ -5,7 +5,7 @@ namespace Expenses.Domain.ValueObjects
 {
     public class Debit
     {
-        public User DebitorId { get; }
+        public User Debitor { get; }
 
         public decimal Amount { get; }
 
@@ -16,7 +16,7 @@ namespace Expenses.Domain.ValueObjects
             if (debitorId == null) throw new Exception("Invalid dbitor id.");
             if (amount < 0.0M) throw new Exception("Amount must me greater than zero.");
 
-            DebitorId = debitorId;
+            Debitor = debitorId;
             Amount = amount;
         }
     }

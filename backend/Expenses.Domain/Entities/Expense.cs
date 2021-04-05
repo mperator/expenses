@@ -53,7 +53,7 @@ namespace Expenses.Domain.Entities
             if (credit.Amount != debits.Sum(d => d.Amount)) throw new ExpenseValidationException("CreditNotDebitsAmount", "Invalid amount betwenn credit and debits.");
             
             // TODO: does this matter?
-            if (debits.Count() != debits.Select(d => d.DebitorId).Distinct().Count()) throw new ExpenseValidationException("DebitorSame", "Same debitor is not allowed");
+            if (debits.Count() != debits.Select(d => d.Debitor).Distinct().Count()) throw new ExpenseValidationException("DebitorSame", "Same debitor is not allowed");
 
             _credit = credit;
             _debits = debits.AsReadOnly();
