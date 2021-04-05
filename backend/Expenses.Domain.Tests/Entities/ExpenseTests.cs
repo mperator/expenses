@@ -138,7 +138,7 @@ namespace Expenses.Domain.Tests.Entities
             Assert.Equal(credit.Amount, expense.Credit.Amount);
 
             Assert.Equal(3, expense.Debits.Count);
-            Assert.Equal(debits[1].DebitorId.Id, expense.Debits[1].DebitorId.Id);
+            Assert.Equal(debits[1].Debitor.Id, expense.Debits[1].Debitor.Id);
             Assert.Equal(debits[1].Amount, expense.Debits[1].Amount);
         }
 

@@ -76,7 +76,7 @@ namespace Expenses.Domain.Entities
             // Check if participant takes part in any expense.
             var _1 = _expenses.Select(e => e.Creator).FirstOrDefault(a => a.Id == participant.Id) != null;
             var _2 = _expenses.Select(e => e.Credit.Creditor).FirstOrDefault(a => a.Id == participant.Id) != null;
-            var _3 = _expenses.SelectMany(e => e.Debits.ToList())?.Select(a => a.DebitorId).FirstOrDefault(a => a.Id == participant.Id) != null;
+            var _3 = _expenses.SelectMany(e => e.Debits.ToList())?.Select(a => a.Debitor).FirstOrDefault(a => a.Id == participant.Id) != null;
 
             if (_1 || _2 || _3)
                 throw new EventValidationException("RemoveParticipantHasExpenses", "Participant takes part in expense and cannot be deleted.");
@@ -95,7 +95,7 @@ namespace Expenses.Domain.Entities
 
             // Check if creator, creditor and debitor take part in event.
             var userIds = new List<string> { expense.Creator.Id, expense.Credit.Creditor.Id };
-            userIds.AddRange(expense.Debits.Select(a => a.DebitorId.Id));
+            userIds.AddRange(expense.Debits.Select(a => a.Debitor.Id));
 
             foreach (var id in userIds)
                 if (_participants.Find(p => p.Id == id) == null) throw new EventValidationException("AddExpenseUnknownParticipant", "User does not participate in event.");
