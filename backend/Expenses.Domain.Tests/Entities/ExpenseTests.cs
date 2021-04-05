@@ -23,7 +23,7 @@ namespace Expenses.Domain.Tests.Entities
 
             var expense = new Expense(user, title, description, date, currency);
 
-            Assert.Equal(user.Id, expense.CreatorId.Id);
+            Assert.Equal(user.Id, expense.Creator.Id);
             Assert.Equal(title, expense.Title);
             Assert.Equal(description, expense.Description);
             Assert.Equal(date, expense.Date);
@@ -118,7 +118,7 @@ namespace Expenses.Domain.Tests.Entities
         {
             // arrange
             var expense = GetExpenseWithDefaultValues();
-            var creditor = expense.CreatorId;
+            var creditor = expense.Creator;
             var debitor1 = new User(Guid.NewGuid().ToString());
             var debitor2 = new User(Guid.NewGuid().ToString());
 
@@ -134,7 +134,7 @@ namespace Expenses.Domain.Tests.Entities
             expense.Split(credit, debits);
 
             // assert
-            Assert.Equal(credit.CreditorId.Id, expense.Credit.CreditorId.Id);
+            Assert.Equal(credit.Creditor.Id, expense.Credit.Creditor.Id);
             Assert.Equal(credit.Amount, expense.Credit.Amount);
 
             Assert.Equal(3, expense.Debits.Count);
@@ -147,7 +147,7 @@ namespace Expenses.Domain.Tests.Entities
         {
             // arrange
             var expense = GetExpenseWithDefaultValues();
-            var creditor = expense.CreatorId;
+            var creditor = expense.Creator;
             var debitor1 = new User(Guid.NewGuid().ToString());
             var debitor2 = new User(Guid.NewGuid().ToString());
 
@@ -171,7 +171,7 @@ namespace Expenses.Domain.Tests.Entities
         {
             // arrange
             var expense = GetExpenseWithDefaultValues();
-            var creditor = expense.CreatorId;
+            var creditor = expense.Creator;
             var debitor1 = new User(Guid.NewGuid().ToString());
 
             var credit = new Credit(creditor, 10);
