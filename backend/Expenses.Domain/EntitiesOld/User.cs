@@ -15,7 +15,7 @@ namespace Expenses.Domain.EntitiesOld
 
         public IList<Event> Events { get; set; }
 
-        public ICollection<ExpenseUser> ExpensesUsers { get; set; }
+        //public ICollection<ExpenseUser> ExpensesUsers { get; set; }
 
         public string Username { get; set; }
 

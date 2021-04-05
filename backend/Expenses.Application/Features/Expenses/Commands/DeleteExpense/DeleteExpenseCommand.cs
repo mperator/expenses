@@ -25,20 +25,22 @@ namespace Expenses.Application.Features.Expenses.Commands.DeleteExpense
 
         public async Task<Unit> Handle(DeleteExpenseCommand request, CancellationToken cancellationToken)
         {
-            var expense = await _context.Expenses.FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
-            if (expense == null) throw new NotFoundException();
-
-            _context.Expenses.Remove(expense);
-            try
-            {
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                new InvalidOperationException(e.Message);
-            }
-
             return Unit.Value;
+
+            //var expense = await _context.Expenses.FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
+            //if (expense == null) throw new NotFoundException();
+
+            //_context.Expenses.Remove(expense);
+            //try
+            //{
+            //    await _context.SaveChangesAsync(cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    new InvalidOperationException(e.Message);
+            //}
+
+            //return Unit.Value;
         }
     }
 }

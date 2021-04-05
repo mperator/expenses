@@ -6,6 +6,8 @@ namespace Expenses.Domain.ValueObjects
     {
         public string Id { get; }
 
+        private UserId() {}
+
         public UserId(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) throw new Exception("Invelid user id.");

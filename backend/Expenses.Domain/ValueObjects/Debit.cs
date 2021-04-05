@@ -8,6 +8,8 @@ namespace Expenses.Domain.ValueObjects
 
         public decimal Amount { get; }
 
+        private Debit() { }
+
         public Debit(UserId debitorId, decimal amount)
         {
             if (debitorId == null) throw new Exception("Invalid dbitor id.");

@@ -1,6 +1,6 @@
 ﻿using Expenses.Application.Common.Interfaces;
 using Expenses.Domain.Common;
-using Expenses.Domain.EntitiesOld;
+using Expenses.Domain.Entities;
 using Expenses.Infrastructure.Identity;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
@@ -10,7 +10,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Expenses.Infrastructure.Persistence
 {
@@ -36,7 +35,7 @@ namespace Expenses.Infrastructure.Persistence
         #endregion
 
         public DbSet<Event> Events { get; set; } 
-        public DbSet<Expense> Expenses { get; set; }
+        //public DbSet<Expense> Expenses { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -70,9 +69,9 @@ namespace Expenses.Infrastructure.Persistence
 
             // Anti pluralize tables.
             builder.Entity<Event>().ToTable(nameof(Event));
-            builder.Entity<EventUser>().ToTable(nameof(EventUser));
-            builder.Entity<Expense>().ToTable(nameof(Expense));
-            builder.Entity<ExpenseUser>().ToTable(nameof(ExpenseUser));
+            //builder.Entity<EventUser>().ToTable(nameof(EventUser));
+            //builder.Entity<Expense>().ToTable(nameof(Expense));
+            //builder.Entity<ExpenseUser>().ToTable(nameof(ExpenseUser));
         }
 
         private async Task DispatchEvents()

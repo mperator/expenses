@@ -3,7 +3,7 @@ using System;
 
 namespace Expenses.Api.Entities
 {
-    [Owned]
+    //[Owned]
     public class RefreshToken
     {
         public string Token { get; set; }

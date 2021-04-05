@@ -30,25 +30,29 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenseById
 
         public async Task<GetExpenseByIdResponseExpense> Handle(GetExpenseByIdQuery request, CancellationToken cancellationToken)
         {
-            var expense = await _context.Expenses
-                .AsNoTracking()
-                .Include(a => a.ExpenseUsers)
-                .FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
+            return null;
 
-            if (expense == null)
-                throw new NotFoundException($"No expense found for id {request.ExpenseId} on event {request.EventId}");
+            //var expense = await _context.Expenses
+            //    .AsNoTracking()
+            //    .Include(a => a.ExpenseUsers)
+            //    .FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
 
-            var response = _mapper.Map<GetExpenseByIdResponseExpense>(expense);
-            response.Participants = new List<GetExpenseByIdResponseExpenseParticipant>();
+            //Expense expenses;
 
-            var users = expense.ExpenseUsers;
-            foreach(var expenseUser in expense.ExpenseUsers)
-            {
-                var participant = await _userService.FindByIdAsync(expenseUser.UserId);
-                response.Participants.Add(new GetExpenseByIdResponseExpenseParticipant { Id = participant.Id, Name = participant.Username, Amount = expenseUser.Amount });
-            }
+            //if (expense == null)
+            //    throw new NotFoundException($"No expense found for id {request.ExpenseId} on event {request.EventId}");
 
-            return response;
+            //var response = _mapper.Map<GetExpenseByIdResponseExpense>(expense);
+            //response.Participants = new List<GetExpenseByIdResponseExpenseParticipant>();
+
+            //var users = expense.ExpenseUsers;
+            //foreach(var expenseUser in expense.ExpenseUsers)
+            //{
+            //    var participant = await _userService.FindByIdAsync(expenseUser.UserId);
+            //    response.Participants.Add(new GetExpenseByIdResponseExpenseParticipant { Id = participant.Id, Name = participant.Username, Amount = expenseUser.Amount });
+            //}
+
+            //return response;
         }
     }
 }
