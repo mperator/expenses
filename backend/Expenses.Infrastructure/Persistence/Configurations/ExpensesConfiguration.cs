@@ -1,6 +1,5 @@
 ﻿using Expenses.Domain.Entities;
 using Expenses.Domain.ValueObjects;
-using Expenses.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -39,19 +38,8 @@ namespace Expenses.Infrastructure.Persistence.Configurations
                     d.HasOne<User>(a => a.Debitor)
                         .WithOne()
                         .HasForeignKey<Debit>("DebitorId");
+                    d.HasKey("Id");
                 });
-
-
-            
-
-            //// Configure many to many relationship between user and event.
-            //builder.HasMany<User>(a => a.Participants)
-            //    .WithMany("Events")   // Link to private navigation property.
-            //    .UsingEntity<EventUser>(
-            //        eu => eu.HasOne<User>(e => e.User).WithMany().HasForeignKey(x => x.UserId),
-            //        eu => eu.HasOne<Event>(e => e.Event).WithMany().HasForeignKey(x => x.EventId))
-            //    .ToTable("EventUser")
-            //    .HasKey(e => new { e.EventId, e.UserId });
         }
     }
 }

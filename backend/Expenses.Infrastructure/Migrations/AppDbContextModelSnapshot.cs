@@ -73,6 +73,9 @@ namespace Expenses.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("EventId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -80,6 +83,8 @@ namespace Expenses.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
+
+                    b.HasIndex("EventId");
 
                     b.ToTable("Expense");
                 });
@@ -93,29 +98,6 @@ namespace Expenses.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Expenses.Domain.ValueObjects.Debit", b =>
-                {
-                    b.Property<int>("ExpenseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("DebitorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ExpenseId", "Id");
-
-                    b.HasIndex("DebitorId")
-                        .IsUnique()
-                        .HasFilter("[DebitorId] IS NOT NULL");
-
-                    b.ToTable("Debit");
                 });
 
             modelBuilder.Entity("Expenses.Infrastructure.Entities.EventUser", b =>
@@ -460,6 +442,10 @@ namespace Expenses.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("CreatorId");
 
+                    b.HasOne("Expenses.Domain.Entities.Event", null)
+                        .WithMany("Expenses")
+                        .HasForeignKey("EventId");
+
                     b.OwnsOne("Expenses.Domain.ValueObjects.Credit", "Credit", b1 =>
                         {
                             b1.Property<int>("ExpenseId")
@@ -491,9 +477,47 @@ namespace Expenses.Infrastructure.Migrations
                             b1.Navigation("Creditor");
                         });
 
+                    b.OwnsMany("Expenses.Domain.ValueObjects.Debit", "Debits", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)");
+
+                            b1.Property<string>("DebitorId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("ExpenseId")
+                                .HasColumnType("int");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("DebitorId")
+                                .IsUnique()
+                                .HasFilter("[DebitorId] IS NOT NULL");
+
+                            b1.HasIndex("ExpenseId");
+
+                            b1.ToTable("Debit");
+
+                            b1.HasOne("Expenses.Domain.Entities.User", "Debitor")
+                                .WithOne()
+                                .HasForeignKey("Expenses.Domain.ValueObjects.Debit", "DebitorId");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ExpenseId");
+
+                            b1.Navigation("Debitor");
+                        });
+
                     b.Navigation("Creator");
 
                     b.Navigation("Credit");
+
+                    b.Navigation("Debits");
                 });
 
             modelBuilder.Entity("Expenses.Domain.Entities.User", b =>
@@ -503,15 +527,6 @@ namespace Expenses.Infrastructure.Migrations
                         .HasForeignKey("Expenses.Domain.Entities.User", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Expenses.Domain.ValueObjects.Debit", b =>
-                {
-                    b.HasOne("Expenses.Domain.Entities.User", "Debitor")
-                        .WithOne()
-                        .HasForeignKey("Expenses.Domain.ValueObjects.Debit", "DebitorId");
-
-                    b.Navigation("Debitor");
                 });
 
             modelBuilder.Entity("Expenses.Infrastructure.Entities.EventUser", b =>
@@ -531,6 +546,41 @@ namespace Expenses.Infrastructure.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Expenses.Infrastructure.Identity.ApplicationUser", b =>
+                {
+                    b.OwnsMany("Expenses.Application.Common.Models.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<string>("ApplicationUserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<DateTime>("Created")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("Expires")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime?>("Revoked")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Token")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("ApplicationUserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationUserId");
+                        });
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -582,6 +632,11 @@ namespace Expenses.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Expenses.Domain.Entities.Event", b =>
+                {
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }
