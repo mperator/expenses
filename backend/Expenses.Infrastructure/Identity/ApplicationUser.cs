@@ -1,6 +1,4 @@
 ﻿using Expenses.Application.Common.Models;
-using Expenses.Domain;
-using Expenses.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -17,14 +15,8 @@ namespace Expenses.Infrastructure.Identity
 
         public DateTime? DateOfBirth { get; set; }
 
-        //public ICollection<RefreshToken> RefreshTokens { get; set; }
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
         
-        //public IList<Event> Events { get; set; }
-
-        //public ICollection<ExpenseUser> ExpensesUsers { get; set; }
-
-        //public ICollection<EventUser> EventUsers { get; set; }
-
         #endregion
 
         //public static implicit operator User(ApplicationUser applicationUser)

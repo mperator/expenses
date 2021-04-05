@@ -219,6 +219,29 @@ namespace Expenses.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshToken",
+                columns: table => new
+                {
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Expires = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Revoked = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshToken", x => new { x.ApplicationUserId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_RefreshToken_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EventUser",
                 columns: table => new
                 {
@@ -238,6 +261,71 @@ namespace Expenses.Infrastructure.Migrations
                         name: "FK_EventUser_Event_EventId",
                         column: x => x.EventId,
                         principalTable: "Event",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Expense",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Credit_CreditorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Credit_Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    EventId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Expense", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Expense_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Expense_AspNetUsers_Credit_CreditorId",
+                        column: x => x.Credit_CreditorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Expense_Event_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Event",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Debit",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DebitorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ExpenseId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Debit", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Debit_AspNetUsers_DebitorId",
+                        column: x => x.DebitorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Debit_Expense_ExpenseId",
+                        column: x => x.ExpenseId,
+                        principalTable: "Expense",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -282,6 +370,18 @@ namespace Expenses.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Debit_DebitorId",
+                table: "Debit",
+                column: "DebitorId",
+                unique: true,
+                filter: "[DebitorId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Debit_ExpenseId",
+                table: "Debit",
+                column: "ExpenseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",
                 table: "DeviceCodes",
                 column: "DeviceCode",
@@ -301,6 +401,23 @@ namespace Expenses.Infrastructure.Migrations
                 name: "IX_EventUser_UserId",
                 table: "EventUser",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Expense_CreatorId",
+                table: "Expense",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Expense_Credit_CreditorId",
+                table: "Expense",
+                column: "Credit_CreditorId",
+                unique: true,
+                filter: "[Credit_CreditorId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Expense_EventId",
+                table: "Expense",
+                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
@@ -336,6 +453,9 @@ namespace Expenses.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Debit");
+
+            migrationBuilder.DropTable(
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
@@ -345,7 +465,13 @@ namespace Expenses.Infrastructure.Migrations
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
+                name: "RefreshToken");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Expense");
 
             migrationBuilder.DropTable(
                 name: "Event");
