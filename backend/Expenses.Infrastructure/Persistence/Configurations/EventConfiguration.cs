@@ -28,7 +28,7 @@ namespace Expenses.Infrastructure.Persistence.Configurations
 
             // user class needs navigation property to be able to create migration. Anonymous are not supported.
             builder.HasMany<User>(a => a.Users)
-                .WithMany(e => e.Events)   // write anythin != empty to cheat lol
+                .WithMany("Events")   // write anythin != empty to cheat lol
                 .UsingEntity<EventUser>(
                     eu => eu.HasOne<User>(e => e.User).WithMany().HasForeignKey(x => x.UserId),
                     eu => eu.HasOne<Event>(e => e.Event).WithMany().HasForeignKey(x => x.EventId))
