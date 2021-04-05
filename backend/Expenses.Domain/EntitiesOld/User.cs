@@ -13,7 +13,7 @@ namespace Expenses.Domain.EntitiesOld
 
         public DateTime? DateOfBirth { get; set; }
 
-        public IList<Event> Events { get; set; }
+        //public IList<Event> Events { get; set; }
 
         //public ICollection<ExpenseUser> ExpensesUsers { get; set; }
 
