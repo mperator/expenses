@@ -18,14 +18,14 @@ namespace Expenses.Domain.Entities
         public string Description { get; set; }
         public string Currency { get; }
         public DateTime Date { get; set; }
-        public UserId CreatorId { get; }
+        public User CreatorId { get; }
 
         public Credit Credit => _credit;
         public IReadOnlyList<Debit> Debits => _debits;
 
         private Expense() { } // EF
 
-        public Expense(UserId creatorId, string title, string description, DateTime date, string currency)
+        public Expense(User creatorId, string title, string description, DateTime date, string currency)
         {
             // domain validation
             if (creatorId == null) throw new ExpenseValidationException("CreatorInvalid", "Invalid creator.");
