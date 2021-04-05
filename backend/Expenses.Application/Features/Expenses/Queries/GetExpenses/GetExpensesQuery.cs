@@ -31,45 +31,47 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenses
 
         public async Task<IEnumerable<GetExpensesResponseExpense>> Handle(GetExpensesQuery request, CancellationToken cancellationToken)
         {
-            var @event = await _context.Events
-                .AsNoTracking()
-                .Include(ev => ev.Expenses)
-                    .ThenInclude(ex => ex.ExpenseUsers)
-                .SingleOrDefaultAsync(ev => ev.Id == request.EventId);
+            throw new System.Exception();
 
-            if(@event == null)
-                throw new NotFoundException($"Event {request.EventId} not found.");
+            //var @event = await _context.Events
+            //    .AsNoTracking()
+            //    .Include(ev => ev.Expenses)
+            //        .ThenInclude(ex => ex.ExpenseUsers)
+            //    .SingleOrDefaultAsync(ev => ev.Id == request.EventId);
 
-            // get all users distinct
-            if(@event.Expenses == null)
-            {
-                return Enumerable.Empty<GetExpensesResponseExpense>();
-            }
-            else
-            {
-                var userIds = @event.Expenses.SelectMany(a => a.ExpenseUsers).Select(a => a.UserId);
-                var users = new List<User>();
+            //if(@event == null)
+            //    throw new NotFoundException($"Event {request.EventId} not found.");
 
-                foreach (var id in userIds.Distinct())
-                    users.Add(await _userService.FindByIdAsync(id));
+            //// get all users distinct
+            //if(@event.Expenses == null)
+            //{
+            //    return Enumerable.Empty<GetExpensesResponseExpense>();
+            //}
+            //else
+            //{
+            //    var userIds = @event.Expenses.SelectMany(a => a.ExpenseUsers).Select(a => a.UserId);
+            //    var users = new List<User>();
+
+            //    foreach (var id in userIds.Distinct())
+            //        users.Add(await _userService.FindByIdAsync(id));
 
 
-                var result = new List<GetExpensesResponseExpense>();
-                foreach(var expense in @event.Expenses)
-                {
-                    var temp = _mapper.Map<GetExpensesResponseExpense>(expense);
-                    temp.Participants = expense.ExpenseUsers.Select(e => new GetExpensesResponseExpenseParticipant
-                    {
-                        Id = e.UserId,
-                        Name = users.Where(u => u.Id == e.UserId).SingleOrDefault()?.Username,
-                        Amount = e.Amount
-                    }).ToList();
+            //    var result = new List<GetExpensesResponseExpense>();
+            //    foreach(var expense in @event.Expenses)
+            //    {
+            //        var temp = _mapper.Map<GetExpensesResponseExpense>(expense);
+            //        temp.Participants = expense.ExpenseUsers.Select(e => new GetExpensesResponseExpenseParticipant
+            //        {
+            //            Id = e.UserId,
+            //            Name = users.Where(u => u.Id == e.UserId).SingleOrDefault()?.Username,
+            //            Amount = e.Amount
+            //        }).ToList();
 
-                    result.Add(temp);
-                }
+            //        result.Add(temp);
+            //    }
 
-                return result;
-            }
+            //    return result;
+            //}
         }
     }
 }

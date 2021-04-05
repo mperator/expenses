@@ -45,38 +45,40 @@ namespace Expenses.Application.Features.Events.Commands.CreateEvent
 
         public async Task<int> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userService.GetCurrentUserAsync();
+            //var user = await _userService.GetCurrentUserAsync();
 
-            Event savedEvent = new Event
-            {
-                Title = request.Title,
-                Description = request.Description,
-                CreatorId = user.Id,
-                Currency = "Euro",
-                StartDate = request.StartDate,
-                EndDate = request.EndDate
-            };
+            //Event savedEvent = new Event
+            //{
+            //    Title = request.Title,
+            //    Description = request.Description,
+            //    CreatorId = user.Id,
+            //    Currency = "Euro",
+            //    StartDate = request.StartDate,
+            //    EndDate = request.EndDate
+            //};
 
-            savedEvent.Participants = new List<EventUser>();
-            savedEvent.Participants.Add(new EventUser { Event = savedEvent, UserId = user.Id });
+            //savedEvent.Participants = new List<EventUser>();
+            //savedEvent.Participants.Add(new EventUser { Event = savedEvent, UserId = user.Id });
+            //////FIXME:
+            //foreach (var a in request.Attendees)
+            //{
+            //    savedEvent.Participants.Add(new EventUser { Event = savedEvent, UserId = a.Id });
+            //}
+
+            //_context.Events.Add(savedEvent);
+            //try
+            //{
+            //    await _context.SaveChangesAsync(cancellationToken);
+            //}
+            //catch (Exception e)
+            //{
+            //    throw new InvalidOperationException(e.Message);
+            //}
             ////FIXME:
-            foreach (var a in request.Attendees)
-            {
-                savedEvent.Participants.Add(new EventUser { Event = savedEvent, UserId = a.Id });
-            }
+            ////return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
+            //return savedEvent.Id;
 
-            _context.Events.Add(savedEvent);
-            try
-            {
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException(e.Message);
-            }
-            //FIXME:
-            //return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
-            return savedEvent.Id;
+            throw new Exception();
         }
     }
 }

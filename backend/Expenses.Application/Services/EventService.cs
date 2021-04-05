@@ -20,7 +20,7 @@ namespace Expenses.Application.Services
         // Create
         public EventReadModel CreateEvent(EventCreateModel model)
         {
-            UserId creatorId = new UserId(""); // UserService.Current
+            var creatorId = string.Empty; // UserService.Current
 
             // create domain model
             var @event = new Event(creatorId, model.Title, model.Description, model.StartTime, model.EndTime, model.Currency);

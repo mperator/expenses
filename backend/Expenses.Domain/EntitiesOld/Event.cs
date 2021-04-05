@@ -20,9 +20,9 @@ namespace Expenses.Domain.EntitiesOld
         public DateTimeOffset EndDate { get; set; }
         
         //public ICollection<User> Attendees { get; set; }
-        public ICollection<Expense> Expenses { get; set; }
+        //public ICollection<Expense> Expenses { get; set; }
 
-        public ICollection<EventUser> Participants { get; set; }
+        //public ICollection<EventUser> Participants { get; set; }
 
         #endregion
     }

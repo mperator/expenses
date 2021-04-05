@@ -56,7 +56,7 @@ namespace Expenses.Domain.Tests.Entities
 
 
             // arrange
-            UserId creatorId = new UserId(Guid.NewGuid().ToString());
+            var creatorId = (Guid.NewGuid().ToString());
             const string title = "title";
             const string description = "description";
             DateTime startDate = DateTime.UtcNow;
@@ -67,21 +67,21 @@ namespace Expenses.Domain.Tests.Entities
             var @event = new Event(creatorId, title, description, startDate, endDate, currency);
 
             // assert
-            Assert.Equal(creatorId.Id, @event.CreatorId.Id);
+            Assert.Equal(creatorId, @event.CreatorId);
             Assert.Equal(title, @event.Title);
             Assert.Equal(description, @event.Description);
             Assert.Equal(startDate, @event.StartDate);
             Assert.Equal(endDate, @event.EndDate);
             Assert.Equal(currency, @event.Currency);
 
-            Assert.True(@event.Participants.First().Id == creatorId.Id);
+            Assert.True(@event.Participants.First() == creatorId);
         }
 
         [Fact]
         public void CreateEvent_WithDefaultOrEmptyParameter()
         {
             // arrange
-            UserId creatorId = new UserId(Guid.NewGuid().ToString());
+            var creatorId = (Guid.NewGuid().ToString());
             const string title = "title";
             const string description = "description";
             DateTime startDate = DateTime.UtcNow;
@@ -113,7 +113,7 @@ namespace Expenses.Domain.Tests.Entities
 
         [Theory]
         [MemberData(nameof(EventDataGenerator.GenerateEvent_WithDefaultOrEmptyParameter), MemberType = typeof(EventDataGenerator))]
-        public void CreateEvent_WithDefaultOrEmptyParameter1(UserId creatorId, string title, string description, DateTime startDate, DateTime endDate, string currency, string exceptionCode)
+        public void CreateEvent_WithDefaultOrEmptyParameter1(string creatorId, string title, string description, DateTime startDate, DateTime endDate, string currency, string exceptionCode)
         {
             // act and assert
             var exception = Assert.Throws<EventValidationException>(() => new Event(creatorId, title, description, startDate, endDate, currency));
@@ -142,7 +142,7 @@ namespace Expenses.Domain.Tests.Entities
         public void ChangeTitle()
         {
             // arrange
-            var @event = GetValidEvent();
+            var @event = GetValidEventWithRandomCreator();
             var title = @event.Title + Guid.NewGuid().ToString("n");
 
             // act
@@ -156,7 +156,7 @@ namespace Expenses.Domain.Tests.Entities
         public void ChangeDescription()
         {
             // arrange
-            var @event = GetValidEvent();
+            var @event = GetValidEventWithRandomCreator();
             var description = @event.Description + Guid.NewGuid().ToString("n");
 
             // act
@@ -171,7 +171,7 @@ namespace Expenses.Domain.Tests.Entities
         public void AddParticipant_Multiple()
         {
             // arrange
-            var @event = GetValidEvent();
+            var @event = GetValidEventWithRandomCreator();
             var participant1 = new UserId(Guid.NewGuid().ToString());
             var participant2 = new UserId(Guid.NewGuid().ToString());
 
@@ -181,16 +181,16 @@ namespace Expenses.Domain.Tests.Entities
 
             // assert
             Assert.Collection(@event.Participants,
-                i => Assert.Equal(@event.CreatorId.Id, i.Id),
-                i => Assert.Equal(participant1.Id, i.Id),
-                i => Assert.Equal(participant2.Id, i.Id));
+                i => Assert.Equal(@event.CreatorId, i),
+                i => Assert.Equal(participant1.Id, i),
+                i => Assert.Equal(participant2.Id, i));
         }
 
         [Fact]
         public void AddParticipant_WhoAlreadyExists()
         {
             // arrange
-            var @event = GetValidEvent();
+            var @event = GetValidEventWithRandomCreator();
             var participantId = Guid.NewGuid().ToString();
             @event.AddParticipant(new UserId(participantId));
 
@@ -205,7 +205,7 @@ namespace Expenses.Domain.Tests.Entities
         public void RemoveParticipant()
         {
             // arrange
-            var @event = GetValidEvent();
+            var @event = GetValidEventWithRandomCreator();
 
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
@@ -222,9 +222,9 @@ namespace Expenses.Domain.Tests.Entities
             Assert.True(@event.Participants.Count() == 3);
 
             Assert.Collection(@event.Participants,
-                i => Assert.Equal(@event.CreatorId.Id, i.Id),
-                i => Assert.Equal(participantId1, i.Id),
-                i => Assert.Equal(participantId2, i.Id));
+                i => Assert.Equal(@event.CreatorId, i),
+                i => Assert.Equal(participantId1, i),
+                i => Assert.Equal(participantId2, i));
         }
 
         [Fact]
@@ -235,7 +235,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -261,7 +261,7 @@ namespace Expenses.Domain.Tests.Entities
         public void RemoveParticipant_WhoNotExist()
         {
             // arrange
-            var @event = GetValidEvent();
+            var @event = GetValidEventWithRandomCreator();
 
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
@@ -285,7 +285,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -316,7 +316,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -339,7 +339,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -369,7 +369,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId2 = Guid.NewGuid().ToString();
             var unknownParticipantId = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -399,7 +399,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -428,7 +428,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -457,7 +457,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -488,7 +488,7 @@ namespace Expenses.Domain.Tests.Entities
             var participantId1 = Guid.NewGuid().ToString();
             var participantId2 = Guid.NewGuid().ToString();
 
-            var @event = GetValidEvent(new UserId(creatorId));
+            var @event = GetValidEvent(creatorId);
 
             @event.AddParticipant(new UserId(participantId1));
             @event.AddParticipant(new UserId(participantId2));
@@ -510,18 +510,18 @@ namespace Expenses.Domain.Tests.Entities
         }
 
 
-        private Event GetValidEvent(
+        private Event GetValidEventWithRandomCreator(
             string title = "title",
             string description = "description",
             string currency = "EUR")
         {
-            var creatorId = new UserId(Guid.NewGuid().ToString());
+            var creatorId = (Guid.NewGuid().ToString());
 
             return GetValidEvent(creatorId, title, description, currency);
         }
 
         private Event GetValidEvent(
-            UserId creatorId,
+            string creatorId,
             string title = "title",
             string description = "description",
             string currency = "EUR")

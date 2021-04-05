@@ -26,35 +26,25 @@ namespace Expenses.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatorId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Currency")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("EndDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("StartDate")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -63,7 +53,18 @@ namespace Expenses.Infrastructure.Migrations
                     b.ToTable("Event");
                 });
 
-            modelBuilder.Entity("Expenses.Domain.Entities.EventUser", b =>
+            modelBuilder.Entity("Expenses.Domain.Entities.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Expenses.Infrastructure.Entities.EventUser", b =>
                 {
                     b.Property<int>("EventId")
                         .HasColumnType("int");
@@ -76,73 +77,6 @@ namespace Expenses.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("EventUser");
-                });
-
-            modelBuilder.Entity("Expenses.Domain.Entities.Expense", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<float>("Amount")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Currency")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IssuerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("IssuerId");
-
-                    b.ToTable("Expense");
-                });
-
-            modelBuilder.Entity("Expenses.Domain.Entities.ExpenseUser", b =>
-                {
-                    b.Property<int>("ExpenseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.HasKey("ExpenseId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ExpenseUser");
                 });
 
             modelBuilder.Entity("Expenses.Infrastructure.Identity.ApplicationUser", b =>
@@ -459,93 +393,39 @@ namespace Expenses.Infrastructure.Migrations
 
             modelBuilder.Entity("Expenses.Domain.Entities.Event", b =>
                 {
-                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany("Events")
-                        .HasForeignKey("CreatorId");
-                });
-
-            modelBuilder.Entity("Expenses.Domain.Entities.EventUser", b =>
-                {
-                    b.HasOne("Expenses.Domain.Entities.Event", "Event")
-                        .WithMany("Participants")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany("EventUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("Expenses.Domain.Entities.Expense", b =>
-                {
-                    b.HasOne("Expenses.Domain.Entities.Event", "Event")
-                        .WithMany("Expenses")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
+                    b.HasOne("Expenses.Domain.Entities.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("IssuerId");
+                        .HasForeignKey("CreatorId");
 
-                    b.Navigation("Event");
+                    b.Navigation("Creator");
                 });
 
-            modelBuilder.Entity("Expenses.Domain.Entities.ExpenseUser", b =>
+            modelBuilder.Entity("Expenses.Domain.Entities.User", b =>
                 {
-                    b.HasOne("Expenses.Domain.Entities.Expense", "Expense")
-                        .WithMany("ExpenseUsers")
-                        .HasForeignKey("ExpenseId")
+                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("Expenses.Domain.Entities.User", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Expenses.Infrastructure.Entities.EventUser", b =>
+                {
+                    b.HasOne("Expenses.Domain.Entities.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Expenses.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany("ExpensesUsers")
+                    b.HasOne("Expenses.Domain.Entities.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Expense");
-                });
+                    b.Navigation("Event");
 
-            modelBuilder.Entity("Expenses.Infrastructure.Identity.ApplicationUser", b =>
-                {
-                    b.OwnsMany("Expenses.Application.Common.Models.RefreshToken", "RefreshTokens", b1 =>
-                        {
-                            b1.Property<string>("ApplicationUserId")
-                                .HasColumnType("nvarchar(450)");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<DateTime>("Created")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime>("Expires")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime?>("Revoked")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("Token")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("ApplicationUserId", "Id");
-
-                            b1.ToTable("RefreshToken");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ApplicationUserId");
-                        });
-
-                    b.Navigation("RefreshTokens");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -597,27 +477,6 @@ namespace Expenses.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Expenses.Domain.Entities.Event", b =>
-                {
-                    b.Navigation("Expenses");
-
-                    b.Navigation("Participants");
-                });
-
-            modelBuilder.Entity("Expenses.Domain.Entities.Expense", b =>
-                {
-                    b.Navigation("ExpenseUsers");
-                });
-
-            modelBuilder.Entity("Expenses.Infrastructure.Identity.ApplicationUser", b =>
-                {
-                    b.Navigation("Events");
-
-                    b.Navigation("EventUsers");
-
-                    b.Navigation("ExpensesUsers");
                 });
 #pragma warning restore 612, 618
         }
