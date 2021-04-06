@@ -1,32 +1,24 @@
 ﻿using Expenses.Application.Common.Interfaces;
-using Expenses.Domain.EntitiesOld;
+using Expenses.Domain.Entities;
+using Expenses.Domain.ValueObjects;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Expenses.Application.Features.Events.Commands.CreateEvent
 {
     // FIXME: should the response type really be an int??
+    // Depends on return type of api. If specified NoContent nothing is needed else return object as is an id in location header.
     public class CreateEventCommand : IRequest<int>
     {
-        #region Properties
-
         public string Title { get; set; }
-
         public string Description { get; set; }
-
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public string Currency { get; set; }
-
-        public DateTimeOffset StartDate { get; set; }
-
-        public DateTimeOffset EndDate { get; set; }
-
-        public IEnumerable<AttendeeWriteModel> Attendees { get; set; }
-
-        #endregion
+        public IEnumerable<string> ParticipantIds { get; set; }
     }
 
     public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, int>
@@ -45,40 +37,34 @@ namespace Expenses.Application.Features.Events.Commands.CreateEvent
 
         public async Task<int> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
-            //var user = await _userService.GetCurrentUserAsync();
+            // TODO: Get user information or better get current user id / get current user information (App layer)
+            var creator = await _userService.GetCurrentUserAsync();
 
-            //Event savedEvent = new Event
-            //{
-            //    Title = request.Title,
-            //    Description = request.Description,
-            //    CreatorId = user.Id,
-            //    Currency = "Euro",
-            //    StartDate = request.StartDate,
-            //    EndDate = request.EndDate
-            //};
+            var @event = new Event(
+                new User(creator.Id),
+                request.Title,
+                request.Description,
+                request.StartDate,
+                request.EndDate,
+                request.Currency);
 
-            //savedEvent.Participants = new List<EventUser>();
-            //savedEvent.Participants.Add(new EventUser { Event = savedEvent, UserId = user.Id });
-            //////FIXME:
-            //foreach (var a in request.Attendees)
-            //{
-            //    savedEvent.Participants.Add(new EventUser { Event = savedEvent, UserId = a.Id });
-            //}
+            foreach(var participantId in request.ParticipantIds)
+            {
+                // TODO: user service validate user exists rename userId in table particiepant to id or participantid to ship cnflicts with dbo
+                @event.AddParticipant(new User(participantId));
+            }
 
-            //_context.Events.Add(savedEvent);
-            //try
-            //{
-            //    await _context.SaveChangesAsync(cancellationToken);
-            //}
-            //catch (Exception e)
-            //{
-            //    throw new InvalidOperationException(e.Message);
-            //}
-            ////FIXME:
-            ////return CreatedAtRoute(nameof(GetEventByIdAsync), new { id = savedEvent.Id }, _mapper.Map<EventReadModel>(savedEvent));
-            //return savedEvent.Id;
-
-            throw new Exception();
+            _context.Events.Add(@event);
+            try
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.Message);
+            }
+            
+            return @event.Id;
         }
     }
 }
