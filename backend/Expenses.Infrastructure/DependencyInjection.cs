@@ -47,6 +47,7 @@ namespace Expenses.Infrastructure
             //services.AddIdentityServer()
             //    .AddApiAuthorization<ApplicationUser, AppDbContext>();
 
+            services.AddTransient<IDateTime, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IUserService, UserService>();
