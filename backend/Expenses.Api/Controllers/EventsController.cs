@@ -22,7 +22,7 @@ namespace Expenses.Api.Controllers
         /// <returns>A list of events</returns>
         /// <response code="200">On success</response>
         [HttpGet]
-        public async Task<ActionResult<List<Application.Features.Events.Queries.GetEvents.GetEventsQueryEvent>>> GetEventsAsync()
+        public async Task<ActionResult<List<GetEventsQueryEvent>>> GetEventsAsync()
         {
             return await Mediator.Send(new GetEventsQuery());
         }
@@ -35,7 +35,7 @@ namespace Expenses.Api.Controllers
         /// <response code="400">No ID given</response>
         /// <response code="404">No resource found for the given ID</response>
         [HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
-        public async Task<ActionResult<Application.Features.Events.Queries.GetEventById.EventReadModel>> GetEventByIdAsync(int id)
+        public async Task<ActionResult<GetEventByIdQueryEvent>> GetEventByIdAsync(int id)
         {
             return await Mediator.Send(new GetEventByIdQuery { Id = id });
         }
