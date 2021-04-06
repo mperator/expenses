@@ -1,22 +1,21 @@
 ﻿using Expenses.Application.Common.Mappings;
-using Expenses.Domain.EntitiesOld;
+using Expenses.Domain.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace Expenses.Application.Features.Events.Queries.GetEventById
 {
-    public class ExpenseReadModel : IMapFrom<Expense>
+    public class GetEventByIdQueryExpense : IMapFrom<Expense>
     {
-        #region Properties
-
         public int Id { get; set; }
+        public string CreatorId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
-        public float Amount { get; set; }
+        public decimal Amount { get; set; }
         public string Currency { get; set; }
-        public string IssuerId { get; set; }
-        public string Issuer { get; set; }
 
-        #endregion
+        public GetEventByIdQueryExpenseCredit Credit {get; set;}
+        public IEnumerable<GetEventByIdQueryExpenseDebit> Debits {get; set;}
     }
 }
