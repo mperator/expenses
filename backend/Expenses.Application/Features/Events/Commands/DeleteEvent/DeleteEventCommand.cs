@@ -22,17 +22,14 @@ namespace Expenses.Application.Features.Events.Commands.DeleteEvent
 
         public async Task<Unit> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
         {
+            var @event = await _context.Events
+                .Include(e => e.Expenses)
+                .SingleOrDefaultAsync(e => e.Id == request.Id);
 
-            var dbEvent = await _context.Events.FirstOrDefaultAsync(ev => ev.Id == request.Id);
-
-            //TODO: throw not found exception for user
-
-            _context.Events.Remove(dbEvent);
-            //TODO: use try catch blog to use cancellationToken
+            _context.Events.Remove(@event);
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }
     }
-
 }
