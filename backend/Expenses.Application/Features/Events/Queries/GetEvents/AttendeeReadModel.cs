@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Expenses.Application.Common.Mappings;
-using Expenses.Domain.EntitiesOld;
+using Expenses.Domain.Entities;
 
 namespace Expenses.Application.Features.Events.Queries.GetEvents
 {
-    public class AttendeeReadModel : IMapFrom<User>
+    public class AttendeeReadModel : IMapFrom<AppUser>
     {
         public string Id { get; set; }
 
@@ -12,7 +12,7 @@ namespace Expenses.Application.Features.Events.Queries.GetEvents
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<User, AttendeeReadModel>()
+            profile.CreateMap<AppUser, AttendeeReadModel>()
                 .ForMember(d => d.Name, o => o.MapFrom(s => $"{s.FirstName} {s.LastName}"));
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Expenses.Application.Common.Interfaces;
-using Expenses.Domain.EntitiesOld;
+using Expenses.Domain.Entities;
 using Expenses.Infrastructure.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -21,22 +21,18 @@ namespace Expenses.Infrastructure.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<User> FindByIdAsync(string id)
+        public async Task<AppUser> FindByIdAsync(string id)
         {
-            //return await _userManager.FindByIdAsync(id);
-
-            return null;
+            return await _userManager.FindByIdAsync(id);
         }
 
         //TODO: own identity context
-        public async Task<User> GetCurrentUserAsync()
+        public async Task<AppUser> GetCurrentUserAsync()
         {
-            //return await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-
-            return null;
+            return await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync(string name)
+        public async Task<IEnumerable<AppUser>> GetUsersAsync(string name)
         {
             var query = _userManager.Users;
             if (!string.IsNullOrEmpty(name))
@@ -45,9 +41,7 @@ namespace Expenses.Infrastructure.Services
                     u.LastName.Contains(name) ||
                     u.UserName.Contains(name));
 
-            //return (await query.ToListAsync()).Select(s => (User)s);
-
-            return null;
+            return (await query.ToListAsync()).Select(s => (AppUser)s);
         }
     }
 }
