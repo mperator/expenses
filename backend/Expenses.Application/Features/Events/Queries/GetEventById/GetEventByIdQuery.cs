@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Expenses.Application.Features.Events.Queries.GetEventById
 {
-    public class GetEventByIdQuery : IRequest<EventReadModel> {
+    public class GetEventByIdQuery : IRequest<EventReadModel> 
+    {
         public int Id { get; set; }
     }
 

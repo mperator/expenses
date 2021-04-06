@@ -22,7 +22,7 @@ namespace Expenses.Api.Controllers
         /// <returns>A list of events</returns>
         /// <response code="200">On success</response>
         [HttpGet]
-        public async Task<ActionResult<List<Application.Features.Events.Queries.GetEvents.EventReadModel>>> GetEventsAsync()
+        public async Task<ActionResult<List<Application.Features.Events.Queries.GetEvents.GetEventsQueryEvent>>> GetEventsAsync()
         {
             return await Mediator.Send(new GetEventsQuery());
         }
