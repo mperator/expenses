@@ -63,18 +63,9 @@ namespace Expenses.Api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateEventAsync(int id, [FromBody] UpdateEventCommand updateEventCommand)
         {
+            updateEventCommand.Id = id;
 
-            await Mediator.Send(new UpdateEventCommand
-            {
-                Id = id,
-                Attendees = updateEventCommand.Attendees,
-                Currency = updateEventCommand.Currency,
-                Description = updateEventCommand.Description,
-                EndDate = updateEventCommand.EndDate,
-                StartDate = updateEventCommand.StartDate,
-                Title = updateEventCommand.Title
-            });
-
+            await Mediator.Send(updateEventCommand);
             return NoContent();
         }
         /// <summary>
