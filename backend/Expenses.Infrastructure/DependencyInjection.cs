@@ -39,8 +39,6 @@ namespace Expenses.Infrastructure
 
             services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>());
 
-            services.AddScoped<IDomainEventService, DomainEventService>();
-
             services
                 .AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<IdentityRole>()
@@ -49,7 +47,6 @@ namespace Expenses.Infrastructure
             //services.AddIdentityServer()
             //    .AddApiAuthorization<ApplicationUser, AppDbContext>();
 
-            services.AddTransient<IDateTime, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IUserService, UserService>();

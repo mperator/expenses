@@ -17,18 +17,15 @@ namespace Expenses.Infrastructure.Persistence
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IDateTime _dateTime;
-        private readonly IDomainEventService _domainEventService;
 
         #region Constructors
         public AppDbContext(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
-            IDomainEventService domainEventService,
             IDateTime dateTime) : base(options, operationalStoreOptions)
         {
             _currentUserService = currentUserService;
-            _domainEventService = domainEventService;
             _dateTime = dateTime;
         }
 
@@ -57,8 +54,6 @@ namespace Expenses.Infrastructure.Persistence
 
             var result = await base.SaveChangesAsync(cancellationToken);
 
-            await DispatchEvents();
-
             return result;
         }
 
@@ -70,22 +65,6 @@ namespace Expenses.Infrastructure.Persistence
             // De-pluralize tables.
             builder.Entity<Event>().ToTable(nameof(Event));
             builder.Entity<Expense>().ToTable(nameof(Expense));
-        }
-
-        private async Task DispatchEvents()
-        {
-            while (true)
-            {
-                var domainEventEntity = ChangeTracker.Entries<IHasDomainEvent>()
-                    .Select(x => x.Entity.DomainEvents)
-                    .SelectMany(x => x)
-                    .Where(domainEvent => !domainEvent.IsPublished)
-                    .FirstOrDefault();
-                if (domainEventEntity == null) break;
-
-                domainEventEntity.IsPublished = true;
-                await _domainEventService.Publish(domainEventEntity);
-            }
         }
     }
 }
