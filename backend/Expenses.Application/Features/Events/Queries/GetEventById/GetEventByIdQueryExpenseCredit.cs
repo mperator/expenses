@@ -6,8 +6,8 @@ namespace Expenses.Application.Features.Events.Queries.GetEventById
 {
     public class GetEventByIdQueryExpenseCredit : IMapFrom<Credit>
     {
-        public string CreditorId { get; }
-        public decimal Amount { get; }
+        public string CreditorId { get; set; }
+        public decimal Amount { get; set; }
 
         public void Mapping(Profile profile)
         {
