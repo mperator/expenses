@@ -1,40 +1,51 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Expenses.Application.Common.Interfaces;
+using Expenses.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Expenses.Application.Features.Events.Queries.GetEventById
 {
-    public class GetEventByIdQuery : IRequest<EventReadModel> 
+    public class GetEventByIdQuery : IRequest<GetEventByIdQueryEvent> 
     {
         public int Id { get; set; }
     }
 
-    public class GetEventByIdQueryHandler : IRequestHandler<GetEventByIdQuery, EventReadModel>
+    public class GetEventByIdQueryHandler : IRequestHandler<GetEventByIdQuery, GetEventByIdQueryEvent>
     {
         private readonly IAppDbContext _context;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public GetEventByIdQueryHandler(IAppDbContext context, IMapper mapper)
+        public GetEventByIdQueryHandler(IAppDbContext context, IUserService userService, IMapper mapper)
         {
             _context = context;
+            _userService = userService;
             _mapper = mapper;
         }
 
-        public async Task<EventReadModel> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetEventByIdQueryEvent> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
         {
-            throw new System.Exception();
+            var @event = await _context.Events
+                .AsNoTracking()
+                .Include(e => e.Expenses)
+                .SingleOrDefaultAsync(e => e.Id == request.Id);
 
-            //return await _context.EventData
-            //    .Include(ev => ev.Creator)
-            //    .Include(e => e.Attendees)
-            //    .Include(ev => ev.Expenses)
-            //    .AsSingleQuery()
-            //    .ProjectTo<EventReadModel>(_mapper.ConfigurationProvider)
-            //    .SingleOrDefaultAsync(ev => ev.Id == request.Id);
+            var mappedEvent = _mapper.Map<GetEventByIdQueryEvent>(@event);
+
+            // Get all users
+            var users = new List<AppUser>();
+            foreach(var participant in @event.Participants)
+            {
+                users.Add(await _userService.FindByIdAsync(participant.Id));
+            }
+
+            mappedEvent.Participants = _mapper.Map<IEnumerable<GetEventByIdQueryParticipant>>(users);
+
+            return mappedEvent;
         }
     }
 }
