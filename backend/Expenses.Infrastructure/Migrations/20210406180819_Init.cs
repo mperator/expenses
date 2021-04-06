@@ -69,6 +69,24 @@ namespace Expenses.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Event",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Event", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PersistedGrants",
                 columns: table => new
                 {
@@ -195,30 +213,6 @@ namespace Expenses.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Event",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Event", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Event_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RefreshToken",
                 columns: table => new
                 {
@@ -242,30 +236,6 @@ namespace Expenses.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EventUser",
-                columns: table => new
-                {
-                    EventId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EventUser", x => new { x.EventId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_EventUser_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EventUser_Event_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Expense",
                 columns: table => new
                 {
@@ -275,26 +245,14 @@ namespace Expenses.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Credit_CreditorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Credit_Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    CreatorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreditorId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     EventId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Expense", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Expense_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Expense_AspNetUsers_Credit_CreditorId",
-                        column: x => x.Credit_CreditorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Expense_Event_EventId",
                         column: x => x.EventId,
@@ -304,24 +262,36 @@ namespace Expenses.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Debit",
+                name: "Participant",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DebitorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ExpenseId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EventId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Debit", x => x.Id);
+                    table.PrimaryKey("PK_Participant", x => new { x.EventId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_Debit_AspNetUsers_DebitorId",
-                        column: x => x.DebitorId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_Participant_Event_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Event",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Debit",
+                columns: table => new
+                {
+                    ExpenseId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DebitorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Debit", x => new { x.ExpenseId, x.Id });
                     table.ForeignKey(
                         name: "FK_Debit_Expense_ExpenseId",
                         column: x => x.ExpenseId,
@@ -370,18 +340,6 @@ namespace Expenses.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Debit_DebitorId",
-                table: "Debit",
-                column: "DebitorId",
-                unique: true,
-                filter: "[DebitorId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Debit_ExpenseId",
-                table: "Debit",
-                column: "ExpenseId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",
                 table: "DeviceCodes",
                 column: "DeviceCode",
@@ -391,28 +349,6 @@ namespace Expenses.Infrastructure.Migrations
                 name: "IX_DeviceCodes_Expiration",
                 table: "DeviceCodes",
                 column: "Expiration");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Event_CreatorId",
-                table: "Event",
-                column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EventUser_UserId",
-                table: "EventUser",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Expense_CreatorId",
-                table: "Expense",
-                column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Expense_Credit_CreditorId",
-                table: "Expense",
-                column: "Credit_CreditorId",
-                unique: true,
-                filter: "[Credit_CreditorId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Expense_EventId",
@@ -459,7 +395,7 @@ namespace Expenses.Infrastructure.Migrations
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
-                name: "EventUser");
+                name: "Participant");
 
             migrationBuilder.DropTable(
                 name: "PersistedGrants");
@@ -474,10 +410,10 @@ namespace Expenses.Infrastructure.Migrations
                 name: "Expense");
 
             migrationBuilder.DropTable(
-                name: "Event");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Event");
         }
     }
 }

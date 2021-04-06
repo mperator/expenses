@@ -1,5 +1,4 @@
-﻿using Expenses.Domain.Entities;
-using System;
+﻿using System;
 
 namespace Expenses.Domain.ValueObjects
 {
@@ -9,7 +8,7 @@ namespace Expenses.Domain.ValueObjects
 
         public decimal Amount { get; }
 
-        private Debit() { }
+        private Debit() { } // EF
 
         public Debit(User debitorId, decimal amount)
         {

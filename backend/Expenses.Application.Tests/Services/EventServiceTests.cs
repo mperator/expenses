@@ -1,6 +1,7 @@
 using Expenses.Application.Interfaces;
 using Expenses.Application.Services;
 using Expenses.Domain.Entities;
+using Expenses.Domain.ValueObjects;
 using Moq;
 using System;
 using Xunit;

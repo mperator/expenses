@@ -1,5 +1,4 @@
-﻿using Expenses.Domain.Entities;
-using System;
+﻿using System;
 
 namespace Expenses.Domain.ValueObjects
 {
