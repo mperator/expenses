@@ -55,7 +55,7 @@ namespace Expenses.Domain.Tests.Entities
             var @event = new Event(creator, title, description, startDate, endDate, currency);
 
             // assert
-            Assert.Equal(creator.Id, @event.CreatorId);
+            Assert.Equal(creator.Id, @event.Creator.Id);
             Assert.Equal(title, @event.Title);
             Assert.Equal(description, @event.Description);
             Assert.Equal(startDate, @event.StartDate);
@@ -169,7 +169,7 @@ namespace Expenses.Domain.Tests.Entities
 
             // assert
             Assert.Collection(@event.Participants,
-                i => Assert.Equal(@event.CreatorId, i.Id),
+                i => Assert.Equal(@event.Creator.Id, i.Id),
                 i => Assert.Equal(participant1.Id, i.Id),
                 i => Assert.Equal(participant2.Id, i.Id));
         }
@@ -210,7 +210,7 @@ namespace Expenses.Domain.Tests.Entities
             Assert.True(@event.Participants.Count() == 3);
 
             Assert.Collection(@event.Participants,
-                i => Assert.Equal(@event.CreatorId, i.Id),
+                i => Assert.Equal(@event.Creator.Id, i.Id),
                 i => Assert.Equal(participantId1, i.Id),
                 i => Assert.Equal(participantId2, i.Id));
         }

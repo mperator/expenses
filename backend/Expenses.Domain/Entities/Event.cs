@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Exceptions;
+using Expenses.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Expenses.Domain.Entities
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public string CreatorId { get; }
+        //public string CreatorId { get; }
         public User Creator { get; private set; }   // Hide?
 
         public string Currency { get; }
@@ -42,7 +43,6 @@ namespace Expenses.Domain.Entities
             if (startDate > endDate) throw new EventValidationException("StartDateBehindEndDate", "Start date must be smaller or same like end date.");
 
             Creator = creator;
-            CreatorId = creator.Id;
             Title = title;
             Description = description;
             StartDate = startDate;

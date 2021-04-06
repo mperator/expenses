@@ -1,5 +1,5 @@
 ﻿using Expenses.Domain.Entities;
-using Expenses.Infrastructure.Entities;
+using Expenses.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,18 +19,21 @@ namespace Expenses.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Currency)
                 .HasMaxLength(3);
 
-            builder.HasOne<User>(e => e.Creator)
-                .WithMany()
-                .HasForeignKey(x => x.CreatorId);
+            builder.Property(p => p.Creator)
+                .HasConversion(
+                    v => v.Id.ToString(),
+                    v => new User(v))
+                .HasColumnName("CreatorId")
+                .IsRequired();
 
-            // Configure many to many relationship between user and event.
-            builder.HasMany<User>(a => a.Participants)
-                .WithMany("Events")   // Link to private navigation property.
-                .UsingEntity<EventUser>(
-                    eu => eu.HasOne<User>(e => e.User).WithMany().HasForeignKey(x => x.UserId),
-                    eu => eu.HasOne<Event>(e => e.Event).WithMany().HasForeignKey(x => x.EventId))
-                .ToTable("EventUser")
-                .HasKey(e => new { e.EventId, e.UserId });
+            builder.OwnsMany<User>(e => e.Participants,
+                eu =>
+                {
+                    eu.ToTable("Participant");
+                    eu.Property(p => p.Id)
+                        .HasColumnName("UserId")
+                        .IsRequired();
+                });
 
             builder.HasMany<Expense>(e => e.Expenses)
                 .WithOne()
