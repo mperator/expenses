@@ -1,7 +1,6 @@
 ﻿using Expenses.Application.Common.Interfaces;
 using Expenses.Domain.Common;
 using Expenses.Domain.Entities;
-using Expenses.Infrastructure.Entities;
 using Expenses.Infrastructure.Identity;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
@@ -68,9 +67,8 @@ namespace Expenses.Infrastructure.Persistence
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            // Anti pluralize tables.
+            // De-pluralize tables.
             builder.Entity<Event>().ToTable(nameof(Event));
-            builder.Entity<EventUser>().ToTable(nameof(EventUser));
             builder.Entity<Expense>().ToTable(nameof(Expense));
         }
 

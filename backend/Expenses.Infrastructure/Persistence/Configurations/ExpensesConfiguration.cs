@@ -18,27 +18,41 @@ namespace Expenses.Infrastructure.Persistence.Configurations
             builder.Property(e => e.Currency)
                 .HasMaxLength(3);
 
-            builder.HasOne<User>(e => e.Creator)
-                .WithMany()
-                .HasForeignKey("CreatorId");
+            builder.Property(p => p.Creator)
+                .HasConversion(
+                    v => v.Id.ToString(),
+                    v => new User(v))
+                .HasColumnName("CreatorId")
+                .IsRequired();
 
             builder.OwnsOne<Credit>(e => e.Credit,
                 sa =>
                 {
-                    sa.Property(p => p.Amount).HasColumnType("decimal(18,2)").IsRequired();
-                    sa.HasOne<User>(a => a.Creditor)
-                        .WithOne()
-                        .HasForeignKey<Credit>("CreditorId");
+                    sa.Property(p => p.Amount)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Amount")
+                        .IsRequired();
+                    sa.Property(p => p.Creditor)
+                        .HasConversion(
+                            v => v.Id.ToString(),
+                            v => new User(v))
+                        .HasColumnName("CreditorId")
+                        .IsRequired();
                 });
 
             builder.OwnsMany<Debit>(e => e.Debits,
                 d =>
                 {
-                    d.Property(p => p.Amount).HasColumnType("decimal(18,2)").IsRequired();
-                    d.HasOne<User>(a => a.Debitor)
-                        .WithOne()
-                        .HasForeignKey<Debit>("DebitorId");
-                    d.HasKey("Id");
+                    d.Property(p => p.Amount)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Amount")
+                        .IsRequired();
+                    d.Property(p => p.Debitor)
+                        .HasConversion(
+                            v => v.Id.ToString(),
+                            v => new User(v))
+                        .HasColumnName("DebitorId")
+                        .IsRequired();
                 });
         }
     }
