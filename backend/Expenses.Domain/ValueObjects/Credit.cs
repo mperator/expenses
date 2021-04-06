@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Expenses.Domain.Common;
+using System;
+using System.Collections.Generic;
 
 namespace Expenses.Domain.ValueObjects
 {
-    public class Credit
+    public class Credit : ValueObject
     {
         public User Creditor { get; }
 
@@ -17,6 +19,12 @@ namespace Expenses.Domain.ValueObjects
 
             Creditor = creditor;
             Amount = amount;
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Creditor;
+            yield return Amount;
         }
     }
 }

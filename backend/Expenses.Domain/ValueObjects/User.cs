@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Expenses.Domain.Common;
+using System;
+using System.Collections.Generic;
 
 namespace Expenses.Domain.ValueObjects
 {
-    public class User
+    public class User : ValueObject
     {
         public string Id { get; }
 
@@ -12,6 +14,11 @@ namespace Expenses.Domain.ValueObjects
         {
             if (string.IsNullOrWhiteSpace(id)) throw new Exception("Invelid user id.");
             Id = id;
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Id;
         }
     }
 }

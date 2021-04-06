@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Expenses.Domain.Common;
+using System;
+using System.Collections.Generic;
 
 namespace Expenses.Domain.ValueObjects
 {
-    public class Currency
+    public class Currency : ValueObject
     {
         public string Code { get; }
 
@@ -12,6 +14,11 @@ namespace Expenses.Domain.ValueObjects
             if (!(code.Length == 3)) throw new Exception("Length not invalid");
 
             Code = code;
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Code;
         }
     }
 }
