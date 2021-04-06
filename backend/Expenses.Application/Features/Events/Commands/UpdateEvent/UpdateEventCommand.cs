@@ -1,7 +1,9 @@
 ﻿using Expenses.Application.Common.Interfaces;
+using Expenses.Domain.ValueObjects;
 using MediatR;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,17 +11,10 @@ namespace Expenses.Application.Features.Events.Commands.UpdateEvent
 {
     public class UpdateEventCommand : IRequest
     {
-        #region Properties
-
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Currency { get; set; }
-        public DateTimeOffset StartDate { get; set; }
-        public DateTimeOffset EndDate { get; set; }
-        public IEnumerable<AttendeeWriteModel> Attendees { get; set; }
-
-        #endregion
+        public IList<string> ParticipantIds { get; set; }
     }
 
     public class UpdateEventCommandHandler : IRequestHandler<UpdateEventCommand>
@@ -35,35 +30,34 @@ namespace Expenses.Application.Features.Events.Commands.UpdateEvent
 
         public async Task<Unit> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException("Please check because of database structure changes.");
+            var @event = await _context.Events
+                .Include(e => e.Expenses)
+                .SingleOrDefaultAsync(e => e.Id == request.Id);
 
-            //var dbEvent = await _context.Events
-            //    .Include(ev => ev.Creator)
-            //    .Include(e => e.Attendees)
-            //    .Include(ev => ev.Expenses)
-            //    .AsSingleQuery()
-            //    .FirstOrDefaultAsync(ev => ev.Id == request.Id);
+            @event.Title = request.Title;
+            @event.Description = request.Description;
 
-            ////TODO: throw not found exception for user
+            // Remove participants that dont exists anymore.
+            foreach (var participant in @event.Participants.Reverse())
+            {
+                if (participant.Id == @event.Creator.Id) continue;
 
-            //dbEvent.Title = request.Title;
-            //dbEvent.StartDate = request.StartDate;
-            //dbEvent.EndDate = request.EndDate;
-            //dbEvent.Description = request.Description;
-            ////dbEvent.Creator = update.Creator;
-            ////dbEvent.Currency = update.Currency;
-            
-            //var currentUser = await _userService.GetCurrentUserAsync();
+                if (!request.ParticipantIds.Contains(participant.Id))
+                    @event.RemoveParticipant(participant);
+            }
 
-            //foreach (var attendee in request.Attendees.Where(attendee => attendee.Id != currentUser.Id))
-            //{
-            //    var foundAttendee = await _userService.FindByIdAsync(attendee.Id);
-            //    dbEvent.Attendees.Add(foundAttendee);
-            //}
+            // Add new participants
+            foreach (var participantId in request.ParticipantIds)
+            {
+                if (@event.Participants.FirstOrDefault(p => p.Id == participantId) == null)
+                {
+                    // TODO: User service validate if user exists.
+                    @event.AddParticipant(new User(participantId));
+                }
+            }
 
-            //await _context.SaveChangesAsync(cancellationToken);
-
-            //return Unit.Value;
+            await _context.SaveChangesAsync(cancellationToken);
+            return Unit.Value;
         }
     }
 }
