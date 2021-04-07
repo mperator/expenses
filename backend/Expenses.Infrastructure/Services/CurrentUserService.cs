@@ -1,5 +1,4 @@
 ﻿using Expenses.Application.Common.Interfaces;
-using Expenses.Domain.EntitiesOld;
 using Expenses.Infrastructure.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
