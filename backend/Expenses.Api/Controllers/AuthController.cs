@@ -1,6 +1,7 @@
 ﻿using Expenses.Api.Common;
 using Expenses.Api.Models;
 using Expenses.Application.Common.Interfaces;
+using Expenses.Application.Features.Auth.Commands.ConfirmEmail;
 using Expenses.Application.Features.Auth.Commands.RegisterUser;
 using Expenses.Application.Features.Auth.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -59,11 +60,9 @@ namespace Expenses.Api.Controllers
         [HttpGet("confirmEmail", Name = nameof(ConfirmEmail))]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
         {
-            var result = await _identityService.ConfirmEmailAsync(email, token);
-            if (result.Succeeded)
-                return NoContent();
-            else
-                return BadRequest(result.Errors);
+            var result = await Mediator.Send(new ConfirmEmailCommand { Email = email, Token = token });
+
+            return result.Succeeded ? NoContent() : BadRequest(result.Errors);
         }
 
         /// <summary>
