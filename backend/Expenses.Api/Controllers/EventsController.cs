@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Expenses.Application.Features.Events.Commands.UpdateEvent;
 using Expenses.Application.Features.Events.Commands.DeleteEvent;
+using Expenses.Api.Common;
 
 namespace Expenses.Api.Controllers
 {
