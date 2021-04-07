@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Expenses.Application.Common.Exceptions;
-using Expenses.Application.Common.Interfaces;
-using Expenses.Domain.EntitiesOld;
+﻿using Expenses.Application.Common.Interfaces;
+using Expenses.Domain.ValueObjects;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,43 +18,34 @@ namespace Expenses.Application.Features.Expenses.Commands.UpdateExpense
     public class UpdateExpenseCommandHandler : IRequestHandler<UpdateExpenseCommand, Unit>
     {
         private readonly IAppDbContext _context;
-        private readonly IMapper _mapper;
 
-        public UpdateExpenseCommandHandler(IAppDbContext context, IUserService userService, IMapper mapper)
+        public UpdateExpenseCommandHandler(IAppDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<Unit> Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
         {
+            var @event = await _context.Events
+                .Include(e => e.Expenses)
+                .SingleOrDefaultAsync(e => e.Id == request.EventId);
+
+            var expense = @event.Expenses.SingleOrDefault(e => e.Id == request.ExpenseId);
+            expense.Title = request.Model.Title;
+            expense.Description = request.Model.Description;
+
+            var credit = new Credit(
+                new User(request.Model.Credit.CreditorId),
+                request.Model.Credit.Amount);
+
+            var debits = request.Model.Debits
+                .Select(d => new Debit(new User(d.DebitorId), d.Amount))
+                .ToList();
+            expense.Split(credit, debits);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
             return Unit.Value;
-
-            //var model = request.Model;
-
-            //var expense = await _context.Expenses
-            //    .Include(a => a.ExpenseUsers)
-            //    .FirstOrDefaultAsync(ex => ex.EventId == request.EventId && ex.Id == request.ExpenseId);
-            //if (expense == null) throw new NotFoundException();
-
-            //var update = _mapper.Map<Expense>(model);
-            ////TODO: make sure that only same user as creator or a user with appropriate role can change event
-
-            //expense.Title = update.Title;
-            //expense.Description = update.Description;
-            //expense.Date = update.Date;
-            //expense.Amount = update.Amount;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync(cancellationToken);
-            //}
-            //catch (Exception e)
-            //{
-            //    new InvalidOperationException(e.Message);
-            //}
-
-            //return Unit.Value;
         }
     }
 }
