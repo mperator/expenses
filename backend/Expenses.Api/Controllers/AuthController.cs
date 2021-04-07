@@ -1,6 +1,7 @@
 ﻿using Expenses.Api.Common;
 using Expenses.Api.Models;
 using Expenses.Application.Common.Interfaces;
+using Expenses.Application.Features.Auth.Commands.RegisterUser;
 using Expenses.Application.Features.Auth.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -43,15 +44,14 @@ namespace Expenses.Api.Controllers
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RegisterAsync([FromBody] UserRegistrationModel model)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserRequestModel model)
         {
             var confirmationLink = $"{Request.Scheme}://{Request.Host.Value}{Url.RouteUrl(nameof(ConfirmEmail))}";
-            var result = await _identityService.RegisterAsync(model.FirstName, model.LastName, model.Username, model.Email, model.Password,
-                confirmationLink);
+            var result = await Mediator.Send(new RegisterUserCommand { ConfirmationLink = confirmationLink, Model = model });
 
-            if (result.Succeeded) return NoContent();
-            else return BadRequest(result.Errors);
+            return result.Succeeded ? NoContent() : BadRequest(result.Errors);
         }
+
 
         // TODO: Better create post.
         // user navigates on email confirmation sites with params. Site requests for email confirm with posts and redirect depending on data. Eventually requests new confirmation link. Or navigate to login.

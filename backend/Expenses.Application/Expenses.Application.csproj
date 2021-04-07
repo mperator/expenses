@@ -19,8 +19,4 @@
 		<ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Features\Auth\Commands\" />
-	</ItemGroup>
-
 </Project>
