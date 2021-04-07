@@ -1,16 +1,14 @@
 ﻿using Expenses.Api.Common;
-using Expenses.Api.Models;
-using Expenses.Application.Common.Interfaces;
 using Expenses.Application.Common.Models;
 using Expenses.Application.Features.Auth.Commands.ConfirmEmail;
 using Expenses.Application.Features.Auth.Commands.Login;
 using Expenses.Application.Features.Auth.Commands.Logout;
+using Expenses.Application.Features.Auth.Commands.RefreshCurrentToken;
 using Expenses.Application.Features.Auth.Commands.RegisterUser;
 using Expenses.Application.Features.Auth.Queries.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
@@ -20,14 +18,6 @@ namespace Expenses.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ApiControllerBase
     {
-        // https://www.codewithmukesh.com/blog/refresh-tokens-in-aspnet-core/
-        private readonly IIdentityService _identityService;
-
-        public AuthController(IIdentityService identityService)
-        {
-            _identityService = identityService;
-        }
-
         /// <summary>
         /// Endpoint to test authorization. For demo purpose only.
         /// </summary>
@@ -102,18 +92,17 @@ namespace Expenses.Api.Controllers
         /// <summary>
         /// Refresh token by token value in body.
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("refreshToken")]
-        public async Task<ActionResult<TokenModel>> RefreshTokenAsync([FromBody] RefreshTokenModel model)
+        public async Task<ActionResult<TokenModel>> RefreshTokenAsync([FromBody] RefreshTokenCommand request)
         {
-            var result = await _identityService.HandleRefreshTokenAsync(model.Token);
-
-            if (!result.Result.Succeeded) return Unauthorized(result.Result.Errors);
+            var (result, token, refreshToken) = await Mediator.Send(request);
+            if (!result.Succeeded) return Unauthorized(result.Errors);
             else
             {
-                SetRefreshTokenInCookie(result.RefreshToken);
-                return Ok(result.TokenModel);
+                SetRefreshTokenInCookie(refreshToken);
+                return Ok(token);
             }
         }
 
@@ -124,13 +113,12 @@ namespace Expenses.Api.Controllers
         [HttpPost("refreshTokenSilent")]
         public async Task<ActionResult<TokenModel>> RefreshTokenByCookieAsync()
         {
-            var result = await _identityService.HandleRefreshTokenAsync(Request.Cookies["X-RefreshToken"]);
-
-            if (!result.Result.Succeeded) return Unauthorized(result.Result.Errors);
+            var (result, token, refreshToken) = await Mediator.Send(new RefreshTokenCommand { Token = Request.Cookies["X-RefreshToken"] });
+            if (!result.Succeeded) return Unauthorized(result.Errors);
             else
             {
-                SetRefreshTokenInCookie(result.RefreshToken);
-                return Ok(result.TokenModel);
+                SetRefreshTokenInCookie(refreshToken);
+                return Ok(token);
             }
         }
 
@@ -138,7 +126,7 @@ namespace Expenses.Api.Controllers
         /// Set RefreshToken in Cookie.
         /// </summary>
         /// <param name="refreshToken"></param>
-        private void SetRefreshTokenInCookie(Expenses.Application.Common.Models.RefreshToken refreshToken)
+        private void SetRefreshTokenInCookie(RefreshToken refreshToken)
         {
             var cookieOptions = new CookieOptions
             {
