@@ -1,5 +1,7 @@
-﻿using Expenses.Api.Models;
+﻿using Expenses.Api.Common;
+using Expenses.Api.Models;
 using Expenses.Application.Common.Interfaces;
+using Expenses.Application.Features.Auth.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +13,7 @@ namespace Expenses.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController : ApiControllerBase
     {
         // https://www.codewithmukesh.com/blog/refresh-tokens-in-aspnet-core/
         private readonly IIdentityService _identityService;
@@ -29,7 +31,7 @@ namespace Expenses.Api.Controllers
         [HttpGet("test")]
         public async Task<string> TestAsync()
         {
-            return $"Secret {Guid.NewGuid()}";
+            return await Mediator.Send(new TestQuery());
         }
 
         /// <summary>
