@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Expenses.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,12 +29,9 @@ namespace Expenses.Application.Features.Expenses.Queries.GetExpenseById
 
         public async Task<GetExpenseByIdQueryExpense> Handle(GetExpenseByIdQuery request, CancellationToken cancellationToken)
         {
-            // TODO: check if shadow property can be used for further query optimization
-            // else get event get expense from event.
-            // var id = EF.Property<int>(temp, "EventId");
-
             return await _context.Expenses
                 .AsNoTracking()
+                .Where(e => EF.Property<int>(e, "EventId") == request.EventId)
                 .ProjectTo<GetExpenseByIdQueryExpense>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(e => e.Id == request.ExpenseId, cancellationToken);
         }
