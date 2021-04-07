@@ -1,7 +1,10 @@
 ﻿using Expenses.Api.Common;
 using Expenses.Api.Models;
 using Expenses.Application.Common.Interfaces;
+using Expenses.Application.Common.Models;
 using Expenses.Application.Features.Auth.Commands.ConfirmEmail;
+using Expenses.Application.Features.Auth.Commands.Login;
+using Expenses.Application.Features.Auth.Commands.Logout;
 using Expenses.Application.Features.Auth.Commands.RegisterUser;
 using Expenses.Application.Features.Auth.Queries.Test;
 using Microsoft.AspNetCore.Authorization;
@@ -71,9 +74,10 @@ namespace Expenses.Api.Controllers
         /// <param name="model"></param>
         /// <returns>Returns access and refresh token.</returns>
         [HttpPost("login")]
-        public async Task<ActionResult<Expenses.Application.Common.Models.TokenModel>> LoginAsync([FromBody] LoginModel model)
+        public async Task<ActionResult<TokenModel>> LoginAsync([FromBody] LoginCommand model)
         {
-            var (result, token, refreshToken) = await _identityService.LoginAsync(model.Username, model.Email, model.Password);
+            var (result, token, refreshToken) = await Mediator.Send(model);
+            
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
@@ -89,12 +93,12 @@ namespace Expenses.Api.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> LogoutAsync()
         {
-            var result = await _identityService.LogoutAsync(User);
-            if (result) Response.Cookies.Delete("X-RefreshToken");
+            var result = await Mediator.Send(new LogoutCommand());
 
+            if (result) Response.Cookies.Delete("X-RefreshToken");
             return NoContent();
         }
-        //TODO: do we need to get rid of the models?
+        
         /// <summary>
         /// Refresh token by token value in body.
         /// </summary>
