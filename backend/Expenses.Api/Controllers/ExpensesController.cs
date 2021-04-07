@@ -1,4 +1,5 @@
-﻿using Expenses.Application.Features.Expenses.Commands.CreateExpense;
+﻿using Expenses.Api.Common;
+using Expenses.Application.Features.Expenses.Commands.CreateExpense;
 using Expenses.Application.Features.Expenses.Commands.DeleteExpense;
 using Expenses.Application.Features.Expenses.Commands.UpdateExpense;
 using Expenses.Application.Features.Expenses.Queries.GetExpenseById;

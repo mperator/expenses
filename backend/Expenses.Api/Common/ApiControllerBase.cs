@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Expenses.Api.Controllers
+namespace Expenses.Api.Common
 {
     [ApiController]
     [Route("api/[controller]")]
