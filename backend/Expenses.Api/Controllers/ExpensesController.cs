@@ -37,7 +37,7 @@ namespace Expenses.Api.Controllers
         /// <response code="404">No expense found for the given expense and event id</response>
         /// <response code="200">On success</response>
         [HttpGet("{expenseId}", Name = nameof(GetExpenseById))]
-        public async Task<ActionResult<GetExpenseByIdResponseExpense>> GetExpenseById(int eventId, int expenseId)
+        public async Task<ActionResult<GetExpenseByIdQueryExpense>> GetExpenseById(int eventId, int expenseId)
         {
             return Ok(await Mediator.Send(new GetExpenseByIdQuery { EventId = eventId, ExpenseId = expenseId }));
         }
