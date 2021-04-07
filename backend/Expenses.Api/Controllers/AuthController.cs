@@ -3,7 +3,7 @@ using Expenses.Api.Models;
 using Expenses.Application.Common.Interfaces;
 using Expenses.Application.Features.Auth.Commands.ConfirmEmail;
 using Expenses.Application.Features.Auth.Commands.RegisterUser;
-using Expenses.Application.Features.Auth.Queries;
+using Expenses.Application.Features.Auth.Queries.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

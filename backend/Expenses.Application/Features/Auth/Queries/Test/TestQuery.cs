@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Expenses.Application.Features.Auth.Queries
+namespace Expenses.Application.Features.Auth.Queries.Test
 {
     public class TestQuery : IRequest<string> { }
 
