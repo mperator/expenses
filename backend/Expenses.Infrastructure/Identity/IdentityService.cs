@@ -20,6 +20,7 @@ namespace Expenses.Infrastructure.Identity
     public class IdentityService : IIdentityService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IFeatureManager _featureManager;
         private readonly IEmailService _emailService;
         private readonly AppDbContext _context;
@@ -27,12 +28,14 @@ namespace Expenses.Infrastructure.Identity
 
         public IdentityService(
             UserManager<ApplicationUser> userManager,
+            ICurrentUserService currentUserService,
             IFeatureManager featureManager,
             IEmailService emailService,
             IOptions<JwtTokenOptions> options,
             AppDbContext context)
         {
             _userManager = userManager;
+            _currentUserService = currentUserService;
             _featureManager = featureManager;
             _emailService = emailService;
             _context = context;
@@ -91,21 +94,19 @@ namespace Expenses.Infrastructure.Identity
             return (Result.Success(), token, refreshToken);
         }
 
-        public async Task<bool> LogoutAsync(ClaimsPrincipal requestingUser)
+        public async Task<bool> LogoutAsync(string userId)
         {
-            //// delete cookie invalidate all refresh tokens
-            //var user = await _userManager.GetUserAsync(requestingUser);
-            //var activeTokens = user.RefreshTokens.Where(x => x.IsActive);
-            //foreach (var token in activeTokens)
-            //{
-            //    token.Revoked = DateTime.UtcNow;
-            //}
-            //await _userManager.UpdateAsync(user);
+            var user = await _userManager.FindByIdAsync(userId);
 
+            // Delete cookie invalidate all refresh tokens.
+            var activeTokens = user.RefreshTokens.Where(x => x.IsActive);
+            foreach (var token in activeTokens)
+            {
+                token.Revoked = DateTime.UtcNow;
+            }
+            await _userManager.UpdateAsync(user);
             return true;
         }
-
-
 
         public async Task<Result> RegisterAsync(string firstName, string lastName, string username,
             string email, string password, string registerLink)
