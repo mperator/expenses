@@ -11,14 +11,13 @@ namespace Expenses.Domain.Entities
     public class Expense
     {
         private Credit _credit;
-        private IReadOnlyList<Debit> _debits;
+        private List<Debit> _debits;
 
         public int Id { get; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Currency { get; }
-        public DateTime Date { get; set; }
-        
+        public DateTime Date { get; }
         public User Creator { get; }
 
         public Credit Credit => _credit;
@@ -56,7 +55,7 @@ namespace Expenses.Domain.Entities
             if (debits.Count() != debits.Select(d => d.Debitor).Distinct().Count()) throw new ExpenseValidationException("DebitorSame", "Same debitor is not allowed");
 
             _credit = credit;
-            _debits = debits.AsReadOnly();
+            _debits = debits;
         }
     }
 }

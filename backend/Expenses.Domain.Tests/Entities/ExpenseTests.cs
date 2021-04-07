@@ -90,20 +90,6 @@ namespace Expenses.Domain.Tests.Entities
         }
 
         [Fact]
-        public void CreateExpense_ChangeDate()
-        {
-            // arrange
-            var expense = GetExpenseWithDefaultValues();
-            var date = expense.Date.AddDays(-10);
-
-            // act
-            expense.Date = date;
-
-            // assert
-            Assert.Equal(date, expense.Date);
-        }
-
-        [Fact]
         public void CreateExpense_WithInvalidCurrency()
         {
             // act and arrange
