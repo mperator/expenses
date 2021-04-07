@@ -81,7 +81,7 @@ namespace Expenses.Infrastructure.Identity
                 return (Result.Failure(new List<string> { "Could not login." }), null, null);
 
             var refreshToken = CreateRefreshToken();
-            //user.RefreshTokens.Add(refreshToken);
+            user.RefreshTokens.Add(refreshToken);
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
                 return (Result.Failure(result.Errors.Select(e => e.Description)), null, null);
@@ -213,40 +213,38 @@ namespace Expenses.Infrastructure.Identity
         /// <returns></returns>
         public async Task<(Result Result, TokenModel TokenModel, RefreshToken RefreshToken)> HandleRefreshTokenAsync(string refreshToken)
         {
-            var user = new ApplicationUser();
+            var user = _userManager.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+            if (user == null)
+            {
+                // return error and null
+                return (Result.Failure(new List<string> { "Token did not match any users." }), null, null);
+            }
 
-            //var user = _userManager.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
-            //if (user == null)
-            //{
-            //    // return error and null
-            //    return (Result.Failure(new List<string> { "Token did not match any users." }), null, null);
-            //}
+            // Check if token is active
+            var token = user.RefreshTokens.Single(x => x.Token == refreshToken);
+            if (!token.IsActive)
+            {
+                return (Result.Failure(new List<string> { "Token expired." }), null, null);
+            }
 
-            // check if token is active
-            //var token = user.RefreshTokens.Single(x => x.Token == refreshToken);
-            //if (!token.IsActive)
-            //{
-            //    return (Result.Failure(new List<string> { "Token expired." }), null, null);
-            //}
+            token.Revoked = DateTime.UtcNow;
 
-            //token.Revoked = DateTime.UtcNow;
+            // generate new refresh and access token
 
-            //// generate new refresh and access token
+            var newRefreshToken = CreateRefreshToken();
+            user.RefreshTokens.Add(newRefreshToken);
+            _context.Update(user);
 
-            //var newRefreshToken = CreateRefreshToken();
-            //user.RefreshTokens.Add(newRefreshToken);
-            //_context.Update(user);
+            //SetRefreshTokenInCookie(newRefreshToken);
 
-            ////SetRefreshTokenInCookie(newRefreshToken);
+            // Create token
+            var newAccessToken = GenerateToken(user);
+            //FIXME: was ist mit all den anderen props?
+            newAccessToken.RefreshToken = newRefreshToken.Token;
+            newAccessToken.RefreshTokenExpires = newRefreshToken.Expires;
+            await _context.SaveChangesAsync();
 
-            //// Create token
-            //var newAccessToken = GenerateToken(user);
-            ////FIXME: was ist mit all den anderen props?
-            //newAccessToken.RefreshToken = newRefreshToken.Token;
-            //newAccessToken.RefreshTokenExpires = newRefreshToken.Expires;
-            //await _context.SaveChangesAsync();
-
-            //return (Result.Success(), newAccessToken, newRefreshToken);
+            return (Result.Success(), newAccessToken, newRefreshToken);
 
             throw new Exception();
         }
