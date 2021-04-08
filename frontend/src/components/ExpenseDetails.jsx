@@ -82,14 +82,18 @@ export default function ExpenseDetails() {
                     </div>
                 </div>
                 <div className="card-body">
-                    <p className="card-text mb-0">Paid by {formatToCapitalize(expense.issuer)}: {expense.amount}€</p>
-                    <p className="card-text"><small className="text-muted">added on {dayjs(expense.date).format('DD/MM/YYYY')}</small></p>
+                    {expense.credit ? 
+                    <>
+                        <p className="card-text mb-0">Paid by {formatToCapitalize(expense.credit.creditorId)}: {expense.credit.amount}€</p>
+                        <p className="card-text"><small className="text-muted">added on {dayjs(expense.date).format('DD/MM/YYYY')}</small></p>
+                    </> : null
+                    }
                 </div>
                 <div className="card-body">
-                    {expense.expensesUsers && expense.expensesUsers.map(eu => (
-                        <div key={eu.userId} className="row">
-                            <div className="col-auto text-capitalize">{eu.userName}</div>
-                            <div className="col-auto">{eu.amount}€</div>
+                    {expense.debits && expense.debits.map(d => (
+                        <div key={d.debitorId} className="row">
+                            <div className="col-auto text-capitalize">{d.debitorId}</div>
+                            <div className="col-auto">{d.amount}€</div>
                         </div>
                     ))}
                 </div>
