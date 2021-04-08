@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import useForm from '../hooks/useForm'
 import FormInput from './layout/FormInput'
 import { useHistory } from 'react-router';
@@ -8,7 +8,7 @@ function Register() {
     const { registerUserAsync } = useClient();
     const history = useHistory();
 
-    const { state, error, handleFormChange, setError, setForm } = useForm({
+    const { state, error, handleFormChange, setError } = useForm({
         username: "",
         email: "",
         firstName: "",
@@ -21,14 +21,14 @@ function Register() {
         e.preventDefault();
 
         // soft validation to prevent sending wrong data.
-        if(state.password != state.passwordConfirmation) {
+        if(state.password !== state.passwordConfirmation) {
             setError({...error, passwordConfirmation: "Password does not match." });
         } else {
             setError({...error, passwordConfirmation: "" });
         }
 
         try {
-            const response = await registerUserAsync({
+            await registerUserAsync({
                 username: state.username,
                 email: state.email,
                 firstName: state.firstName,
