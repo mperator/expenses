@@ -2,34 +2,53 @@ import React from 'react'
 
 function Register() {
     return (
-        <div>
-            <form action="">
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input id="email" name="email" type="text" className="text" />
+        <div className="container">
+            <div className="row mt-5">
+                <div className="col" />
+                <div className="col-lg-6">
+                    <form>
+                        <div className="row mb-3">
+                            <label htmlFor="username" className="col-sm-2 col-form-label">Username</label>
+                            <div className="col-sm-10">
+                                <input type="text" className="form-control" id="username" name="username"></input>
+                            </div>
+                        </div>
+                        <div className="row mb-3">
+                            <label htmlFor="email" className="col-sm-2 col-form-label">Email</label>
+                            <div className="col-sm-10">
+                                <input type="email" className="form-control" id="email" name="email"></input>
+                            </div>
+                        </div>
+                        <div className="row mb-3">
+                            <label htmlFor="firstName" className="col-sm-2 col-form-label">First Name</label>
+                            <div className="col-sm-10">
+                                <input type="text" className="form-control" id="firstName" name="firstName"></input>
+                            </div>
+                        </div>
+                        <div className="row mb-3">
+                            <label htmlFor="lastName" className="col-sm-2 col-form-label">Last Name</label>
+                            <div className="col-sm-10">
+                                <input type="text" className="form-control" id="lastName" name="lastName"></input>
+                            </div>
+                        </div>
+                        <div className="row mb-3">
+                            <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
+                            <div className="col-sm-10">
+                                <input type="password" className="form-control" id="password" name="password"></input>
+                            </div>
+                        </div>
+                        <div className="row mb-3">
+                            <label htmlFor="passwordConfirmation" className="col-sm-2 col-form-label">Password Confirmation</label>
+                            <div className="col-sm-10">
+                                <input type="password" className="form-control" id="passwordConfirmation" name="passwordConfirmation"></input>
+                            </div>
+                        </div>
+                        <div className="position-relative">
+                            <button type="submit" className="btn btn-primary float-end">Register</button>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <label htmlFor="username">Username</label>
-                    <input id="username" name="username" type="text" className="text" />
-                </div>
-                <div>
-                    <label htmlFor="firstName">First name</label>
-                    <input id="firstName" name="firstName" type="text" className="text" />
-                </div>
-                <div>
-                    <label htmlFor="lastName">Last name</label>
-                    <input id="lastName" name="lastName" type="text" className="text" />
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input id="password" name="password" type="password" className="text" />
-                </div>
-                <div>
-                    <label htmlFor="passwordConfirm">Confirm password</label>
-                    <input id="passwordConfirm" name="passwordConfirm" type="password" className="text" />
-                </div>
-                <button>Login</button>
-            </form>
+            </div>
         </div>
     )
 }

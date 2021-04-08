@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './AuthContext';
 import Navigation from './components/Navigation';
+import Register from './components/Register'
 import Login from './components/Login';
 import Info from './components/Info';
 import EventDetails from './components/EventDetails';
@@ -23,6 +24,7 @@ function App() {
                     <Switch>
                         <Route exact path='/' render={props => <Landing {...props} />} />
                         <Route exact path='/login' component={Login} />
+                        <Route exact path='/register' component={Register} />
 
                         <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                         <ProtectedRoute exact path='/info' component={Info} />
