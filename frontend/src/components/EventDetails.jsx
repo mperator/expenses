@@ -18,7 +18,7 @@ const EventDetails = () => {
             (async () => {
                 // try catch ignore or redirect when failing
                 const event = await getEventAsync(params.id);
-                setEvent(event)
+                setEvent(event);
                 setLoading(false);
             })();
         }
@@ -27,42 +27,26 @@ const EventDetails = () => {
     const calculateExpenseSummary = () => {
         const expenses = event.expenses;
         if (expenses.length > 0)
-            return expenses.map(a => a.amount).reduce((a, c) => a + c);
+            return expenses.map(a => a.credit.amount).reduce((a, c) => a + c);
         else
             return 0;
     }
 
     const calculateUserDebt = (userId) => {
-        let dept = 0;
-
-        for (const expense of event.expenses) {
-            if (expense.issuerId !== userId) {
-                const selfAmount = expense.expensesUsers
-                    .filter(e => e.userId === userId)
-                    .map(e => e.amount)
-                    // sets 0 as intial value, in case the array is empty
-                    .reduce((a, c) => a + c, 0)
-
-                dept -= selfAmount;
-
-            }
-        }
+        const dept = event.expenses
+            .flatMap(e => e.debits)
+            .filter(d => d.debitorId === userId)
+            .map(d => d.amount)
+            .reduce((a, c) => a + c, 0);
         return dept;
     }
 
     const calculateUserLoan = (userId) => {
-        let loan = 0;
-
-        for (const expense of event.expenses) {
-            if (expense.issuerId === userId) {
-                const selfAmount = expense.expensesUsers
-                    .filter(e => e.userId === userId)
-                    .map(e => e.amount)
-                    .reduce((a, c) => a + c)
-                const tempLoan = expense.amount - selfAmount;
-                loan += tempLoan;
-            }
-        }
+        const loan = event.expenses
+            .flatMap(e => e.credit)
+            .filter(c => c.creditorId === userId)
+            .map(c => c.amount)
+            .reduce((a, c) => a + c, 0);
         return loan;
     }
 
@@ -131,7 +115,7 @@ const EventDetails = () => {
                                         </div>
                                     </div>
                                 </li>
-                                {event.attendees.map(a => (
+                                {event.participants.map(a => (
                                     <li key={a.id} className="list-group-item">
                                         <div className="row justify-content-between align-items-center">
                                             <div className="col-auto">
@@ -163,7 +147,7 @@ const EventDetails = () => {
                                                     : event.expenses.map(e => (
                                                         <li key={e.id} className="list-group-item">
                                                             <p className="mb-0 fs-6">{e.title}</p>
-                                                            <p className="fs-4 fw-bold mb-0">{e.amount}€</p>
+                                                            <p className="fs-4 fw-bold mb-0">{e.credit.amount}€</p>
                                                             <p style={{ fontSize: '0.7rem' }}>{dayjs(e.date).format('DD/MM/YYYY')}</p>
                                                             <Link to={{ pathname: `/expense/${e.id}`, state: { eventId: event.id } }} className="stretched-link" />
                                                         </li>
