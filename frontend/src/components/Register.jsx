@@ -1,53 +1,67 @@
-import React from 'react'
+import React, { useState } from 'react'
+import useForm from '../hooks/useForm'
+import FormInput from './layout/FormInput'
+import { useHistory } from 'react-router';
+import useClient from '../hooks/useClient'
 
 function Register() {
+    const { registerUserAsync } = useClient();
+    const history = useHistory();
+
+    const { state, error, handleFormChange, setError, setForm } = useForm({
+        username: "",
+        email: "",
+        firstName: "",
+        lastName: "",
+        password: "",
+        passwordConfirmation: "",
+    });
+
+    const handleSubmitAsync = async (e) => {
+        e.preventDefault();
+
+        // soft validation to prevent sending wrong data.
+        if(state.password != state.passwordConfirmation) {
+            setError({...error, passwordConfirmation: "Password does not match." });
+        } else {
+            setError({...error, passwordConfirmation: "" });
+        }
+
+        try {
+            const response = await registerUserAsync({
+                username: state.username,
+                email: state.email,
+                firstName: state.firstName,
+                lastName: state.lastName,
+                password: state.password
+            })
+
+            history.push("/login");
+        }
+        catch(error) {
+
+        }
+    }
+
     return (
         <div className="container">
             <div className="row mt-5">
                 <div className="col" />
                 <div className="col-lg-6">
+                    <h2 className="mb-5">Register</h2>
                     <form>
-                        <div className="row mb-3">
-                            <label htmlFor="username" className="col-sm-2 col-form-label">Username</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control" id="username" name="username"></input>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <label htmlFor="email" className="col-sm-2 col-form-label">Email</label>
-                            <div className="col-sm-10">
-                                <input type="email" className="form-control" id="email" name="email"></input>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <label htmlFor="firstName" className="col-sm-2 col-form-label">First Name</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control" id="firstName" name="firstName"></input>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <label htmlFor="lastName" className="col-sm-2 col-form-label">Last Name</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control" id="lastName" name="lastName"></input>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
-                            <div className="col-sm-10">
-                                <input type="password" className="form-control" id="password" name="password"></input>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <label htmlFor="passwordConfirmation" className="col-sm-2 col-form-label">Password Confirmation</label>
-                            <div className="col-sm-10">
-                                <input type="password" className="form-control" id="passwordConfirmation" name="passwordConfirmation"></input>
-                            </div>
-                        </div>
+                        <FormInput type="text" id="username" label="Username" placeholder="JohnDoe21" value={state.username} handleChange={handleFormChange} error={error.username} />
+                        <FormInput type="email" id="email" label="Email" placeholder="johndoe@example.com" value={state.email} handleChange={handleFormChange} error={error.email} />
+                        <FormInput type="text" id="firstName" label="First Name" placeholder="John" value={state.firstName} handleChange={handleFormChange} error={error.firstName} />
+                        <FormInput type="text" id="lastName" label="Last Name" placeholder="Doe" value={state.lastName} handleChange={handleFormChange} error={error.lastName} />
+                        <FormInput type="password" id="password" label="Password" placeholder="" value={state.password} handleChange={handleFormChange} error={error.password} />
+                        <FormInput type="password" id="passwordConfirmation" label="Password Confirmation" placeholder="" value={state.passwordConfirmation} handleChange={handleFormChange} error={error.passwordConfirmation} />
                         <div className="position-relative">
-                            <button type="submit" className="btn btn-primary float-end">Register</button>
+                            <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Register</button>
                         </div>
                     </form>
                 </div>
+                <div className="col" />
             </div>
         </div>
     )
