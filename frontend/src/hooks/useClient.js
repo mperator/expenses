@@ -47,6 +47,18 @@ const useClient = () => {
         return await handleResponseAsync(response, getWithAuthenticationAsync, url);
     }
 
+    async function postAsync(url, data) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        return await handleResponseAsync(response, null, url, data);
+    }
+
     async function postWithAuthenticationAsync(url, token, data) {
         const response = await fetch(url, {
             method: 'POST',
@@ -86,6 +98,11 @@ const useClient = () => {
     /* test hook */
     const getAuthTestAsync = async () => {
         return await getWithAuthenticationAsync('/auth/test', token);
+    }
+
+    /* users */
+    const registerUserAsync = async (data) => {
+        return await postAsync("/auth/register", data);
     }
 
     /* events */
@@ -132,6 +149,7 @@ const useClient = () => {
     }
 
     return {
+        registerUserAsync,
         getAuthTestAsync,
         getEventsAsync,
         getEventAsync,
