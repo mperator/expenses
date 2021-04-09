@@ -145,7 +145,7 @@ const useClient = () => {
 
     /* attendees */
     const getAttendeeAsync = async (name) => {
-        return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
+        return await getWithAuthenticationAsync(`/users?name=${name}`, token);
     }
 
     return {
