@@ -9,7 +9,7 @@ import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
 
 // TODO: what happens if parms.id is invalid?
 const EventEditor = () => {
-    const { getEventAsync, putEventAsync, postEventAsync, getAttendeeAsync } = useClient();
+    const { getEventAsync, putEventAsync, postEventAsync, getParticipantAsync } = useClient();
     const history = useHistory();
     const params = useParams();
 
@@ -36,9 +36,8 @@ const EventEditor = () => {
                     startDate: dayjs(event.startDate).format('YYYY-MM-DD'),
                     endDate: dayjs(event.endDate).format('YYYY-MM-DD'),
                 });
-
-                setAttendees(
-                    event.attendees
+                setParticipants(
+                    event.participants
                 );
 
                 setLoading(false);
@@ -50,35 +49,35 @@ const EventEditor = () => {
 
     const [search, setSearch] = useState({
         query: "",
-        attendees: []
+        participants: []
     });
 
-    const [attendees, setAttendees] = useState([]);
+    const [participants, setParticipants] = useState([]);
     useEffect(() => {
         (async () => {
-            let attendees = [];
+            let participants = [];
             if (search.query !== "") {
                 try {
-                    attendees = await getAttendeeAsync(search.query);
+                    participants = await getParticipantAsync(search.query);
                     setSearch(s => ({
                         ...s,
-                        attendees
+                        participants
                     }));
                 } catch (error) { }
             }
 
             setSearch(s => ({
                 ...s,
-                attendees
+                participants
             }));
         })()
     }, [search.query])
 
-    const selectAttendee = (a) => {
-        setAttendees([...attendees, a]);
+    const selectParticipant = (a) => {
+        setParticipants([...participants, a]);
         setSearch({
             query: "",
-            attendees: []
+            participants: []
         })
     }
 
@@ -91,13 +90,17 @@ const EventEditor = () => {
     }
 
     const createAsync = async () => {
+        const filteredParticipantsIds = participants.map(participant => {
+            return participant.id;
+        });
         try {
             const response = await postEventAsync({
                 title: state.title,
                 description: state.description,
                 startDate: state.startDate,
                 endDate: state.endDate,
-                attendees: attendees
+                currency: "EUR",
+                participantIds: filteredParticipantsIds
             });
             // show the error toast in case something went wrong and stay on current page
             if (response === null) triggerErrorToast();
@@ -113,13 +116,16 @@ const EventEditor = () => {
     }
 
     const updateAsync = async () => {
+        const filteredParticipantsIds = participants.map(participant => {
+            return participant.id;
+        });
         try {
             const response = await putEventAsync(params.id, {
                 title: state.title,
                 description: state.description,
                 startDate: state.startDate,
                 endDate: state.endDate,
-                attendees: attendees
+                participantIds: filteredParticipantsIds
             });
             history.goBack();
         } catch (error) {
@@ -151,9 +157,9 @@ const EventEditor = () => {
         }
     }
 
-    const handleDeleteAttendee = (id) => {
-        let updatedAttendees = attendees.filter(a => a.id !== id);
-        setAttendees([...updatedAttendees]);
+    const handleDeleteParticipant = (id) => {
+        let updatedParticipants = participants.filter(a => a.id !== id);
+        setParticipants([...updatedParticipants]);
     }
 
     const handleCancel = () => {
@@ -180,9 +186,9 @@ const EventEditor = () => {
                             <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder="Search for users ..." autoComplete="off"></input>
 
                             <div className="list-group">
-                                {search.attendees.map(a => (
+                                {search.participants.map(a => (
                                     <button key={a.id} type="button" className="list-group-item list-group-item-action"
-                                        onClick={e => { e.preventDefault(); selectAttendee(a); }}
+                                        onClick={e => { e.preventDefault(); selectParticipant(a); }}
                                     >{a.username}</button>
                                 ))}
                             </div>
@@ -201,8 +207,8 @@ const EventEditor = () => {
                     </div> */}
                         <div className="mb-3">
                             <ul className="list-group">
-                                {attendees.map(a => (
-                                    <li key={a.id} onClick={() => handleDeleteAttendee(a.id)} className="list-group-item d-flex justify-content-between align-items-center">
+                                {participants.map(a => (
+                                    <li key={a.id} onClick={() => handleDeleteParticipant(a.id)} className="list-group-item d-flex justify-content-between align-items-center">
                                         {a.username}
                                         <button type="button" className="btn" >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">

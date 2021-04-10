@@ -18,6 +18,7 @@ const useClient = () => {
             case 400:   // Bad Request
                 // TODO: Create error object that contains errors.
                 const error = await response.json();
+                console.log(error)
                 throw error;
             case 401:   // Unauthorized
                 const renewedToken = await renewAccessTokenAsync();
@@ -143,8 +144,8 @@ const useClient = () => {
         return await deleteWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
     }
 
-    /* attendees */
-    const getAttendeeAsync = async (name) => {
+    /* participants */
+    const getParticipantAsync = async (name) => {
         return await getWithAuthenticationAsync(`/users?name=${name}`, token);
     }
 
@@ -159,7 +160,7 @@ const useClient = () => {
         postExpenseAsync,
         getExpenseAsync,
         deleteExpenseAsync,
-        getAttendeeAsync,
+        getParticipantAsync,
         getFilteredEventsAsync
     }
 }
