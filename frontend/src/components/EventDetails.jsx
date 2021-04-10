@@ -119,7 +119,7 @@ const EventDetails = () => {
                                     <li key={a.id} className="list-group-item">
                                         <div className="row justify-content-between align-items-center">
                                             <div className="col-auto">
-                                                {a.name}
+                                                {a.username}
                                             </div>
                                             <div className="col-auto">
                                                 <div className="col-auto">
