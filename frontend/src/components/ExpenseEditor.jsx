@@ -50,7 +50,7 @@ const ExpenseEditor = () => {
         if (eventId && !expenseId) {
             (async () => {
                 const event = await getEventAsync(eventId);
-                const participants = event.attendees.map(a => ({ id: a.id, isParticipating: true, name: a.name, amount: 0 }));
+                const participants = event.participants.map(a => ({ id: a.id, isParticipating: true, username: a.username, amount: 0 }));
                 setState({
                     ...state,
                     participants
@@ -190,10 +190,10 @@ const ExpenseEditor = () => {
                         </div>
                     </div>
                     <div className="mb-3">
-                        <h3 className="mb-3" >Attendees</h3>
+                        <h3 className="mb-3" >Participants</h3>
                         {state.participants.map((p, i) => (
                             <div key={p.id} className="row mb-2">
-                                <label className="col-sm-3 col-form-label">{p.name}</label>
+                                <label className="col-sm-3 col-form-label">{p.username}</label>
                                 <div className="col-sm-9">
                                     <div className="input-group">
                                         <div className="input-group-text">
