@@ -33,7 +33,8 @@ const ExpenseEditor = () => {
         description: '',
         //TODO: change to empty string! and check evaluation
         amount: 0,
-        participants: []
+        participants: [],
+        creditor: ""
     });
 
     const [error, setError] = useState({
@@ -51,9 +52,11 @@ const ExpenseEditor = () => {
             (async () => {
                 const event = await getEventAsync(eventId);
                 const participants = event.participants.map(a => ({ id: a.id, isParticipating: true, username: a.username, amount: 0 }));
+                const creditor = participants[0];
                 setState({
                     ...state,
-                    participants
+                    participants,
+                    creditor
                 })
             })();
         }
@@ -65,13 +68,14 @@ const ExpenseEditor = () => {
             (async () => {
                 const expense = await getExpenseAsync(eventId, expenseId);
                 const participants = expense.expensesUsers.map(eu => ({ id: eu.userId, isParticipating: true, name: eu.name, amount: eu.amount }));
-
+                //FIXME: set creditor as well in case we are loading an expense
                 setState({
                     ...state,
                     date: dayjs(expense.date).format('YYYY-MM-DD'),
                     title: expense.title,
                     description: expense.description,
                     amount: expense.amount,
+                    currency: "EUR",
                     participants
                 })
             })();
@@ -127,12 +131,23 @@ const ExpenseEditor = () => {
     const handleSubmitAsync = async (e) => {
         e.preventDefault();
         try {
+            const debitors = state.participants.map(participant => {
+                var debitor = {};
+                debitor["debitorId"] = participant.id;
+                debitor["amount"] = participant.amount;
+                return debitor;
+            });
             const response = await postExpenseAsync(eventId, {
                 date: state.date,
                 title: state.title,
                 description: state.description,
-                amount: state.amount,
+                currency: "EUR",
                 participants: state.participants,
+                credit: {
+                    creditorId: state.creditor.id,
+                    amount: state.amount,
+                },
+                debits: debitors
             });
             if (response === null) triggerErrorToast();
             else history.goBack();
@@ -161,6 +176,14 @@ const ExpenseEditor = () => {
         errorToast.show();
     }
 
+    const handleCreditorChange = async (e) => {
+        const creditor = state.participants.find(p => p.id === e.target.value);
+        setState({
+            ...state,
+            creditor
+        });
+    }
+
     return (
         <>
             <div className="container mt-4">
@@ -187,6 +210,16 @@ const ExpenseEditor = () => {
                             <input type="text" className="form-control text-right" aria-label="amount" id="amount" name="amount" value={state.amount} onChange={handleFormChange} />
                             <button type="button" className="btn btn-outline-primary" onClick={handleSplit}>Split</button>
                             <span className="input-group-text">€</span>
+                        </div>
+                    </div>
+                    <div className="mb-3">
+                        <div className="form-floating">
+                            <select className="form-select" id="creditorId" aria-label="Id of the creditor" name="creditor" value={state.creditor.id} onChange={(e) => handleCreditorChange(e)}>
+                                {state.participants.map(participant =>
+                                    <option key={participant.id} value={participant.id}>{participant.username}</option>
+                                )}
+                            </select>
+                            <label htmlFor="creditorId">Creditor</label>
                         </div>
                     </div>
                     <div className="mb-3">
