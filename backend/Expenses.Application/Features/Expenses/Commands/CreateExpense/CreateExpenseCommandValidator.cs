@@ -18,7 +18,7 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
 
                     request.RuleFor(e => e.Credit).ChildRules(credit =>
                     {
-                        credit.RuleFor(e => e.CreditorId).NotNull().WithMessage("Debitor is required.");
+                        credit.RuleFor(e => e.CreditorId).NotNull().WithMessage("Creditor is required.");
                         credit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage("Amount is required.");
                     });
 
