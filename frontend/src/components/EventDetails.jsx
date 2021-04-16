@@ -149,7 +149,7 @@ const EventDetails = () => {
                                                             <p className="mb-0 fs-6">{e.title}</p>
                                                             <p className="fs-4 fw-bold mb-0">{e.credit.amount}€</p>
                                                             <p style={{ fontSize: '0.7rem' }}>{dayjs(e.date).format('DD/MM/YYYY')}</p>
-                                                            <Link to={{ pathname: `/expense/${e.id}`, state: { eventId: event.id } }} className="stretched-link" />
+                                                            <Link to={`/expense/editor?expenseId=${e.id}&eventId=${event.id}`} className="stretched-link" />
                                                         </li>
                                                     ))
                                                 }

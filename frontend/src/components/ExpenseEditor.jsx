@@ -5,27 +5,11 @@ import useClient from '../hooks/useClient'
 import Toast from './layout/Toast';
 import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
 
-/*
-- Datum
-- Title
-- Description
-- Betrag
-
-- Personen
-- Personen
-- Personen
---------------------------
-Personen from expense holen
-
-Es fehlt eine tabelle issuer/expense/amount
-
-*/
-
 const ExpenseEditor = () => {
     const history = useHistory();
     const eventId = useQuery().get('eventId');
     const expenseId = useQuery().get('expenseId');
-    const { getEventAsync, postExpenseAsync, getExpenseAsync } = useClient();
+    const { getEventAsync, postExpenseAsync, getExpenseAsync, putExpenseAsync } = useClient();
 
     const [state, setState] = useState({
         date: dayjs(new Date()).format('YYYY-MM-DD'),
@@ -34,7 +18,7 @@ const ExpenseEditor = () => {
         //TODO: change to empty string! and check evaluation
         amount: 0,
         participants: [],
-        creditor: ""
+        creditorId: ''
     });
 
     const [error, setError] = useState({
@@ -52,11 +36,11 @@ const ExpenseEditor = () => {
             (async () => {
                 const event = await getEventAsync(eventId);
                 const participants = event.participants.map(a => ({ id: a.id, isParticipating: true, username: a.username, amount: 0 }));
-                const creditor = participants[0];
+                const creditorId = participants[0].id;
                 setState({
                     ...state,
                     participants,
-                    creditor
+                    creditorId
                 })
             })();
         }
@@ -64,19 +48,23 @@ const ExpenseEditor = () => {
 
     useEffect(() => {
         // load expense in case expenseId is given
-        if (expenseId) {
+        if (expenseId && eventId) {
             (async () => {
                 const expense = await getExpenseAsync(eventId, expenseId);
-                const participants = expense.expensesUsers.map(eu => ({ id: eu.userId, isParticipating: true, name: eu.name, amount: eu.amount }));
-                //FIXME: set creditor as well in case we are loading an expense
+                //TODO: load all participants in expense --> implement in CQRS command
+                const event = await getEventAsync(eventId);
+                const participants = event.participants.map(a => ({
+                    id: a.id, isParticipating: true, username: a.username, amount: expense.debits[expense.debits.findIndex(debitor => debitor.debitorId == a.id)].amount
+                }));
                 setState({
                     ...state,
                     date: dayjs(expense.date).format('YYYY-MM-DD'),
                     title: expense.title,
                     description: expense.description,
-                    amount: expense.amount,
                     currency: "EUR",
-                    participants
+                    participants,
+                    creditorId: expense.credit.creditorId,
+                    amount: expense.credit.amount
                 })
             })();
         }
@@ -130,36 +118,62 @@ const ExpenseEditor = () => {
 
     const handleSubmitAsync = async (e) => {
         e.preventDefault();
-        try {
-            const debitors = state.participants.map(participant => {
-                var debitor = {};
-                debitor["debitorId"] = participant.id;
-                debitor["amount"] = participant.amount;
-                return debitor;
-            });
-            const response = await postExpenseAsync(eventId, {
-                date: state.date,
-                title: state.title,
-                description: state.description,
-                currency: "EUR",
-                participants: state.participants,
-                credit: {
-                    creditorId: state.creditor.id,
-                    amount: state.amount,
-                },
-                debits: debitors
-            });
-            if (response === null) triggerErrorToast();
-            else history.goBack();
-        } catch (error) {
-            setError(s => ({
-                date: (error.Date && error.Date[0]) || "",
-                title: (error.Title && error.Title[0]) || "",
-                description: (error.Description && error.Description[0]) || "",
-                amount: (error.Amount && error.Amount[0]) || "",
-                participants: (error.Participants && error.Participants[0]) || "",
-                others: (error.Others && error.Others[0]) || ""
-            }))
+        if (expenseId) {
+            try {
+                console.log(state)
+                const debitors = state.participants.map(participant => {
+                    var debitor = {};
+                    debitor["debitorId"] = participant.id;
+                    debitor["amount"] = participant.amount;
+                    return debitor;
+                })
+                const response = await putExpenseAsync(eventId, expenseId, {
+                    title: state.title,
+                    description: state.description,
+                    credit: {
+                        creditorId: state.creditorId,
+                        amount: state.amount
+                    },
+                    debits: debitors
+                });
+                if (response !== null) triggerErrorToast();
+                else history.goBack();
+            } catch (error) {
+                //TODO: implement showing the error to the user
+                console.log(error)
+            }
+        } else {
+            try {
+                const debitors = state.participants.map(participant => {
+                    var debitor = {};
+                    debitor["debitorId"] = participant.id;
+                    debitor["amount"] = participant.amount;
+                    return debitor;
+                });
+                const response = await postExpenseAsync(eventId, {
+                    date: state.date,
+                    title: state.title,
+                    description: state.description,
+                    currency: "EUR",
+                    participants: state.participants,
+                    credit: {
+                        creditorId: state.creditorId,
+                        amount: state.amount,
+                    },
+                    debits: debitors
+                });
+                if (response === null) triggerErrorToast();
+                else history.goBack();
+            } catch (error) {
+                setError(s => ({
+                    date: (error.Date && error.Date[0]) || "",
+                    title: (error.Title && error.Title[0]) || "",
+                    description: (error.Description && error.Description[0]) || "",
+                    amount: (error.Amount && error.Amount[0]) || "",
+                    participants: (error.Participants && error.Participants[0]) || "",
+                    others: (error.Others && error.Others[0]) || ""
+                }))
+            }
         }
     }
 
@@ -177,10 +191,10 @@ const ExpenseEditor = () => {
     }
 
     const handleCreditorChange = async (e) => {
-        const creditor = state.participants.find(p => p.id === e.target.value);
+        const creditorId = state.participants[state.participants.findIndex(p => p.id === e.target.value)].id;
         setState({
             ...state,
-            creditor
+            creditorId
         });
     }
 
@@ -214,7 +228,7 @@ const ExpenseEditor = () => {
                     </div>
                     <div className="mb-3">
                         <div className="form-floating">
-                            <select className="form-select" id="creditorId" aria-label="Id of the creditor" name="creditor" value={state.creditor.id} onChange={(e) => handleCreditorChange(e)}>
+                            <select className="form-select" id="creditorId" aria-label="Id of the creditor" name="creditor" value={state.creditorId} onChange={(e) => handleCreditorChange(e)}>
                                 {state.participants.map(participant =>
                                     <option key={participant.id} value={participant.id}>{participant.username}</option>
                                 )}
