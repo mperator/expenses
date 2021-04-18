@@ -149,8 +149,12 @@ const useClient = () => {
     }
 
     /* participants */
-    const getParticipantAsync = async (name) => {
+    const getParticipantsByNameAsync = async (name) => {
         return await getWithAuthenticationAsync(`/users?name=${name}`, token);
+    }
+
+    const getParticipantByIdAsync = async (id) => {
+        return await getWithAuthenticationAsync(`/users?id=${id}`, token);
     }
 
     return {
@@ -165,7 +169,8 @@ const useClient = () => {
         putExpenseAsync,
         getExpenseAsync,
         deleteExpenseAsync,
-        getParticipantAsync,
+        getParticipantsByNameAsync,
+        getParticipantByIdAsync,
         getFilteredEventsAsync
     }
 }
