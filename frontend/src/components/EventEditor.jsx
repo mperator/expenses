@@ -6,10 +6,13 @@ import FormInput from './layout/FormInput'
 import dayjs from 'dayjs'
 import Toast from './layout/Toast';
 import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
+import jwt_decode from "jwt-decode";
+import useAuth from '../hooks/useAuth';
 
 // TODO: what happens if parms.id is invalid?
 const EventEditor = () => {
-    const { getEventAsync, putEventAsync, postEventAsync, getParticipantAsync } = useClient();
+    const { getEventAsync, putEventAsync, postEventAsync, getParticipantsByNameAsync, getParticipantByIdAsync } = useClient();
+    const { token } = useAuth();
     const history = useHistory();
     const params = useParams();
 
@@ -20,7 +23,17 @@ const EventEditor = () => {
         endDate: dayjs(new Date()).format('YYYY-MM-DD')
     });
 
+    const [defaultParticipant, setDefaultParticipant] = useState('');
+
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            const decodedToken = jwt_decode(token);
+            const response = await getParticipantByIdAsync(decodedToken.sub);
+            setDefaultParticipant(response[0])
+        })();
+    }, [])
 
     useEffect(() => {
         // load event using the incoming id
@@ -36,16 +49,15 @@ const EventEditor = () => {
                     startDate: dayjs(event.startDate).format('YYYY-MM-DD'),
                     endDate: dayjs(event.endDate).format('YYYY-MM-DD'),
                 });
+                console.log(defaultParticipant)
                 setParticipants(
-                    event.participants
+                    event.participants.filter(participant => participant.id !== defaultParticipant.id)
                 );
-
-                setLoading(false);
+                if (defaultParticipant) setLoading(false);
             })();
-        } else {
-            setLoading(false);
         }
-    }, [])
+        else if (defaultParticipant) setLoading(false);
+    }, [defaultParticipant])
 
     const [search, setSearch] = useState({
         query: "",
@@ -58,7 +70,9 @@ const EventEditor = () => {
             let participants = [];
             if (search.query !== "") {
                 try {
-                    participants = await getParticipantAsync(search.query);
+                    participants = await getParticipantsByNameAsync(search.query);
+                    // filter the default participant out
+                    participants = participants.filter(participant => participant.id !== defaultParticipant.id);
                     setSearch(s => ({
                         ...s,
                         participants
@@ -207,6 +221,9 @@ const EventEditor = () => {
                     </div> */}
                         <div className="mb-3">
                             <ul className="list-group">
+                                <li key={defaultParticipant.id} className="bg-secondary list-group-item d-flex justify-content-between align-items-center">
+                                    {defaultParticipant.username}
+                                </li>
                                 {participants.map(a => (
                                     <li key={a.id} onClick={() => handleDeleteParticipant(a.id)} className="list-group-item d-flex justify-content-between align-items-center">
                                         {a.username}
