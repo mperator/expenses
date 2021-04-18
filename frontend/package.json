@@ -10,6 +10,7 @@
     "bootstrap": "5.0.0-beta1",
     "bootstrap-icons": "1.1.0",
     "dayjs": "1.9.6",
+    "jwt-decode": "3.1.2",
     "placeholder-loading": "0.2.6",
     "react": "17.0.1",
     "react-dom": "17.0.1",
