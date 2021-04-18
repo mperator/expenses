@@ -9,6 +9,6 @@ namespace Expenses.Application.Common.Interfaces
         Task<AppUser> FindByIdAsync(string id);
 
         Task<AppUser> GetCurrentUserAsync();
-        Task<IEnumerable<AppUser>> GetUsersAsync(string name);
+        Task<IEnumerable<AppUser>> GetUsersAsync(string name, string id);
     }
 }
