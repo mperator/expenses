@@ -32,7 +32,7 @@ namespace Expenses.Infrastructure.Services
             return await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
         }
 
-        public async Task<IEnumerable<AppUser>> GetUsersAsync(string name)
+        public async Task<IEnumerable<AppUser>> GetUsersAsync(string name, string id)
         {
             var query = _userManager.Users;
             if (!string.IsNullOrEmpty(name))
@@ -40,6 +40,10 @@ namespace Expenses.Infrastructure.Services
                     u.FirstName.Contains(name) ||
                     u.LastName.Contains(name) ||
                     u.UserName.Contains(name));
+
+            if (!string.IsNullOrEmpty(id))
+                query = query.Where(u =>
+                    u.Id == id);
 
             return (await query.ToListAsync()).Select(s => (AppUser)s);
         }
