@@ -1,4 +1,4 @@
-﻿using Expenses.Application.Common.Exceptions;
+﻿using Expenses.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
@@ -41,8 +41,13 @@ namespace Expenses.Api.Middlewares
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return context.Response.WriteAsync(result);
             }
+            if(ex is ValidationException ve)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return context.Response.WriteAsync(ve.Message);
+            }
 
-            if (ex is NotFoundException) code = HttpStatusCode.NotFound;
+            if (ex is Application.Common.Exceptions.NotFoundException) code = HttpStatusCode.NotFound;
             context.Response.StatusCode = (int)code;
 
             return Task.CompletedTask;
