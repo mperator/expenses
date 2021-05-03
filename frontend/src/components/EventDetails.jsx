@@ -4,13 +4,24 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
+import { HorizontalBar } from 'react-chartjs-2';
+import jwt_decode from "jwt-decode";
+import useAuth from '../hooks/useAuth';
 
 const EventDetails = () => {
     const { getEventAsync } = useClient();
+    const { token } = useAuth();
     const params = useParams();
 
     const [loading, setLoading] = useState(true);
-    const [event, setEvent] = useState({})
+    const [event, setEvent] = useState('')
+    const [showFinancials, setShowFinancials] = useState(false)
+    const [chartData, setChartData] = useState({
+        labels: '',
+        datasets: []
+    });
+    const receiveColor = 'rgba(0, 255, 0, 0.8)';
+    const loanColor = 'rgba(255, 0, 0, 0.8)';
 
     useEffect(() => {
         // load event using the incoming id
@@ -18,11 +29,15 @@ const EventDetails = () => {
             (async () => {
                 // try catch ignore or redirect when failing
                 const event = await getEventAsync(params.id);
+                // console.log(event.expenses[1].debits)
                 setEvent(event);
                 setLoading(false);
             })();
         }
     }, [])
+
+    useEffect(() => {
+    }, [chartData])
 
     const calculateExpenseSummary = () => {
         const expenses = event.expenses;
@@ -57,6 +72,235 @@ const EventDetails = () => {
 
     const deleteEvent = () => {
         console.log("implement deleting event!!!!");
+    }
+
+    const loadChart = () => {
+        // extract own user id from jwt token
+        const decodedToken = jwt_decode(token);
+        const idSelf = decodedToken.sub;
+        console.log("THATS ME!!!", idSelf)
+        // console.log(event.expenses)
+        // console.log(event.expenses[1].debits)
+        // FIXME: loans and debts seem to be saved somehow --> weird behaviour
+        if (event !== '') {
+            //     // FIXME: navigating to expense details view and back to event details view throws error --> why?
+            const labels = event.participants.filter(participant => participant.id !== idSelf).flatMap(p =>
+                p.username);
+            // console.log("Lables for chart", labels)
+            const labelsWithIds = event.participants.filter(participant => participant.id !== idSelf).map(p => {
+                return { username: p.username, id: p.id }
+            });
+            console.log("Labels with IDs", labelsWithIds)
+            let loans = [];
+            let debts = [];
+            console.log("BEGINNING loans", loans)
+            console.log("BEGINNING debts", debts)
+            const expenses = event.expenses;
+            console.log(expenses)
+            expenses.forEach(expense => {
+                if (expense.credit.creditorId === idSelf) {
+                    // expense.debits.forEach(debit => {
+                    // loans.push(debit)
+                    // });
+                    console.log("original", expense.debits)
+                    const filteredDebits = expense.debits.filter(debt => debt.debitorId !== idSelf);
+                    console.log("filtered", filteredDebits)
+                    console.log(loans)
+                    loans = [...loans, ...filteredDebits]
+                    console.log(loans)
+                }
+                if (expense.credit.creditorId !== idSelf) {
+                    const debtsIdSelf = expense.debits.filter(debit => debit.debitorId === idSelf);
+                    debtsIdSelf.forEach(d => {
+                        debts.push({
+                            amount: d.amount,
+                            creditorId: expense.credit.creditorId
+                        })
+                    });
+                }
+            });
+            console.log("BEFORE loans", loans)
+            console.log("BEFORE debts", debts)
+            loans.forEach((loan, indexLoan) => {
+                debts.forEach(debt => {
+                    if (loan.debitorId === debt.creditorId) {
+                        // subtract loan from debt
+                        const newLoan = loan.amount - debt.amount;
+                        // is loan still bigger than 0 --> update loan
+                        if (newLoan > 0) {
+                            console.log("in here")
+                            loan.amount = newLoan;
+                        }
+                        else {
+                            console.log("doing the else")
+                            // loan is smaller than 0 --> delete entry in loan array and update calculated amount to correct entry of debts array
+                            debt.amount = newLoan;
+                            // remove one element at indexLoan
+                            loans.splice(indexLoan, 1);
+                            console.log(loans)
+                        }
+                    }
+                });
+            });
+            console.log("AFTER loans", loans)
+            console.log("AFTER debts", debts)
+            let combinedDebts = [];
+            // combine all debts of the same id to one debt
+            labelsWithIds.forEach(user => {
+                const debtsSameId = debts.filter(debt => debt.creditorId === user.id)
+                console.log(debtsSameId)
+                let summedUpDebt = 0;
+                debtsSameId.forEach(debtSameId => {
+                    summedUpDebt = summedUpDebt + debtSameId.amount
+                });
+                combinedDebts.push({
+                    amount: summedUpDebt,
+                    creditorId: user.id
+                })
+            });
+            console.log("Combined debts: ", combinedDebts)
+            // combine all loans of the same id to one loan??
+            // TODO:
+
+            let backgroundColorsReceive = [];
+            let backgroundColorsLoan = [];
+            let newLabels = [];
+            loans.forEach(loan => {
+                backgroundColorsReceive.push(receiveColor);
+                // add user only as label as long as he's not already in the label array
+                if (!newLabels.includes(labelsWithIds.find(member => member.id === loan.debitorId).username)) {
+                    newLabels.push(labelsWithIds.find(member => member.id === loan.debitorId).username)
+                }
+            });
+            combinedDebts.forEach(debt => {
+                if (debt.amount !== 0) {
+                    loans.forEach(loan => {
+                        backgroundColorsLoan.push("");
+                    });
+                    backgroundColorsLoan.push(loanColor);
+                    // add user only as label as long as he's not already in the label array
+                    if (!newLabels.includes(labelsWithIds.find(member => member.id === debt.creditorId).username)) {
+                        newLabels.push(labelsWithIds.find(member => member.id === debt.creditorId).username)
+                    }
+                }
+            });
+            console.log("new labels", newLabels)
+            let loanData = [...loans.flatMap(loan => loan.amount)];
+            combinedDebts.forEach(debt => {
+                // only push empty strings in case there are loans
+                if (loans.length > 0) {
+                    loanData.push("");
+                }
+            });
+            let debtData = [];
+            const filteredFlattedDebts = combinedDebts.filter(debt => debt.amount !== 0).flatMap(debt => debt.amount);
+            loans.forEach(loan => {
+                if (filteredFlattedDebts.length > 0) {
+                    debtData.push("");
+                }
+            });
+            debtData = [...debtData, ...filteredFlattedDebts];
+            // console.log(test)
+            let datasets = []
+            if (loanData.length > 0 && debtData.length > 0) {
+                datasets = [
+                    {
+                        label: 'you receive',
+                        data: loanData,
+                        backgroundColor: backgroundColorsReceive,
+                    },
+                    {
+                        label: 'you owe',
+                        data: debtData,
+                        backgroundColor: backgroundColorsLoan,
+                    },
+                ]
+            } else if (loanData.length > 0 && debtData.length === 0) {
+                datasets = [
+                    {
+                        label: 'you receive',
+                        data: loanData,
+                        backgroundColor: backgroundColorsReceive,
+                    }
+                ]
+            } else if (loanData.length === 0 && debtData.length > 0) {
+                datasets = [
+                    {
+                        label: 'you owe',
+                        data: debtData,
+                        backgroundColor: backgroundColorsLoan,
+                    },
+                ]
+            }
+            console.log(datasets)
+            setChartData({
+                labels: newLabels,
+                datasets: datasets
+            })
+        }
+    }
+
+    const data = {
+        labels: ['Seppl Sappl', 'Testuser', 'Hans', 'Appleboy'],
+        datasets: [
+            {
+                label: 'you receive',
+                data: [4, 4, 4, ""],
+                backgroundColor: [
+                    'rgba(0, 255, 0, 0.8)',
+                    'rgba(0, 255, 0, 0.8)',
+                    'rgba(0, 255, 0, 0.8)',
+                    "",
+                ],
+                // borderColor: [
+                //     'rgba(255, 99, 132, 1)',
+                //     'rgba(54, 162, 235, 1)',
+                //     'rgba(255, 206, 86, 1)',
+                // ],
+                // borderWidth: 1,
+            },
+            {
+                label: 'you owe',
+                data: ["", "", "", -2],
+                backgroundColor: [
+                    "",
+                    "",
+                    "",
+                    'rgba(255, 0, 0, 0.8)',
+                ],
+                // borderColor: [
+                //     'rgba(255, 99, 132, 1)',
+                //     'rgba(54, 162, 235, 1)',
+                //     'rgba(255, 206, 86, 1)',
+                // ],
+                // borderWidth: 1,
+            },
+        ],
+    }
+
+    const options = {
+        indexAxis: 'y',
+        // Elements options apply to all of the options unless overridden in a dataset
+        // In this case, we are setting the border of each horizontal bar to be 2px wide
+        // elements: {
+        //     bar: {
+        //         borderWidth: 2,
+        //     }
+        // },
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'right',
+            },
+            // title: {
+            //     display: true,
+            //     text: 'Chart.js Horizontal Bar Chart'
+            // }
+        }
+    }
+
+    const handleTab = () => {
+        setShowFinancials(!showFinancials, loadChart())
     }
 
     //TODO: if total expense is negative show font in red and vice versa
@@ -133,14 +377,14 @@ const EventDetails = () => {
                                     </li>
                                 ))}
                             </ul>
-                            <div className="accordion my-2" id="accordionFlushExample">
+                            {/* <div className="accordion my-2" id="accordionFlushExample">
                                 <div className="accordion-item">
                                     <h2 className="accordion-header" id="flush-headingOne">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                                             <h6>Expenses</h6>
                                         </button>
                                     </h2>
-                                    <div id="flush-collapseOne" className="accordion-collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                     <div id="flush-collapseOne" className="accordion-collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                         <div className="accordion-body">
                                             <ul className="list-group">
                                                 {event.expenses.length === 0 ? "no expenses yet ... go and add one"
@@ -155,11 +399,41 @@ const EventDetails = () => {
                                                 }
                                             </ul>
                                         </div>
+                                    </div> 
+                                </div>
+                            </div>*/}
+                            <div className="mt-3">
+                                <ul className="nav nav-tabs" role="tablist">
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link active" id="expenses-tab" data-bs-toggle="tab" data-bs-target="#expenses" type="button" role="tab" aria-controls="expenses" aria-selected="true">Expenses</button>
+                                    </li>
+                                    <li className="nav-item" role="presentation">
+                                        <button className="nav-link" id="expenses-tab" onClick={loadChart} data-bs-toggle="tab" data-bs-target="#financials" type="button" role="tab" aria-controls="financials" aria-selected="false">Financials</button>
+                                    </li>
+                                </ul>
+                                <div className="tab-content" id="myTabContent">
+                                    <div className="tab-pane fade show active" id="expenses" role="tabpanel" aria-labelledby="expenses-tab">
+                                        <ul className="list-group">
+                                            {event.expenses.length === 0 ? "no expenses yet ... go and add one"
+                                                : event.expenses.map(e => (
+                                                    <li key={e.id} className="list-group-item">
+                                                        <p className="mb-0 fs-6">{e.title}</p>
+                                                        <p className="fs-4 fw-bold mb-0">{e.credit.amount}€</p>
+                                                        <p style={{ fontSize: '0.7rem' }}>{dayjs(e.date).format('DD/MM/YYYY')}</p>
+                                                        <Link to={`/expense/editor?expenseId=${e.id}&eventId=${event.id}`} className="stretched-link" />
+                                                    </li>
+                                                ))
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div className="tab-pane fade" id="financials" role="tabpanel" aria-labelledby="financials-tab">
+                                        {/* <canvas id="loanChart"></canvas> */}
+                                        <HorizontalBar data={chartData} options={options} />
                                     </div>
                                 </div>
                             </div>
                             <Link className="text-dark" to={`/expense/editor?eventId=${event.id}`}>
-                                <svg width="0.8em" height="0.8em" viewBox="0 0 16 16" className="addButton bi bi-plus-circle-fill text-primary" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="0.8em" height="0.8em" viewBox="0 0 16 16" className="mt-3 addButton bi bi-plus-circle-fill text-primary" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fillRule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
                                 </svg>
                             </Link>
