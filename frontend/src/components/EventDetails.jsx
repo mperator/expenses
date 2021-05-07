@@ -229,7 +229,6 @@ const EventDetails = () => {
 
     //TODO: if total expense is negative show font in red and vice versa
     //TODO: add logo in front of user name
-    //TODO: make each expense clickable and open expense editor for corresponding expense after click
     //TODO: delete button has no functionality yet
     return (
         <div className="container mt-4">
