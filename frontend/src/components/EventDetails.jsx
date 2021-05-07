@@ -78,36 +78,21 @@ const EventDetails = () => {
         // extract own user id from jwt token
         const decodedToken = jwt_decode(token);
         const idSelf = decodedToken.sub;
-        console.log("THATS ME!!!", idSelf)
-        // console.log(event.expenses)
-        // console.log(event.expenses[1].debits)
-        // FIXME: loans and debts seem to be saved somehow --> weird behaviour
+
         if (event !== '') {
-            //     // FIXME: navigating to expense details view and back to event details view throws error --> why?
-            const labels = event.participants.filter(participant => participant.id !== idSelf).flatMap(p =>
-                p.username);
-            // console.log("Lables for chart", labels)
             const labelsWithIds = event.participants.filter(participant => participant.id !== idSelf).map(p => {
                 return { username: p.username, id: p.id }
             });
-            console.log("Labels with IDs", labelsWithIds)
+
             let loans = [];
             let debts = [];
-            console.log("BEGINNING loans", loans)
-            console.log("BEGINNING debts", debts)
+
             const expenses = event.expenses;
-            console.log(expenses)
+
             expenses.forEach(expense => {
                 if (expense.credit.creditorId === idSelf) {
-                    // expense.debits.forEach(debit => {
-                    // loans.push(debit)
-                    // });
-                    console.log("original", expense.debits)
                     const filteredDebits = expense.debits.filter(debt => debt.debitorId !== idSelf);
-                    console.log("filtered", filteredDebits)
-                    console.log(loans)
                     loans = [...loans, ...filteredDebits]
-                    console.log(loans)
                 }
                 if (expense.credit.creditorId !== idSelf) {
                     const debtsIdSelf = expense.debits.filter(debit => debit.debitorId === idSelf);
@@ -119,8 +104,7 @@ const EventDetails = () => {
                     });
                 }
             });
-            console.log("BEFORE loans", loans)
-            console.log("BEFORE debts", debts)
+
             loans.forEach((loan, indexLoan) => {
                 debts.forEach(debt => {
                     if (loan.debitorId === debt.creditorId) {
@@ -128,28 +112,24 @@ const EventDetails = () => {
                         const newLoan = loan.amount - debt.amount;
                         // is loan still bigger than 0 --> update loan
                         if (newLoan > 0) {
-                            console.log("in here")
                             loan.amount = newLoan;
                         }
                         else {
-                            console.log("doing the else")
                             // loan is smaller than 0 --> delete entry in loan array and update calculated amount to correct entry of debts array
                             debt.amount = newLoan;
                             // remove one element at indexLoan
                             loans.splice(indexLoan, 1);
-                            console.log(loans)
                         }
                     }
                 });
             });
-            console.log("AFTER loans", loans)
-            console.log("AFTER debts", debts)
+
             let combinedDebts = [];
             // combine all debts of the same id to one debt
             labelsWithIds.forEach(user => {
                 const debtsSameId = debts.filter(debt => debt.creditorId === user.id)
-                console.log(debtsSameId)
                 let summedUpDebt = 0;
+
                 debtsSameId.forEach(debtSameId => {
                     summedUpDebt = summedUpDebt + debtSameId.amount
                 });
@@ -158,9 +138,6 @@ const EventDetails = () => {
                     creditorId: user.id
                 })
             });
-            console.log("Combined debts: ", combinedDebts)
-            // combine all loans of the same id to one loan??
-            // TODO:
 
             let backgroundColorsReceive = [];
             let backgroundColorsLoan = [];
@@ -184,7 +161,7 @@ const EventDetails = () => {
                     }
                 }
             });
-            console.log("new labels", newLabels)
+
             let loanData = [...loans.flatMap(loan => loan.amount)];
             combinedDebts.forEach(debt => {
                 // only push empty strings in case there are loans
@@ -200,7 +177,7 @@ const EventDetails = () => {
                 }
             });
             debtData = [...debtData, ...filteredFlattedDebts];
-            // console.log(test)
+
             let datasets = []
             if (loanData.length > 0 && debtData.length > 0) {
                 datasets = [
@@ -232,7 +209,7 @@ const EventDetails = () => {
                     },
                 ]
             }
-            console.log(datasets)
+
             setChartData({
                 labels: newLabels,
                 datasets: datasets
@@ -240,67 +217,14 @@ const EventDetails = () => {
         }
     }
 
-    const data = {
-        labels: ['Seppl Sappl', 'Testuser', 'Hans', 'Appleboy'],
-        datasets: [
-            {
-                label: 'you receive',
-                data: [4, 4, 4, ""],
-                backgroundColor: [
-                    'rgba(0, 255, 0, 0.8)',
-                    'rgba(0, 255, 0, 0.8)',
-                    'rgba(0, 255, 0, 0.8)',
-                    "",
-                ],
-                // borderColor: [
-                //     'rgba(255, 99, 132, 1)',
-                //     'rgba(54, 162, 235, 1)',
-                //     'rgba(255, 206, 86, 1)',
-                // ],
-                // borderWidth: 1,
-            },
-            {
-                label: 'you owe',
-                data: ["", "", "", -2],
-                backgroundColor: [
-                    "",
-                    "",
-                    "",
-                    'rgba(255, 0, 0, 0.8)',
-                ],
-                // borderColor: [
-                //     'rgba(255, 99, 132, 1)',
-                //     'rgba(54, 162, 235, 1)',
-                //     'rgba(255, 206, 86, 1)',
-                // ],
-                // borderWidth: 1,
-            },
-        ],
-    }
-
     const options = {
         indexAxis: 'y',
-        // Elements options apply to all of the options unless overridden in a dataset
-        // In this case, we are setting the border of each horizontal bar to be 2px wide
-        // elements: {
-        //     bar: {
-        //         borderWidth: 2,
-        //     }
-        // },
         responsive: true,
         plugins: {
             legend: {
                 position: 'right',
             },
-            // title: {
-            //     display: true,
-            //     text: 'Chart.js Horizontal Bar Chart'
-            // }
         }
-    }
-
-    const handleTab = () => {
-        setShowFinancials(!showFinancials, loadChart())
     }
 
     //TODO: if total expense is negative show font in red and vice versa
