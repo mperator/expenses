@@ -57,7 +57,7 @@ const useAuth = () => {
                     accessToken: null
                 }));
 
-                return history.push(`/`);
+                return history.push(`/login`);
 
             case 401:
                 console.log("access token invalid, refresh token.")
@@ -75,17 +75,17 @@ const useAuth = () => {
                         'Accept': 'application/json'
                     }
                 });
-                
+
                 setState(state => ({
                     ...state,
                     tokenType: null,
                     accessToken: null
                 }));
 
-                return history.push(`/`);
+                return history.push(`/login`);
             default:
                 console.log("ERROR:")
-                // return null;
+            // return null;
         }
     }
 

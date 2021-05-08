@@ -18,7 +18,8 @@ const useClient = () => {
             case 400:   // Bad Request
                 // TODO: Create error object that contains errors.
                 const error = await response.json();
-                throw (error).errors;
+                console.log(error)
+                throw error;
             case 401:   // Unauthorized
                 const renewedToken = await renewAccessTokenAsync();
                 if (!renewedToken) {
@@ -47,6 +48,18 @@ const useClient = () => {
         return await handleResponseAsync(response, getWithAuthenticationAsync, url);
     }
 
+    async function postAsync(url, data) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        return await handleResponseAsync(response, null, url, data);
+    }
+
     async function postWithAuthenticationAsync(url, token, data) {
         const response = await fetch(url, {
             method: 'POST',
@@ -73,14 +86,33 @@ const useClient = () => {
         return await handleResponseAsync(response, putWithAuthenticationAsync, url, data);
     }
 
+    async function deleteWithAuthenticationAsync(url, token) {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `${token}`,
+            }
+        })
+        return await handleResponseAsync(response, deleteWithAuthenticationAsync, url);
+    }
+
     /* test hook */
     const getAuthTestAsync = async () => {
         return await getWithAuthenticationAsync('/auth/test', token);
     }
 
+    /* users */
+    const registerUserAsync = async (data) => {
+        return await postAsync("/auth/register", data);
+    }
+
     /* events */
     const getEventsAsync = async () => {
         return await getWithAuthenticationAsync('/events', token);
+    }
+
+    const getFilteredEventsAsync = async (title) => {
+        return await getWithAuthenticationAsync(`/events?title=${title}`, token)
     }
 
     const getEventAsync = async (id) => {
@@ -104,12 +136,29 @@ const useClient = () => {
         return await postWithAuthenticationAsync(`/events/${eventid}/expenses`, token, data);
     }
 
-    /* attendees */
-    const getAttendeeAsync = async (name) => {
-        return await getWithAuthenticationAsync(`/attendees?name=${name}`, token);
+    const putExpenseAsync = async (eventId, expenseId, data) => {
+        return await putWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token, data);
+    }
+
+    const getExpenseAsync = async (eventId, expenseId) => {
+        return await getWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
+    }
+
+    const deleteExpenseAsync = async (eventId, expenseId) => {
+        return await deleteWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
+    }
+
+    /* participants */
+    const getParticipantsByNameAsync = async (name) => {
+        return await getWithAuthenticationAsync(`/users?name=${name}`, token);
+    }
+
+    const getParticipantByIdAsync = async (id) => {
+        return await getWithAuthenticationAsync(`/users?id=${id}`, token);
     }
 
     return {
+        registerUserAsync,
         getAuthTestAsync,
         getEventsAsync,
         getEventAsync,
@@ -117,7 +166,12 @@ const useClient = () => {
         postEventAsync,
         putEventAsync,
         postExpenseAsync,
-        getAttendeeAsync
+        putExpenseAsync,
+        getExpenseAsync,
+        deleteExpenseAsync,
+        getParticipantsByNameAsync,
+        getParticipantByIdAsync,
+        getFilteredEventsAsync
     }
 }
 
