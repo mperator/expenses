@@ -1,6 +1,8 @@
 using Expenses.Api.Middlewares;
 using Expenses.Application;
+using Expenses.Application.Features.Expenses.Commands.CreateExpense;
 using Expenses.Infrastructure;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +30,7 @@ namespace Expenses.Api
             services.AddHttpContextAccessor();
             services.AddInfrastructure(Configuration);
             services.AddApplication();
-            
+
             //TODO: do we need this seriously?
             //services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -36,7 +38,10 @@ namespace Expenses.Api
             //services.AddHealthChecks()
             //    .AddDbContextCheck<AppDbContext>();
 
-            services.AddControllers();
+
+            services.AddControllers()
+                .AddFluentValidation(e => e.RegisterValidatorsFromAssemblyContaining<CreateExpenseCommandValidator>());
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Expenses", Version = "v1" });
