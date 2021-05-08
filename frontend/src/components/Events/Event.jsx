@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import useClient from '../hooks/useClient';
+import useClient from './../../hooks/useClient';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
 import { HorizontalBar } from 'react-chartjs-2';
 import jwt_decode from "jwt-decode";
-import useAuth from '../hooks/useAuth';
+import useAuth from './../../hooks/useAuth';
 
-const EventDetails = () => {
+const Wip = () => {
     const { getEventAsync } = useClient();
     const { token } = useAuth();
     const params = useParams();
@@ -30,8 +30,9 @@ const EventDetails = () => {
                 // try catch ignore or redirect when failing
                 const event = await getEventAsync(params.id);
                 
-                calculateOwings(event);
-                // console.log(event.expenses[1].debits)
+                console.log(event)
+
+                // calculateOwings(event);
                 setEvent(event);
                 setLoading(false);
             })();
@@ -342,12 +343,17 @@ const EventDetails = () => {
                             <div className="row">
                                 <div className="col-auto">
                                     <h3>{event.title}</h3>
+
+                                    <div className="bg-primary" style={{width: "100px", height: "100px"}}>
+                                        <i className="bi-alarm" style={{fontSize: "2rem"}}></i>
+                                    </div>
                                 </div>
                                 <div className="col-auto">
                                     <Link className="btn btn-outline-primary me-1" to={`/event/editor/${params.id}`}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="0.8em" height="0.8em" fill="currentColor" className="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                        {/* <svg xmlns="http://www.w3.org/2000/svg" width="0.8em" height="0.8em" fill="currentColor" className="bi bi-pencil-fill" viewBox="0 0 16 16">
                                             <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
-                                        </svg>
+                                        </svg> */}
+                                       <i className="bi-alarm" style={{fontSize: "2rem"}}></i>
                                     </Link>
                                     <button className="btn btn-outline-danger" onClick={handleDeleteButton}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="0.8em" height="0.8em" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -487,4 +493,4 @@ const EventDetails = () => {
     )
 }
 
-export default EventDetails
+export default Wip
