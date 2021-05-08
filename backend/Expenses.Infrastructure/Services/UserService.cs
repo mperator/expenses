@@ -1,0 +1,51 @@
+﻿using Expenses.Application.Common.Interfaces;
+using Expenses.Domain.Entities;
+using Expenses.Infrastructure.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Expenses.Infrastructure.Services
+{
+    public class UserService : IUserService
+    {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public UserService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
+        {
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<AppUser> FindByIdAsync(string id)
+        {
+            return await _userManager.FindByIdAsync(id);
+        }
+
+        //TODO: own identity context
+        public async Task<AppUser> GetCurrentUserAsync()
+        {
+            return await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+        }
+
+        public async Task<IEnumerable<AppUser>> GetUsersAsync(string name, string id)
+        {
+            var query = _userManager.Users;
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(u =>
+                    u.FirstName.Contains(name) ||
+                    u.LastName.Contains(name) ||
+                    u.UserName.Contains(name));
+
+            if (!string.IsNullOrEmpty(id))
+                query = query.Where(u =>
+                    u.Id == id);
+
+            return (await query.ToListAsync()).Select(s => (AppUser)s);
+        }
+    }
+}
