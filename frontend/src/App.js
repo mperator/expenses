@@ -9,13 +9,12 @@ import Navigation from './components/Navigation';
 import Register from './components/Register'
 import Login from './components/Login';
 import Info from './components/Info';
-import EventDetails from './components/EventDetails';
 import EventEditor from './components/EventEditor';
 import ExpenseEditor from './components/ExpenseEditor'
 import ExpenseDetails from './components/ExpenseDetails';
 import 'placeholder-loading/dist/css/placeholder-loading.css';
 
-import Wip from './components/Events/Event'
+import Event from './components/Events/Event'
 import EventFinancials from './components/Events/EventFinancials';
 
 function App() {
@@ -31,12 +30,12 @@ function App() {
 
                         <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                         <ProtectedRoute exact path='/info' component={Info} />
+                        <ProtectedRoute exact path='/event/:id' component={Event} />
+                        <ProtectedRoute exact path='/event/:id/financials' component={EventFinancials} />
                         <ProtectedRoute exact path='/event/editor/:id?' component={EventEditor} />
-                        <ProtectedRoute exact path='/event/:id' component={EventDetails} />
+
                         <ProtectedRoute exact path='/expense/editor:id?' component={ExpenseEditor} />
                         <ProtectedRoute exact path='/expense/:id' component={ExpenseDetails} />
-                        <ProtectedRoute exact path='/wip/:id' component={Wip}/>
-                        <ProtectedRoute exact path='/wip/:id/financials' component={EventFinancials}/>
                     </Switch>
                 </Router>
             </AuthProvider>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useClient from '../hooks/useClient'
-import Event from './Event'
+import DashboardEvent from './DashboardEvent'
 import SkeletonLoader from './SkeletonLoader'
 import './Dashboard.css'
 
@@ -84,7 +84,7 @@ const Dashboard = () => {
                         {
                             events.length !== 0 ?
                                 events && events.map(e => (
-                                    <Event key={e.id} {...e} />
+                                    <DashboardEvent key={e.id} {...e} />
                                 ))
                                 : <div>
                                     No events found. Sorry about that. Go and create a new one</div>
