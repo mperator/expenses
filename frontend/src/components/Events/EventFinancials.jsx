@@ -102,7 +102,10 @@ const EventFinancials = () => {
                                 </div>
                             </li>
                         ))}
-                        <EventFinancialsChart financials={calculateFinancials(event)} />
+                        
+                        <div className="mt-5">
+                            <EventFinancialsChart financials={calculateFinancials(event)} />
+                        </div>
                     </div>
                 </>) : null
             }

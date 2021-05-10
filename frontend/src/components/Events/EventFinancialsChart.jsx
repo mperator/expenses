@@ -35,11 +35,11 @@ const EventFinancialsChart = ({ financials }) => {
     };
 
     return (
-        <div>
+        <>
             {financials ?
                 <HorizontalBar data={calcualateCartData(financials)} options={options} /> :
                 null}
-        </div>
+        </>
     )
 }
 
