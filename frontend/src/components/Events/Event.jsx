@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import useClient from './../../hooks/useClient';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+
 import LinkButtonEdit from '../LinkButtonEdit';
 import LinkButtonFinancial from '../LinkButtonFinancial'
-import LinkButtonPlus from '../LinkButtonPlus'
+
 import DateFormat from '../DateFormat';
 import ExpenseList from './ExpenseList';
 
@@ -29,7 +29,7 @@ const Wip = () => {
 
     return (
         <div className="container ">
-            {event ?
+            {!loading && event ?
                 (<>
                     <h2 className="display-2">{event.title}</h2>
                     <div className="d-flex w-100 justify-content-between">
