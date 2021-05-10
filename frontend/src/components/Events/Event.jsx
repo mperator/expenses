@@ -8,7 +8,7 @@ import LinkButtonFinancial from '../LinkButtonFinancial'
 import DateFormat from '../DateFormat';
 import ExpenseList from './ExpenseList';
 
-const Wip = () => {
+const Event = () => {
     const { getEventAsync } = useClient();
     const params = useParams();
 
@@ -39,7 +39,7 @@ const Wip = () => {
                         </span>
                         <div className="d-flex flex-row-reverse">
                             <div className="btn-group">
-                                <LinkButtonFinancial to={`/wip/${params.id}/financials`} />
+                                <LinkButtonFinancial to={`/event/${params.id}/financials`} />
                                 <LinkButtonEdit to={`/event/editor/${params.id}`} />
                             </div>
                         </div>
@@ -54,4 +54,4 @@ const Wip = () => {
     )
 }
 
-export default Wip
+export default Event
