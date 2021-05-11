@@ -40,7 +40,7 @@ const Event = () => {
                         <div className="d-flex flex-row-reverse">
                             <div className="btn-group">
                                 <LinkButtonFinancial to={`/event/${params.id}/financials`} />
-                                <LinkButtonEdit to={`/event/editor/${params.id}`} />
+                                <LinkButtonEdit to={`/event/${params.id}/edit`} />
                             </div>
                         </div>
                     </div>
