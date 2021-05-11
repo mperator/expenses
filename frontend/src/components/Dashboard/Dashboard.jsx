@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import useClient from '../hooks/useClient'
+import useClient from './../../hooks/useClient'
 import DashboardEvent from './DashboardEvent'
-import SkeletonLoader from './SkeletonLoader'
+import SkeletonLoader from './../SkeletonLoader'
 import './Dashboard.css'
 
 /* Get a list of events and display them. */
