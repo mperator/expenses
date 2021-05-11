@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import useClient from './../../hooks/useClient'
 import useForm from './../../hooks/useForm'
-import { useHistory, useParams } from 'react-router';
+import { useHistory } from 'react-router';
 import dayjs from 'dayjs'
 
 import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
@@ -16,7 +16,7 @@ const EventCreate = () => {
     const { postEventAsync, getParticipantByIdAsync } = useClient();
 
     const [loading, setLoading] = useState(true);
-    const { state, error, handleFormChange, setError, setForm } = useForm({
+    const { state, error, handleFormChange, setError } = useForm({
         title: "",
         description: "",
         startDate: dayjs(new Date()).format('YYYY-MM-DD'),
@@ -27,8 +27,6 @@ const EventCreate = () => {
     useEffect(() => {
         (async () => {
             const currentUser = await getParticipantByIdAsync(userId);
-            console.log("Current user: ", currentUser);
-
             const participant = {
                 ...currentUser,
                 creator: true,
@@ -41,9 +39,10 @@ const EventCreate = () => {
     }, [])
 
     const createAsync = async () => {
-        const filteredParticipantsIds = participants.map(participant => {
-            return participant.id;
-        });
+        const filteredParticipantsIds = participants
+            .map(p => p.id)
+            .filter(p => p !== userId);
+
         try {
             const response = await postEventAsync({
                 title: state.title,
