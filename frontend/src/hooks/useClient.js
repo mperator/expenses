@@ -154,7 +154,7 @@ const useClient = () => {
     }
 
     const getParticipantByIdAsync = async (id) => {
-        return await getWithAuthenticationAsync(`/users?id=${id}`, token);
+        return await getWithAuthenticationAsync(`/users/${id}`, token);
     }
 
     return {
