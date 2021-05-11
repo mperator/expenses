@@ -1,5 +1,5 @@
 import React from 'react'
-import ButtonRemove from '../LinkButtonRemove'
+import ButtonRemove from '../ButtonRemove'
 
 import Participant from './Participant'
 
