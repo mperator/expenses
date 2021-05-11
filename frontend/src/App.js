@@ -10,7 +10,6 @@ import Register from './components/Register'
 import Login from './components/Login';
 import Info from './components/Info';
 import ExpenseEditor from './components/ExpenseEditor'
-import ExpenseDetails from './components/ExpenseDetails';
 import 'placeholder-loading/dist/css/placeholder-loading.css';
 
 import Event from './components/Events/Event'
@@ -19,6 +18,8 @@ import EventEdit from './components/Events/EventEdit';
 import EventCreate from './components/Events/EventCreate';
 
 import Expense from './components/Expenses/Expense'
+import ExpenseNew from './components/Expenses/ExpenseNew';
+import ExpenseEdit from './components/Expenses/ExpenseEdit';
 
 function App() {
     return (
@@ -38,12 +39,11 @@ function App() {
                         <ProtectedRoute exact path='/event/:id/edit' component={EventEdit} />
                         <ProtectedRoute exact path='/event/:id/financials' component={EventFinancials} />
 
-                        <ProtectedRoute exact path='/event/:eventId/expenses/new' component={Expense} />
+                        <ProtectedRoute exact path='/event/:eventId/expenses/new' component={ExpenseNew} />
                         <ProtectedRoute exact path='/event/:eventId/expenses/:expenseId' component={Expense} />
-                        <ProtectedRoute exact path='/event/:eventId/expenses/:expenseId/edit' component={Expense} />
+                        <ProtectedRoute exact path='/event/:eventId/expenses/:expenseId/edit' component={ExpenseEdit} />
 
                         <ProtectedRoute exact path='/expense/editor:id?' component={ExpenseEditor} />
-                        <ProtectedRoute exact path='/expense/:id' component={ExpenseDetails} />
 
                         <ProtectedRoute exact path='/info' component={Info} />
                     </Switch>

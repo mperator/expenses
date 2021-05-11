@@ -59,7 +59,7 @@ const Dashboard = () => {
                     <h2 className="display-3">My Events</h2>
 
                     {/* search bar  */}
-                    <div className="my-4 d-flex align-items-center gap">
+                    <div className="my-4 d-flex align-items-center gap-2">
                         <SearchBar
                             query={search.query}
                             handleChange={handleQueryChange}
