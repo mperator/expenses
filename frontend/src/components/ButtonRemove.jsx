@@ -1,6 +1,6 @@
 import React from 'react'
 
-const LinkButtonRemove = ({handleClick}) => {
+const ButtonRemove = ({handleClick}) => {
     return (
         <button className="btn btn-outline-danger" onClick={handleClick}>
             <i className="bi-trash"></i>
@@ -8,4 +8,4 @@ const LinkButtonRemove = ({handleClick}) => {
     )
 }
 
-export default LinkButtonRemove
+export default ButtonRemove
