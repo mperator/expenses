@@ -18,6 +18,8 @@ import EventFinancials from './components/Events/EventFinancials';
 import EventEdit from './components/Events/EventEdit';
 import EventCreate from './components/Events/EventCreate';
 
+import Expense from './components/Expenses/Expense'
+
 function App() {
     return (
         <div className="App">
@@ -35,6 +37,10 @@ function App() {
                         <ProtectedRoute exact path='/event/:id' component={Event} />
                         <ProtectedRoute exact path='/event/:id/edit' component={EventEdit} />
                         <ProtectedRoute exact path='/event/:id/financials' component={EventFinancials} />
+
+                        <ProtectedRoute exact path='/event/:eventId/expenses/new' component={Expense} />
+                        <ProtectedRoute exact path='/event/:eventId/expenses/:expenseId' component={Expense} />
+                        <ProtectedRoute exact path='/event/:eventId/expenses/:expenseId/edit' component={Expense} />
 
                         <ProtectedRoute exact path='/expense/editor:id?' component={ExpenseEditor} />
                         <ProtectedRoute exact path='/expense/:id' component={ExpenseDetails} />
