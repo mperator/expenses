@@ -8,7 +8,7 @@ const ExpenseList = ({eventId, expenses}) => {
         <div>
             <div className="d-flex flex-row-reverse">
                 <div className="btn-group">
-                    <LinkButtonPlus to={`/expense/editor?eventId=${eventId}`} />
+                    <LinkButtonPlus to={`/event/${eventId}/expenses/new`} />
                 </div>
             </div>
 
