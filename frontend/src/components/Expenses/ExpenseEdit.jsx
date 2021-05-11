@@ -86,7 +86,7 @@ const ExpenseEdit = () => {
         const amount = state.amount;
         if (amount > 0) {
             const split = amount / participants.filter(p => p.isParticipating).length;
-
+            console.log(split.toFixed(2))
             for (const p of participants) {
                 if (p.isParticipating) {
                     p.amount = split;

@@ -78,11 +78,26 @@ const ExpenseNew = () => {
         const participants = state.participants;
         const amount = state.amount;
         if (amount > 0) {
-            const split = amount / participants.filter(p => p.isParticipating).length;
+            const count = participants.filter(p => p.isParticipating).length;
+            const split = (amount / count).toFixed(2);
+
+            const delta = (amount - (count * split));
+            console.log(delta)
+
+            let applyDelta = false;
+            if(delta > 0) {
+               applyDelta = true;
+            }
 
             for (const p of participants) {
                 if (p.isParticipating) {
                     p.amount = split;
+
+                    if(applyDelta) {
+                        p.amount = (parseFloat(p.amount) + parseFloat(delta));
+                        applyDelta = false;
+                    }
+
                 } else {
                     p.amount = 0;
                 }
