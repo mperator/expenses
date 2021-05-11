@@ -16,6 +16,8 @@ import 'placeholder-loading/dist/css/placeholder-loading.css';
 
 import Event from './components/Events/Event'
 import EventFinancials from './components/Events/EventFinancials';
+import EventEdit from './components/Events/EventEdit';
+import EventCreate from './components/Events/EventCreate';
 
 function App() {
     return (
@@ -30,9 +32,14 @@ function App() {
 
                         <ProtectedRoute exact path='/dashboard' component={Dashboard} />
                         <ProtectedRoute exact path='/info' component={Info} />
-                        <ProtectedRoute exact path='/event/:id' component={Event} />
-                        <ProtectedRoute exact path='/event/:id/financials' component={EventFinancials} />
+                        
+                        {/* obsolete */}
                         <ProtectedRoute exact path='/event/editor/:id?' component={EventEditor} />
+                        
+                        <ProtectedRoute exact path='/event/new' component={EventCreate} />
+                        <ProtectedRoute exact path='/event/:id' component={Event} />
+                        <ProtectedRoute exact path='/event/:id/edit' component={EventEdit} />
+                        <ProtectedRoute exact path='/event/:id/financials' component={EventFinancials} />
 
                         <ProtectedRoute exact path='/expense/editor:id?' component={ExpenseEditor} />
                         <ProtectedRoute exact path='/expense/:id' component={ExpenseDetails} />
