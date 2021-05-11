@@ -5,7 +5,7 @@ import DateFormat from '../DateFormat';
 
 const ExpenseListItem = ({eventId, expense}) => {
     return (
-        <Link key={expense.id} to={`/expense/editor?expenseId=${expense.id}&eventId=${eventId}`} className="list-group-item list-group-item-action" aria-current="true">
+        <Link key={expense.id} to={`/event/${eventId}/expenses/${expense.id}`} className="list-group-item list-group-item-action" aria-current="true">
             <div className="container">
                 <div className="row">
                     <div className="col-8 ">
