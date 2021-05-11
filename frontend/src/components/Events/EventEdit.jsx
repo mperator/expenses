@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import useClient from './../../hooks/useClient'
 import useForm from './../../hooks/useForm'
 import { useHistory, useParams } from 'react-router';
@@ -13,10 +13,10 @@ const EventEdit = () => {
     const history = useHistory();
     const params = useParams();
     const { userId } = useAuth();
-    const { getEventAsync, putEventAsync, postEventAsync } = useClient();
+    const { getEventAsync, putEventAsync } = useClient();
 
     const [loading, setLoading] = useState(true);
-    const { state, error, handleFormChange, setError, setForm } = useForm({
+    const { state, error, handleFormChange, setForm } = useForm({
         title: "",
         description: "",
         startDate: dayjs(new Date()).format('YYYY-MM-DD'),
@@ -39,8 +39,8 @@ const EventEdit = () => {
                 setParticipants(
                     event.participants.map(p => ({
                         ...p,
-                        creator: p.id == event.creatorId,
-                        currentUser: p.id == userId
+                        creator: p.id === event.creatorId,
+                        currentUser: p.id === userId
                     }))
                 );
                 setLoading(false);
