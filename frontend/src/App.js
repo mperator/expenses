@@ -9,8 +9,6 @@ import Navigation from './components/Navigation';
 import Register from './components/Register'
 import Login from './components/Login';
 import Info from './components/Info';
-import ExpenseEditor from './components/ExpenseEditor'
-import 'placeholder-loading/dist/css/placeholder-loading.css';
 
 import Event from './components/Events/Event'
 import EventFinancials from './components/Events/EventFinancials';
@@ -20,6 +18,8 @@ import EventCreate from './components/Events/EventCreate';
 import Expense from './components/Expenses/Expense'
 import ExpenseNew from './components/Expenses/ExpenseNew';
 import ExpenseEdit from './components/Expenses/ExpenseEdit';
+
+import 'placeholder-loading/dist/css/placeholder-loading.css';
 
 function App() {
     return (
@@ -42,8 +42,6 @@ function App() {
                         <ProtectedRoute exact path='/event/:eventId/expenses/new' component={ExpenseNew} />
                         <ProtectedRoute exact path='/event/:eventId/expenses/:expenseId' component={Expense} />
                         <ProtectedRoute exact path='/event/:eventId/expenses/:expenseId/edit' component={ExpenseEdit} />
-
-                        <ProtectedRoute exact path='/expense/editor:id?' component={ExpenseEditor} />
 
                         <ProtectedRoute exact path='/info' component={Info} />
                     </Switch>
