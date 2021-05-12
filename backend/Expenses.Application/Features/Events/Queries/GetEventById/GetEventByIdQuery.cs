@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Expenses.Application.Common.Exceptions;
 using Expenses.Application.Common.Interfaces;
 using Expenses.Domain.Entities;
 using MediatR;
@@ -33,6 +34,9 @@ namespace Expenses.Application.Features.Events.Queries.GetEventById
                 .AsNoTracking()
                 .Include(e => e.Expenses)
                 .SingleOrDefaultAsync(e => e.Id == request.Id);
+
+            if (@event == null)
+                throw new NotFoundException();
 
             var mappedEvent = _mapper.Map<GetEventByIdQueryEvent>(@event);
 
