@@ -37,7 +37,8 @@ namespace Expenses.Infrastructure.Persistence.Configurations
 
             builder.HasMany<Expense>(e => e.Expenses)
                 .WithOne()
-                .HasForeignKey("EventId");
+                .HasForeignKey("EventId")
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
