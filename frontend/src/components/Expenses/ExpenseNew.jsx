@@ -37,14 +37,16 @@ const ExpenseNew = () => {
         // load expense in case expenseId is given
         if (eventId) {
             (async () => {
-                const event = await getEventAsync(eventId);
-                const participants = event.participants.map(a => ({ id: a.id, isParticipating: true, username: a.username, amount: 0 }));
-                const creditorId = participants[0].id;
-                setState({
-                    ...state,
-                    participants,
-                    creditorId
-                })
+                try {
+                    const event = await getEventAsync(eventId);
+                    const participants = event.participants.map(a => ({ id: a.id, isParticipating: true, username: a.username, amount: 0 }));
+                    const creditorId = participants[0].id;
+                    setState({
+                        ...state,
+                        participants,
+                        creditorId
+                    })
+                } catch(e) {console.log(e)}
             })();
         }
     }, [expenseId])
@@ -82,19 +84,18 @@ const ExpenseNew = () => {
             const split = (amount / count).toFixed(2);
 
             const delta = (amount - (count * split));
-            console.log(delta)
 
             let applyDelta = false;
-            if(delta > 0) {
-               applyDelta = true;
+            if (delta != 0) {
+                applyDelta = true;
             }
 
             for (const p of participants) {
                 if (p.isParticipating) {
                     p.amount = split;
 
-                    if(applyDelta) {
-                        p.amount = (parseFloat(p.amount) + parseFloat(delta));
+                    if (applyDelta) {
+                        p.amount = (parseFloat(p.amount) + parseFloat(delta)).toFixed(2);
                         applyDelta = false;
                     }
 
