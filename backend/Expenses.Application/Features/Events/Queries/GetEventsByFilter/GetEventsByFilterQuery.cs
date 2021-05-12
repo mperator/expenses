@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Expenses.Application.Common;
 using Expenses.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Expenses.Application.Features.Events.Queries.GetEventsByFilter
 {
-    public class GetEventsByFilterQuery : IRequest<List<GetEventsByFilterQueryEvent>>
+    public class GetEventsByFilterQuery : QueryStringParameter, IRequest<PagedList<GetEventsByFilterQueryEvent>>
     {
         public string Text { get; set; }
     }
 
-    public class GetEventsQueryHandler : IRequestHandler<GetEventsByFilterQuery, List<GetEventsByFilterQueryEvent>>
+    public class GetEventsQueryHandler : IRequestHandler<GetEventsByFilterQuery, PagedList<GetEventsByFilterQueryEvent>>
     {
         private readonly IAppDbContext _context;
         private readonly IMapper _mapper;
@@ -29,7 +30,7 @@ namespace Expenses.Application.Features.Events.Queries.GetEventsByFilter
             _currentUserService = currentUserService;
         }
 
-        public async Task<List<GetEventsByFilterQueryEvent>> Handle(GetEventsByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<GetEventsByFilterQueryEvent>> Handle(GetEventsByFilterQuery request, CancellationToken cancellationToken)
         {
             string userId = _currentUserService.UserId;
 
@@ -39,10 +40,22 @@ namespace Expenses.Application.Features.Events.Queries.GetEventsByFilter
 
             if (request.Text != null)
                 query = query.Where(e => e.Title.Contains(request.Text) || e.Description.Contains(request.Text));
+            query = query.OrderBy(o => o.Id);
 
-            return await query
+            // count total
+            var count = query.Count();
+
+            // apply paging
+            query = query
+                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize);
+
+            // get modified.
+            var items =  await query
                 .ProjectTo<GetEventsByFilterQueryEvent>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+
+            return new PagedList<GetEventsByFilterQueryEvent>(items, request, count);
         }
     }
 }
