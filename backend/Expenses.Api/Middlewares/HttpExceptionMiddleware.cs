@@ -48,6 +48,7 @@ namespace Expenses.Api.Middlewares
             }
 
             if (ex is Application.Common.Exceptions.NotFoundException) code = HttpStatusCode.NotFound;
+            if (ex is Application.Common.Exceptions.ForbiddenAccessException) code = HttpStatusCode.Forbidden;
             context.Response.StatusCode = (int)code;
 
             return Task.CompletedTask;
