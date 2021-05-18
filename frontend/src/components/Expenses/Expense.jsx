@@ -25,6 +25,7 @@ const Expense = () => {
                 setLoading(false);
             }
         })();
+    // eslint-disable-next-line
     }, [])
 
     const getUsernameById = (id) => {
