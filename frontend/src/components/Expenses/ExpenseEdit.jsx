@@ -40,7 +40,7 @@ const ExpenseEdit = () => {
                 //TODO: load all participants in expense --> implement in CQRS command
                 const event = await getEventAsync(eventId);
                 const participants = event.participants.map(a => ({
-                    id: a.id, isParticipating: true, username: a.username, amount: expense.debits[expense.debits.findIndex(debitor => debitor.debitorId == a.id)].amount
+                    id: a.id, isParticipating: true, username: a.username, amount: expense.debits[expense.debits.findIndex(debitor => debitor.debitorId === a.id)].amount
                 }));
                 setState({
                     ...state,
@@ -54,6 +54,7 @@ const ExpenseEdit = () => {
                 })
             })();
         }
+    // eslint-disable-next-line
     }, [expenseId])
 
     const handleFormChange = (e) => {

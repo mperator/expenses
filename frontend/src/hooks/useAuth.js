@@ -62,9 +62,9 @@ const useAuth = () => {
                 return history.push(`/login`);
 
             case 401:
-                console.log("access token invalid, refresh token.")
+                //console.log("access token invalid, refresh token.")
                 const renewedToken = await renewAccessTokenAsync();
-                console.log("Renewd TRoken", renewedToken)
+                //console.log("Renewed Token", renewedToken)
                 if (!renewedToken) {
                     // history.push(`/`)
                     throw "Unauthorized";

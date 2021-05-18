@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 const AuthContext = React.createContext([{}, () => { }]);
 
 async function requestTokenSilentAsync() {
-    console.log("Initial refresh.")
+    //console.log("Initial refresh.")
     try {
         const response = await fetch(`/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' });
         if (response.ok) {
