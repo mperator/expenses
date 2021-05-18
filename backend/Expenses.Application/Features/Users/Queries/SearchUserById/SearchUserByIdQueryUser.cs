@@ -1,9 +1,9 @@
 ﻿using Expenses.Application.Common.Mappings;
 using Expenses.Domain.Entities;
 
-namespace Expenses.Application.Features.Users.Queries.SearchUsersById
+namespace Expenses.Application.Features.Users.Queries.SearchUserById
 {
-    public class SearchUsersByIdQueryUser : IMapFrom<AppUser>
+    public class SearchUserByIdQueryUser : IMapFrom<AppUser>
     {
         public string Id { get; set; }
         public string FirstName { get; set; }
