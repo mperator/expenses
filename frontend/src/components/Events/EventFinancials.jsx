@@ -61,7 +61,7 @@ const EventFinancials = () => {
         for (const p of event.participants) {
             var dept = calculateUserDebt(p.id)
             var loan = calculateUserLoan(p.id)
-            results.push({ userId: p.id, username: p.username, isCurrentUser: p.id == userId, loan, dept, balance: loan - dept, currency: event.currency })
+            results.push({ userId: p.id, username: p.username, isCurrentUser: p.id === userId, loan, dept, balance: loan - dept, currency: event.currency })
         }
         return results.sort(a => -1 * a.balance);
     }

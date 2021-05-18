@@ -6,8 +6,8 @@ const ParticipantMoneyList = ({ financials }) => {
         <>
             <h3>Participants</h3>
             <div className="mt-4">
-                {financials.map(f => (
-                    <ParticipantMoney key={f.userId} username={f.username} balance={f.balance} currency={f.currency} />
+                {financials.map((f, i) => (
+                    <ParticipantMoney key={f.userId + `${i}`} username={f.username} balance={f.balance} currency={f.currency} />
                 ))}
             </div>
         </>
