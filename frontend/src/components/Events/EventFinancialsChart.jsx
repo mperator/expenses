@@ -9,7 +9,7 @@ const EventFinancialsChart = ({ financials }) => {
     const colorCredit = 'rgba(0, 255, 0, 0.8)';
     const colorDebit = 'rgba(255, 0, 0, 0.8)';
 
-    const calcualateCartData = (data) => {
+    const calcualateChartData = (data) => {
         const labels = [];
         const credit = { label: 'credit', data: [], backgroundColor: [] };
         const debit = { label: 'debit', data: [], backgroundColor: [] };
@@ -37,7 +37,7 @@ const EventFinancialsChart = ({ financials }) => {
     return (
         <>
             {financials ?
-                <HorizontalBar data={calcualateCartData(financials)} options={options} /> :
+                <HorizontalBar data={calcualateChartData(financials)} options={options} /> :
                 null}
         </>
     )
