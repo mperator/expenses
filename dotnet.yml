@@ -1,6 +1,7 @@
 name: .NET
 
 on:
+  workflow_dispatch 
   push:
     branches: [ develop, features/uiv2 ]
   pull_request:
