@@ -25,7 +25,7 @@ namespace Expenses.Application.Features.Users.Queries.SearchUsersByName
 
         public async Task<IEnumerable<SearchUsersByNameQueryUser>> Handle(SearchUsersByNameQuery request, CancellationToken cancellationToken)
         {
-            var users = await _userService.GetUsersAsync(request.SearchText, null);
+            var users = await _userService.GetUsersAsync(request.SearchText);
             return _mapper.Map<IEnumerable<SearchUsersByNameQueryUser>>(users);
         }
     }

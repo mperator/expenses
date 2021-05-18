@@ -7,8 +7,7 @@ namespace Expenses.Application.Common.Interfaces
     public interface IUserService
     {
         Task<AppUser> FindByIdAsync(string id);
-
         Task<AppUser> GetCurrentUserAsync();
-        Task<IEnumerable<AppUser>> GetUsersAsync(string name, string id);
+        Task<IEnumerable<AppUser>> GetUsersAsync(string name);
     }
 }

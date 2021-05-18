@@ -2,6 +2,8 @@ import { useContext } from 'react';
 import { AuthContext } from '../AuthContext'
 import { useHistory } from 'react-router';
 
+import jwt_decode from "jwt-decode";
+
 /* IMPORTANT!
  * To use httpsOnly cookie from server we have to configure several things.
  * First we have to make sure oure connection to the server runs on https only then cookies will be 
@@ -60,9 +62,9 @@ const useAuth = () => {
                 return history.push(`/login`);
 
             case 401:
-                console.log("access token invalid, refresh token.")
+                //console.log("access token invalid, refresh token.")
                 const renewedToken = await renewAccessTokenAsync();
-                console.log("Renewd TRoken", renewedToken)
+                //console.log("Renewed Token", renewedToken)
                 if (!renewedToken) {
                     // history.push(`/`)
                     throw "Unauthorized";
@@ -123,6 +125,7 @@ const useAuth = () => {
         isLoading: state.loading,
         hasToken: state.accessToken !== null,
         token: `${state.tokenType} ${state.accessToken}`,
+        userId: state.accessToken ? jwt_decode(state.accessToken).sub : null,
 
         loginAsync,
         logoutAsync,
