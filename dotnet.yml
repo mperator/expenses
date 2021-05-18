@@ -3,7 +3,7 @@ name: .NET
 on:
   workflow_dispatch: 
   push:
-    branches: [ develop, features/uiv2 ]
+    branches: [ develop ]
   pull_request:
     branches: [ develop ]
 
