@@ -1,5 +1,4 @@
 ﻿using Expenses.Application.Features.Events.Commands.CreateEvent;
-using Expenses.Application.Features.Events.Queries.GetEvents;
 using Expenses.Application.Features.Events.Queries.GetEventById;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Expenses.Application.Features.Events.Commands.UpdateEvent;
 using Expenses.Application.Features.Events.Commands.DeleteEvent;
 using Expenses.Api.Common;
+using Expenses.Application.Features.Events.Queries.GetEventsByFilter;
+using System.Text.Json;
 
 namespace Expenses.Api.Controllers
 {
@@ -20,13 +21,29 @@ namespace Expenses.Api.Controllers
         /// <summary>
         /// Gets a list of events
         /// </summary>
+        /// <param name="parameter">Filter parameter.</param>
         /// <returns>A list of events</returns>
         /// <response code="200">On success</response>
         [HttpGet]
-        public async Task<ActionResult<List<GetEventsQueryEvent>>> GetEventsAsync()
+        public async Task<ActionResult<List<GetEventsByFilterQueryEvent>>> GetEventsByFilterAsync([FromQuery] GetEventsByFilterQuery parameter)
         {
-            return await Mediator.Send(new GetEventsQuery());
+            var events = await Mediator.Send(parameter);
+
+            var metadata = new
+            {
+                events.TotalCount,
+                events.PageSize,
+                events.CurrentPage,
+                events.TotalPages,
+                events.HasNext,
+                events.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
+
+            return events;
         }
+
         /// <summary>
         /// Get a single event by its ID
         /// </summary>
