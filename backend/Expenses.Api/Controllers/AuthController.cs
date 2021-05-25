@@ -61,7 +61,7 @@ namespace Expenses.Api.Controllers
         [HttpPost("problem2")]
         public IActionResult ProblemAsync(TestModel model)
         {
-            throw new Domain.Exceptions.EventValidationException("10", "This is a total katastroph");
+            throw new Domain.Exceptions.EventValidationException("This is a total katastroph");
 
 
             //var state = new ModelStateDictionary();

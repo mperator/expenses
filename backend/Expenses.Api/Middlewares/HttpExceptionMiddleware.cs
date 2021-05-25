@@ -1,4 +1,5 @@
-﻿using Expenses.Domain.Exceptions;
+﻿using Expenses.Application.Common.Exceptions;
+using Expenses.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -41,15 +42,17 @@ namespace Expenses.Api.Middlewares
         {
             HttpStatusCode code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            if (ex is FluentValidation.ValidationException vex)
+            if (ex is ApplicationValidationException e)
             {
-                var result = JsonConvert.SerializeObject(vex.Errors);
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                await context.Response.WriteAsync(result);
+                var validationProblemDetails = _factory.CreateValidationProblemDetails(context, e.ModelStateDictionary, (int)HttpStatusCode.BadRequest, detail: e.Message);
+
+                var result = new ObjectResult(validationProblemDetails);
+                var routeData = context.GetRouteData() ?? new RouteData();
+                var actionContext = new ActionContext(context, routeData, new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
+                await _executor.ExecuteAsync(actionContext, result);
                 await context.Response.CompleteAsync();
             }
-            else if(ex is ValidationException ve)
+            else if(ex is DomainException ve)
             {
                 var details = _factory.CreateProblemDetails(context, (int)HttpStatusCode.BadRequest, "BusinessRule violation.", detail: ve.Message);
 

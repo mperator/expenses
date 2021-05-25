@@ -38,9 +38,7 @@ namespace Expenses.Api
             //services.AddHealthChecks()
             //    .AddDbContextCheck<AppDbContext>();
 
-
-            services.AddControllers()
-                .AddFluentValidation(e => e.RegisterValidatorsFromAssemblyContaining<CreateExpenseCommandValidator>());
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
