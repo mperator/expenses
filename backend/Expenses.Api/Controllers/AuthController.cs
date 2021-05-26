@@ -25,7 +25,7 @@ namespace Expenses.Api.Controllers
         /// <response code="400">Registration could not be proceeded.</response>
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserRequestModel model)
         {
             var confirmationLink = $"{Request.Scheme}://{Request.Host.Value}{Url.RouteUrl(nameof(ConfirmEmail))}";
