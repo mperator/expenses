@@ -31,7 +31,7 @@ namespace Expenses.Domain.Entities
             if (creator == null) throw new ExpenseValidationException("Invalid creator.");
             if (string.IsNullOrWhiteSpace(title)) throw new ExpenseValidationException("Invalid title.");
             if (string.IsNullOrWhiteSpace(description)) throw new ExpenseValidationException("description.");  // TODO: allow null?
-            if (date == default) throw new ExpenseValidationException("Invalid date.");
+            if (date == default) throw new ExpenseValidationException("Date must be set.");
             
             // TODO: Use value object for currency
             if (string.IsNullOrWhiteSpace(currency)) throw new ExpenseValidationException("Invalid currency set.");
@@ -49,7 +49,7 @@ namespace Expenses.Domain.Entities
             if (credit == null) throw new ExpenseValidationException("Credit must not be null.");
             if (debits == null || debits.Count == 0) throw new ExpenseValidationException("Debits must not be null or empty.");
 
-            if (credit.Amount != debits.Sum(d => d.Amount)) throw new ExpenseValidationException("Invalid amount betwenn credit and debits.");
+            if (credit.Amount != debits.Sum(d => d.Amount)) throw new ExpenseValidationException("Invalid amount between credit and debits.");
             
             // TODO: does this matter?
             if (debits.Count() != debits.Select(d => d.Debitor).Distinct().Count()) throw new ExpenseValidationException("Same debitor is not allowed");
