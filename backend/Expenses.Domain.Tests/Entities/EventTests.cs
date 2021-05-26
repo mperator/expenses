@@ -4,7 +4,6 @@ using Expenses.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Xunit;
 
 namespace Expenses.Domain.Tests.Entities
@@ -20,15 +19,15 @@ namespace Expenses.Domain.Tests.Entities
             DateTime endDate = DateTime.UtcNow.AddDays(10);
             const string currency = "EUR";
 
-            yield return new object[] { default, title, description, startDate, endDate, currency, "CreatorIdInvalid" };
-            yield return new object[] { creatorId, default, description, startDate, endDate, currency, "TitleInvalid" };
-            yield return new object[] { creatorId, string.Empty, description, startDate, endDate, currency, "TitleInvalid" };
-            yield return new object[] { creatorId, title, default, startDate, endDate, currency, "DescriptionInvalid" };
-            yield return new object[] { creatorId, title, string.Empty, startDate, endDate, currency, "DescriptionInvalid" };
-            yield return new object[] { creatorId, title, description, default, endDate, currency, "StartDateInvalid" };
-            yield return new object[] { creatorId, title, description, startDate, default, currency, "EndDateInvalid" };
-            yield return new object[] { creatorId, title, description, startDate, endDate, default, "CurrencyInvalid" };
-            yield return new object[] { creatorId, title, description, startDate, endDate, string.Empty, "CurrencyInvalid" };
+            yield return new object[] { default, title, description, startDate, endDate, currency };
+            yield return new object[] { creatorId, default, description, startDate, endDate, currency };
+            yield return new object[] { creatorId, string.Empty, description, startDate, endDate, currency };
+            yield return new object[] { creatorId, title, default, startDate, endDate, currency };
+            yield return new object[] { creatorId, title, string.Empty, startDate, endDate, currency };
+            yield return new object[] { creatorId, title, description, default, endDate, currency };
+            yield return new object[] { creatorId, title, description, startDate, default, currency };
+            yield return new object[] { creatorId, title, description, startDate, endDate, default };
+            yield return new object[] { creatorId, title, description, startDate, endDate, string.Empty };
         }
     }
 
@@ -101,11 +100,10 @@ namespace Expenses.Domain.Tests.Entities
 
         [Theory]
         [MemberData(nameof(EventDataGenerator.GenerateEvent_WithDefaultOrEmptyParameter), MemberType = typeof(EventDataGenerator))]
-        public void CreateEvent_WithDefaultOrEmptyParameter1(User creator, string title, string description, DateTime startDate, DateTime endDate, string currency, string exceptionCode)
+        public void CreateEvent_WithDefaultOrEmptyParameter1(User creator, string title, string description, DateTime startDate, DateTime endDate, string currency)
         {
             // act and assert
             var exception = Assert.Throws<EventValidationException>(() => new Event(creator, title, description, startDate, endDate, currency));
-            Assert.Equal(exceptionCode, exception.Code);
         }
 
         [Fact]
