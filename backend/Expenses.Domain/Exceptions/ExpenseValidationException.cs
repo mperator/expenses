@@ -2,13 +2,13 @@
 
 namespace Expenses.Domain.Exceptions
 {
-    public sealed class ExpenseValidationException : ValidationException
+    public sealed class ExpenseValidationException : DomainException
     {
-        public ExpenseValidationException(string code, string message) : base(code, message)
+        public ExpenseValidationException(string message) : base(message)
         {
         }
 
-        public ExpenseValidationException(string code, string message, Exception innerException) : base(code, message, innerException)
+        public ExpenseValidationException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }
