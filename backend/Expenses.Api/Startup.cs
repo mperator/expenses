@@ -1,8 +1,6 @@
 using Expenses.Api.Middlewares;
 using Expenses.Application;
-using Expenses.Application.Features.Expenses.Commands.CreateExpense;
 using Expenses.Infrastructure;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
