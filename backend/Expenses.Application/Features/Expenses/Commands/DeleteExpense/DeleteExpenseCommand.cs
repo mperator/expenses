@@ -1,4 +1,5 @@
-﻿using Expenses.Application.Common.Interfaces;
+﻿using Expenses.Application.Common.Exceptions;
+using Expenses.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace Expenses.Application.Features.Expenses.Commands.DeleteExpense
     public class DeleteExpenseCommandHandler : IRequestHandler<DeleteExpenseCommand>
     {
         private readonly IAppDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public DeleteExpenseCommandHandler(IAppDbContext context)
+        public DeleteExpenseCommandHandler(IAppDbContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
 
         public async Task<Unit> Handle(DeleteExpenseCommand request, CancellationToken cancellationToken)
@@ -29,7 +32,12 @@ namespace Expenses.Application.Features.Expenses.Commands.DeleteExpense
                 .SingleOrDefaultAsync(e => e.Id == request.EventId);
 
             var expense = @event.Expenses.SingleOrDefault(e => e.Id == request.ExpenseId);
-            
+
+            // Businessrule: Only allowed for expense creator or event creator
+            if (@event.Creator.Id != _currentUserService.UserId &&
+               expense.Creator.Id != _currentUserService.UserId)
+                throw new ForbiddenAccessException();
+
             // Remove from event but not from database
             @event.RemoveExpense(expense);
 

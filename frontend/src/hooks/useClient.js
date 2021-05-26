@@ -111,8 +111,8 @@ const useClient = () => {
         return await getWithAuthenticationAsync('/events', token);
     }
 
-    const getFilteredEventsAsync = async (title) => {
-        return await getWithAuthenticationAsync(`/events?title=${title}`, token)
+    const getFilteredEventsAsync = async (text) => {
+        return await getWithAuthenticationAsync(`/events?text=${text}`, token)
     }
 
     const getEventAsync = async (id) => {
@@ -154,7 +154,7 @@ const useClient = () => {
     }
 
     const getParticipantByIdAsync = async (id) => {
-        return await getWithAuthenticationAsync(`/users?id=${id}`, token);
+        return await getWithAuthenticationAsync(`/users/${id}`, token);
     }
 
     return {

@@ -57,17 +57,15 @@ namespace Expenses.Api.Middlewares
                 var details = _factory.CreateProblemDetails(context, (int)HttpStatusCode.BadRequest, "BusinessRule violation.", detail: ve.Message);
 
                 var result = new ObjectResult(details);
-
                 var routeData = context.GetRouteData() ?? new RouteData(); 
                 var actionContext = new ActionContext(context, routeData, new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
                 await _executor.ExecuteAsync(actionContext, result);
                 await context.Response.CompleteAsync();
             }
-            else if (ex is Application.Common.Exceptions.NotFoundException) code = HttpStatusCode.NotFound;
-            else
-            {
-                context.Response.StatusCode = (int)code;
-            }
+            else if (ex is Application.Common.Exceptions.NotFoundException)  code = HttpStatusCode.NotFound;
+            else if (ex is Application.Common.Exceptions.ForbiddenAccessException) code = HttpStatusCode.Forbidden; 
+          
+            context.Response.StatusCode = (int)code;
         }
     }
 }
