@@ -5,12 +5,9 @@ using Expenses.Application.Features.Auth.Commands.Login;
 using Expenses.Application.Features.Auth.Commands.Logout;
 using Expenses.Application.Features.Auth.Commands.RefreshCurrentToken;
 using Expenses.Application.Features.Auth.Commands.RegisterUser;
-using Expenses.Application.Features.Auth.Queries.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Expenses.Api.Controllers
@@ -20,63 +17,6 @@ namespace Expenses.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ApiControllerBase
     {
-        /// <summary>
-        /// Endpoint to test authorization. For demo purpose only.
-        /// </summary>
-        /// <returns></returns>
-        [Authorize]
-        [HttpGet("test")]
-        public async Task<string> TestAsync()
-        {
-            return await Mediator.Send(new TestQuery());
-        }
-
-        /// <summary>
-        /// Endpoint to test authorization. For demo purpose only.
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet("problem")]
-        public IActionResult ProblemAsync()
-        {
-            return Problem("This is my problem detail");
-        }
-
-
-        public record TestModel
-        {
-            //[Required]
-            public int? Age { get; set; }
-
-            //[Required]
-            public string Name { get; set; }
-        }
-
-
-        /// <summary>
-        /// Endpoint to test authorization. For demo purpose only.
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpPost("problem2")]
-        public IActionResult ProblemAsync(TestModel model)
-        {
-            throw new Domain.Exceptions.EventValidationException("This is a total katastroph");
-
-
-            //var state = new ModelStateDictionary();
-            //state.AddModelError("Pommes", "Der vogel fliegt nicht.");
-            //state.AddModelError("Pommes", "Doch er fliegt.");
-
-            ////return BadRequest(x);
-            //var a = ProblemDetailsFactory.CreateValidationProblemDetails(HttpContext, state);
-            //return new ObjectResult(a);
-
-            ////return Problem(a);
-        }
-
-
-
         /// <summary>
         /// Register a new user.
         /// </summary>
