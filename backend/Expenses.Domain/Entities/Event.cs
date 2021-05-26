@@ -31,16 +31,16 @@ namespace Expenses.Domain.Entities
 
         public Event(User creator, string title, string description, DateTime startDate, DateTime endDate, string currency)
         {
-            if (creator == null) throw new EventValidationException("CreatorIdInvalid", Localization.Language.InvalidCreator);
-            if (string.IsNullOrWhiteSpace(title)) throw new EventValidationException("TitleInvalid", "No title set.");
-            if (string.IsNullOrWhiteSpace(description)) throw new EventValidationException("DescriptionInvalid", "No description set.");
-            if (startDate == default) throw new EventValidationException("StartDateInvalid", "Start date not set.");
-            if (endDate == default) throw new EventValidationException("EndDateInvalid", "End Date not set.");
+            if (creator == null) throw new EventValidationException(Localization.Language.InvalidCreator);
+            if (string.IsNullOrWhiteSpace(title)) throw new EventValidationException("No title set.");
+            if (string.IsNullOrWhiteSpace(description)) throw new EventValidationException("No description set.");
+            if (startDate == default) throw new EventValidationException("Start date not set.");
+            if (endDate == default) throw new EventValidationException("End Date not set.");
             
             // TODO: Validate in value object
-            if (string.IsNullOrWhiteSpace(currency)) throw new EventValidationException("CurrencyInvalid", "Currency not set.");
+            if (string.IsNullOrWhiteSpace(currency)) throw new EventValidationException("Currency not set.");
 
-            if (startDate > endDate) throw new EventValidationException("StartDateBehindEndDate", "Start date must be smaller or same like end date.");
+            if (startDate > endDate) throw new EventValidationException("Start date must be smaller or same like end date.");
 
             Creator = creator;
             Title = title;
@@ -60,7 +60,7 @@ namespace Expenses.Domain.Entities
         {
             var p = _participants.Find(p => p.Id == participant.Id);
             if (p != null)
-                throw new EventValidationException("AddParticipantAlreadyExists", "Participant already in event.");
+                throw new EventValidationException("Participant already in event.");
 
             _participants.Add(new User(participant.Id));
         }
@@ -71,7 +71,7 @@ namespace Expenses.Domain.Entities
         {
             var p = _participants.Find(p => p.Id == participant.Id);
             if (p == null)
-                throw new EventValidationException("RemoveParticipantNotExists", "Participant was not found.");
+                throw new EventValidationException("Participant was not found.");
 
             // Check if participant takes part in any expense.
             var _1 = _expenses.Select(e => e.Creator).FirstOrDefault(a => a.Id == participant.Id) != null;
@@ -79,7 +79,7 @@ namespace Expenses.Domain.Entities
             var _3 = _expenses.SelectMany(e => e.Debits.ToList())?.Select(a => a.Debitor).FirstOrDefault(a => a.Id == participant.Id) != null;
 
             if (_1 || _2 || _3)
-                throw new EventValidationException("RemoveParticipantHasExpenses", "Participant takes part in expense and cannot be deleted.");
+                throw new EventValidationException("Participant takes part in expense and cannot be deleted.");
 
             _participants.Remove(p);
         }
@@ -89,24 +89,24 @@ namespace Expenses.Domain.Entities
         {
             // Check if split is set. An expense can be created without split.
             if (expense.Credit == null)
-                throw new EventValidationException("AddExpenseInvalidCredit", "Credit is not set.");
+                throw new EventValidationException("Credit is not set.");
             if (expense.Debits == null || expense.Debits.Count == 0)
-                throw new EventValidationException("AddExpenseInvalidDebits", "Debits is not set or does not contain elements.");
+                throw new EventValidationException("Debits is not set or does not contain elements.");
 
             // Check if creator, creditor and debitor take part in event.
             var userIds = new List<string> { expense.Creator.Id, expense.Credit.Creditor.Id };
             userIds.AddRange(expense.Debits.Select(a => a.Debitor.Id));
 
             foreach (var id in userIds)
-                if (_participants.Find(p => p.Id == id) == null) throw new EventValidationException("AddExpenseUnknownParticipant", "User does not participate in event.");
+                if (_participants.Find(p => p.Id == id) == null) throw new EventValidationException("User does not participate in event.");
 
             // Check if event date is between event date
             if (expense.Date.Date < StartDate.Date || expense.Date.Date > EndDate.Date)
-                throw new EventValidationException("AddExpenseDateNotInRange", "Date not between event start and end date.");
+                throw new EventValidationException("Date not between event start and end date.");
 
             // Check if currency matches.
             if (expense.Currency != Currency)
-                throw new EventValidationException("AddExpenseInvalidCurrency", "The currency does not match the currency of the event.");
+                throw new EventValidationException("The currency does not match the currency of the event.");
 
             _expenses.Add(expense);
         }
@@ -116,7 +116,7 @@ namespace Expenses.Domain.Entities
         public void RemoveExpense(Expense expense)
         {
             // usually identified by id but if not saved yet how to identify
-            if (!_expenses.Contains(expense)) throw new EventValidationException("Remove expense not found.", "Expense not found.");
+            if (!_expenses.Contains(expense)) throw new EventValidationException("Expense not found.");
 
             _expenses.Remove(expense);
         }

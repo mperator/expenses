@@ -1,9 +1,9 @@
-﻿using FluentValidation;
+﻿using Expenses.Application.Common.Exceptions;
+using FluentValidation;
 using MediatR;
-using System;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,8 +29,14 @@ namespace Expenses.Application.Common.Behaviours
                 var validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
                 var failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
 
-                if (failures.Count != 0)
-                    throw new ValidationException(failures);
+                var modelStateDictionary = new ModelStateDictionary();
+                foreach (var failure in failures)
+                {
+                    modelStateDictionary.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                }
+
+                if (modelStateDictionary.Count > 0)
+                    throw new ApplicationValidationException("Error Descripton", modelStateDictionary);
             }
             return await next();
         }

@@ -5,7 +5,6 @@ using Expenses.Application.Features.Auth.Commands.Login;
 using Expenses.Application.Features.Auth.Commands.Logout;
 using Expenses.Application.Features.Auth.Commands.RefreshCurrentToken;
 using Expenses.Application.Features.Auth.Commands.RegisterUser;
-using Expenses.Application.Features.Auth.Queries.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +17,6 @@ namespace Expenses.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ApiControllerBase
     {
-        /// <summary>
-        /// Endpoint to test authorization. For demo purpose only.
-        /// </summary>
-        /// <returns></returns>
-        [Authorize]
-        [HttpGet("test")]
-        public async Task<string> TestAsync()
-        {
-            return await Mediator.Send(new TestQuery());
-        }
-
         /// <summary>
         /// Register a new user.
         /// </summary>
