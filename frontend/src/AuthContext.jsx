@@ -5,7 +5,7 @@ const AuthContext = React.createContext([{}, () => { }]);
 async function requestTokenSilentAsync() {
     //console.log("Initial refresh.")
     try {
-        const response = await fetch(`/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' });
+        const response = await fetch(`/api/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' });
         if (response.ok) {
             const data = await response.json();
             return {
