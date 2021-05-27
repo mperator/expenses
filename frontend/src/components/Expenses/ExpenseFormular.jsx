@@ -2,11 +2,6 @@ import React from 'react'
 import FormInput from '../layout/FormInput';
 
 const ExpenseFormular = ({ title, state, error, handleFormChange, handleSplit, handleCreditorChange, handleParticipantAmountChange, children }) => {
-
-    const isValid = (e) => {
-        return e && " is-invalid";
-    }
-
     return (
         <>
             <h2>{title}</h2>

@@ -46,6 +46,7 @@ const EventEdit = () => {
                 setLoading(false);
             })();
         } else setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const updateAsync = async () => {
@@ -53,7 +54,7 @@ const EventEdit = () => {
             return participant.id;
         });
         try {
-            const response = await putEventAsync(params.id, {
+            await putEventAsync(params.id, {
                 title: state.title,
                 description: state.description,
                 startDate: state.startDate,

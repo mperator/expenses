@@ -12,7 +12,7 @@ const ExpenseNew = () => {
     const history = useHistory();
     const { eventId, expenseId } = useParams()
 
-    const { getEventAsync, postExpenseAsync, getExpenseAsync, putExpenseAsync } = useClient();
+    const { getEventAsync, postExpenseAsync } = useClient();
 
     const [state, setState] = useState({
         date: dayjs(new Date()).format('YYYY-MM-DD'),
@@ -49,6 +49,7 @@ const ExpenseNew = () => {
                 } catch(e) {console.log(e)}
             })();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [expenseId])
 
     const handleFormChange = (e) => {
@@ -86,7 +87,7 @@ const ExpenseNew = () => {
             const delta = (amount - (count * split));
 
             let applyDelta = false;
-            if (delta != 0) {
+            if (delta !== 0) {
                 applyDelta = true;
             }
 

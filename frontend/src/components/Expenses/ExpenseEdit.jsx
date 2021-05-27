@@ -11,7 +11,7 @@ const ExpenseEdit = () => {
     const history = useHistory();
     const { eventId, expenseId } = useParams()
 
-    const { getEventAsync, postExpenseAsync, getExpenseAsync, putExpenseAsync } = useClient();
+    const { getEventAsync, getExpenseAsync, putExpenseAsync } = useClient();
 
     const [state, setState] = useState({
         date: dayjs(new Date()).format('YYYY-MM-DD'),
