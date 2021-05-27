@@ -29,7 +29,7 @@ namespace Expenses.Api
             services.AddHttpContextAccessor();
             services.AddInfrastructure(Configuration);
             services.AddApplication();
-            
+
             //TODO: do we need this seriously?
             //services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -48,6 +48,7 @@ namespace Expenses.Api
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
@@ -57,7 +58,7 @@ namespace Expenses.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -70,7 +71,7 @@ namespace Expenses.Api
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -85,11 +86,11 @@ namespace Expenses.Api
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                //if (env.IsDevelopment())
-                //{
-                //    spa.UseReactDevelopmentServer(npmScript: "start");
-                //    //spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
-                //}
+                if (env.IsDevelopment())
+                {
+                    //spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+                }
             });
         }
     }
