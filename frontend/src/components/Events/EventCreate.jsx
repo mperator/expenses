@@ -4,9 +4,7 @@ import useForm from './../../hooks/useForm'
 import { useHistory } from 'react-router';
 import dayjs from 'dayjs'
 
-import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
 import useAuth from './../../hooks/useAuth';
-import Toast from './../layout/Toast';
 import EventFormular from './EventFormular'
 
 
@@ -45,7 +43,7 @@ const EventCreate = () => {
             .filter(p => p !== userId);
 
         try {
-            const response = await postEventAsync({
+            await postEventAsync({
                 title: state.title,
                 description: state.description,
                 startDate: state.startDate,
@@ -53,9 +51,7 @@ const EventCreate = () => {
                 currency: "EUR",
                 participantIds: filteredParticipantsIds
             });
-            // show the error toast in case something went wrong and stay on current page
-            if (response === null) triggerErrorToast();
-            else history.goBack();
+            history.goBack();
         } catch (ex) {
             if(ex.errors) {
                 setError(s => ({
@@ -68,11 +64,6 @@ const EventCreate = () => {
                 setErrorDetail(ex.detail);
             }
         }
-    }
-
-    const triggerErrorToast = () => {
-        const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-        errorToast.show();
     }
 
     const handleSubmitAsync = async (e) => {
@@ -112,7 +103,6 @@ const EventCreate = () => {
                         <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>Cancel</button>
                     </EventFormular>
                 }
-                <Toast idString="errorToast" />
             </div>
         </>
     )
