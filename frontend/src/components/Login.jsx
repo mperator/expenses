@@ -27,7 +27,7 @@ function Login() {
         } catch (ex) {
             if (ex.errors) {
                 setError(s => ({
-                    username: (ex.errors.Username && ex.Username.Title[0]) || "",
+                    username: (ex.errors.Username && ex.errors.Username[0]) || "",
                     password: (ex.errors.Password && ex.errors.Password[0]) || ""
                 }))
             } else {
