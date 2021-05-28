@@ -98,63 +98,63 @@ const useClient = () => {
 
     /* test hook */
     const getAuthTestAsync = async () => {
-        return await getWithAuthenticationAsync('/auth/test', token);
+        return await getWithAuthenticationAsync('/api/auth/test', token);
     }
 
     /* users */
     const registerUserAsync = async (data) => {
-        return await postAsync("/auth/register", data);
+        return await postAsync("/api/auth/register", data);
     }
 
     /* events */
     const getEventsAsync = async () => {
-        return await getWithAuthenticationAsync('/events', token);
+        return await getWithAuthenticationAsync('/api/events', token);
     }
 
     const getFilteredEventsAsync = async (text) => {
-        return await getWithAuthenticationAsync(`/events?text=${text}`, token)
+        return await getWithAuthenticationAsync(`/api/events?text=${text}`, token)
     }
 
     const getEventAsync = async (id) => {
-        return await getWithAuthenticationAsync(`/events/${id}`, token);
+        return await getWithAuthenticationAsync(`/api/events/${id}`, token);
     }
 
     const getEventByIdAsync = async (id) => {
-        return await getWithAuthenticationAsync(`/events/${id}`, token)
+        return await getWithAuthenticationAsync(`/api/events/${id}`, token)
     }
 
     const postEventAsync = async (data) => {
-        return await postWithAuthenticationAsync('/events', token, data);
+        return await postWithAuthenticationAsync('/api/events', token, data);
     }
 
     const putEventAsync = async (id, data) => {
-        return await putWithAuthenticationAsync(`/events/${id}`, token, data);
+        return await putWithAuthenticationAsync(`/api/events/${id}`, token, data);
     }
 
     /* expenses */
     const postExpenseAsync = async (eventid, data) => {
-        return await postWithAuthenticationAsync(`/events/${eventid}/expenses`, token, data);
+        return await postWithAuthenticationAsync(`/api/events/${eventid}/expenses`, token, data);
     }
 
     const putExpenseAsync = async (eventId, expenseId, data) => {
-        return await putWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token, data);
+        return await putWithAuthenticationAsync(`/api/events/${eventId}/expenses/${expenseId}`, token, data);
     }
 
     const getExpenseAsync = async (eventId, expenseId) => {
-        return await getWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
+        return await getWithAuthenticationAsync(`/api/events/${eventId}/expenses/${expenseId}`, token);
     }
 
     const deleteExpenseAsync = async (eventId, expenseId) => {
-        return await deleteWithAuthenticationAsync(`/events/${eventId}/expenses/${expenseId}`, token);
+        return await deleteWithAuthenticationAsync(`/api/events/${eventId}/expenses/${expenseId}`, token);
     }
 
     /* participants */
     const getParticipantsByNameAsync = async (name) => {
-        return await getWithAuthenticationAsync(`/users?name=${name}`, token);
+        return await getWithAuthenticationAsync(`/api/users?name=${name}`, token);
     }
 
     const getParticipantByIdAsync = async (id) => {
-        return await getWithAuthenticationAsync(`/users/${id}`, token);
+        return await getWithAuthenticationAsync(`/api/users/${id}`, token);
     }
 
     return {
