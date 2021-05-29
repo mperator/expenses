@@ -56,7 +56,7 @@ namespace Expenses.Api.Controllers
         /// <response code="404">No resource found for the given ID</response>
         [HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetEventByIdQueryEvent>> GetEventByIdAsync(int id)
         {
@@ -72,7 +72,7 @@ namespace Expenses.Api.Controllers
         /// <response code="201">Returns created event object</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         public async Task<ActionResult<int>> CreateEventAsync([FromBody] CreateEventCommand eventCommand)
         {
             return await Mediator.Send(eventCommand);
@@ -87,7 +87,7 @@ namespace Expenses.Api.Controllers
         /// <response code="204">On success</response>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateEventAsync(int id, [FromBody] UpdateEventCommand updateEventCommand)
         {
@@ -106,6 +106,7 @@ namespace Expenses.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteEventByIdAsync(int id)
         {

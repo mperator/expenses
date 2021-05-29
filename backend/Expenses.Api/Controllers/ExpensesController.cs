@@ -26,7 +26,7 @@ namespace Expenses.Api.Controllers
         /// <response code="200">On success</response>
         [HttpGet()]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         public async Task<ActionResult<IEnumerable<GetExpensesQueryExpense>>> GetExpensesAsync(int eventId)
         {
             return Ok(await Mediator.Send(new GetExpensesQuery { EventId = eventId }));
@@ -59,7 +59,7 @@ namespace Expenses.Api.Controllers
         /// <response code="201">Returns created expense object</response>
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CreateExpenseResponseExpense>> CreateExpenseAsync(int eventId, [FromBody] CreateExpenseRequestExpense model)
         {
@@ -77,7 +77,7 @@ namespace Expenses.Api.Controllers
         /// <response code="204">Update has been succuessful</response>
         [HttpPut("{expenseId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateExpenseAsync(int eventId, int expenseId, [FromBody] UpdateExpenseRequestExpense model)
         {
@@ -94,7 +94,7 @@ namespace Expenses.Api.Controllers
         /// <response code="404">No expense found for the given expense and event id</response>
         [HttpDelete("{expenseId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteExpenseAsync(int eventId, int expenseId)
         {
