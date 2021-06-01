@@ -11,7 +11,7 @@ function Logout() {
     }
 
     return (
-        <Link className="nav-link" to='/login' onClick={handleLogoutAsync}>Logout</Link>
+        <Link className="nav-link" to='/login' onClick={handleLogoutAsync} data-test="logout-button">Logout</Link>
     );
 }
 

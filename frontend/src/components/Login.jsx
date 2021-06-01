@@ -68,13 +68,13 @@ function Login() {
                             <div className="row mb-3">
                                 <label htmlFor="username" className="col-sm-2 col-form-label">Username</label>
                                 <div className="col-sm-10">
-                                    <input type="text" className="form-control" id="username" name="username" value={state.username} onChange={handleChange} />
+                                    <input type="text" className="form-control" id="username" data-test="username-field" name="username" value={state.username} onChange={handleChange} />
                                 </div>
                             </div>
                             <div className="row mb-3">
                                 <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
                                 <div className="col-sm-10">
-                                    <input type="password" className="form-control" id="password" name="password" value={state.password} onChange={handleChange} />
+                                    <input type="password" className="form-control" id="password" data-test="password-field" name="password" value={state.password} onChange={handleChange} />
                                 </div>
                             </div>
                             {/* <div className="row mb-3">
@@ -86,7 +86,7 @@ function Login() {
                                 </div>
                             </div> */}
                             <div className="position-relative">
-                                <button type="submit" className="btn btn-primary float-end" onClick={handleSubmitAsync}>Sign in</button>
+                                <button type="submit" className="btn btn-primary float-end" data-test="signIn-button" onClick={handleSubmitAsync}>Sign in</button>
                             </div>
 
                             <p className="text-danger">{state.error}</p>

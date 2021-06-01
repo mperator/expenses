@@ -10,6 +10,7 @@
     "bootstrap": "5.0.0-beta1",
     "bootstrap-icons": "1.1.0",
     "chart.js": "2.9.4",
+    "chokidar": "3.5.1",
     "dayjs": "1.9.6",
     "jwt-decode": "3.1.2",
     "placeholder-loading": "0.2.6",
