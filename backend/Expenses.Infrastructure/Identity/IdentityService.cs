@@ -1,5 +1,6 @@
 ﻿using Expenses.Application.Common.Interfaces;
 using Expenses.Application.Common.Models;
+using Expenses.Infrastructure.Exceptions;
 using Expenses.Infrastructure.Options;
 using Expenses.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -58,8 +59,8 @@ namespace Expenses.Infrastructure.Identity
         public async Task<(Result Result, TokenModel TokenModel, RefreshToken refreshToken)> LoginAsync(string username, string email, string password)
         {
             // only username and password is mandatory
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return (Result.Failure(new List<string> { "Invalid model." }), null, null);
+            if (string.IsNullOrEmpty(username)) throw new IdentityException("Username must not be empty.");
+            if (string.IsNullOrEmpty(password)) throw new IdentityException("Password must not be empty.");
 
             ApplicationUser user = null;
             if (user == null && !string.IsNullOrEmpty(username))
@@ -67,18 +68,18 @@ namespace Expenses.Infrastructure.Identity
             else if (user == null && !string.IsNullOrEmpty(email))
                 user = await _userManager.FindByEmailAsync(email);
             else
-                return (Result.Failure(new List<string> { "Could not login." }), null, null);
+                throw new IdentityException("Invalid username or password.");
 
             // Check if eemail confirmation is enabled.
             if (await _featureManager.IsEnabledAsync("EmailConfirmation"))
             {
                 // check if user email is confirmend
                 if (!await _userManager.IsEmailConfirmedAsync(user))
-                    return (Result.Failure(new List<string> { "Please confirm email." }), null, null);
+                    throw new IdentityException("Please confirm email.");
             }
 
             if (!await _userManager.CheckPasswordAsync(user, password))
-                return (Result.Failure(new List<string> { "Could not login." }), null, null);
+                throw new IdentityException("Invalid username or password.");
 
             var refreshToken = CreateRefreshToken();
             user.RefreshTokens.Add(refreshToken);

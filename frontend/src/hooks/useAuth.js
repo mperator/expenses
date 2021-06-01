@@ -29,15 +29,20 @@ const useAuth = () => {
             body: JSON.stringify({ username, password })
         });
 
-        if (response.status === 200) {
-            const data = await response.json();
-            setState(state => ({
-                ...state,
-                tokenType: data.tokenType,
-                accessToken: data.accessToken
-            }));
-        } else {
-            throw "Username or password invalid.";
+        switch (response.status) {
+            case 200:
+                const data = await response.json();
+                setState(state => ({
+                    ...state,
+                    tokenType: data.tokenType,
+                    accessToken: data.accessToken
+                }));
+                break;
+            case 400:
+                const error = await response.json()
+                throw error;
+            default:
+                throw Error("Unknown error");
         }
     }
 
@@ -67,7 +72,7 @@ const useAuth = () => {
                 //console.log("Renewed Token", renewedToken)
                 if (!renewedToken) {
                     // history.push(`/`)
-                    throw "Unauthorized";
+                    throw Error("Unauthorized");
                 }
                 response = await fetch('/api/auth/logout', {
                     method: 'POST',
