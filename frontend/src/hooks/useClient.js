@@ -16,9 +16,7 @@ const useClient = () => {
             case 204:   // No Content
                 return null;
             case 400:   // Bad Request
-                // TODO: Create error object that contains errors.
                 const error = await response.json();
-                console.log(error)
                 throw error;
             case 401:   // Unauthorized
                 const renewedToken = await renewAccessTokenAsync();

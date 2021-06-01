@@ -14,8 +14,8 @@ const useForm = (form) => {
     for(const f in form) {
         errorInit[f] = ''
     }
-    const [error, setError] = useState(errorInit)
-
+    const [error, setError] = useState(errorInit);
+    const [errorDetail, setErrorDetail] = useState("");
 
     // error onSubmit, onChange, onBlur
     // onSubmit -> handleSubmit
@@ -34,6 +34,8 @@ const useForm = (form) => {
             ...s,
             [e.target.name]: ""
         }))
+
+        setErrorDetail("");
     }
 
 
@@ -41,8 +43,10 @@ const useForm = (form) => {
     return {
         state,
         error,
+        errorDetail,
         handleFormChange,
         setError,
+        setErrorDetail,
         setForm: setState
     };
 }

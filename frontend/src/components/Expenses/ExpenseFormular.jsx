@@ -1,12 +1,7 @@
 import React from 'react'
 import FormInput from '../layout/FormInput';
 
-const ExpenseFormular = ({ title, state, error, handleFormChange, handleSplit, handleCreditorChange, handleParticipantAmountChange, children }) => {
-
-    const isValid = (e) => {
-        return e && " is-invalid";
-    }
-
+const ExpenseFormular = ({ title, state, error, errorDetail, handleFormChange, handleSplit, handleCreditorChange, handleParticipantAmountChange, children }) => {
     return (
         <>
             <h2>{title}</h2>
@@ -54,6 +49,12 @@ const ExpenseFormular = ({ title, state, error, handleFormChange, handleSplit, h
                         </div>
                     ))}
                 </div>
+
+                {errorDetail !== "" ? (<>
+                    <div className="is-invalid"></div>
+                    <div className="invalid-feedback">{errorDetail}</div>
+                </>) : null}
+
                 <div className="d-grid gap-2 d-flex justify-content-end">
                     {children}
                 </div>
