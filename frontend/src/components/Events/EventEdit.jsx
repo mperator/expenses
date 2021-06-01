@@ -4,9 +4,7 @@ import useForm from './../../hooks/useForm'
 import { useHistory, useParams } from 'react-router';
 import dayjs from 'dayjs'
 
-import bootstrap from 'bootstrap/dist/js/bootstrap.min.js';
 import useAuth from './../../hooks/useAuth';
-import Toast from './../layout/Toast';
 import EventFormular from './EventFormular'
 
 const EventEdit = () => {
@@ -16,7 +14,7 @@ const EventEdit = () => {
     const { getEventAsync, putEventAsync } = useClient();
 
     const [loading, setLoading] = useState(true);
-    const { state, error, handleFormChange, setForm } = useForm({
+    const { state, error, errorDetail, handleFormChange, setError, setErrorDetail, setForm } = useForm({
         title: "",
         description: "",
         startDate: dayjs(new Date()).format('YYYY-MM-DD'),
@@ -46,6 +44,7 @@ const EventEdit = () => {
                 setLoading(false);
             })();
         } else setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const updateAsync = async () => {
@@ -53,7 +52,7 @@ const EventEdit = () => {
             return participant.id;
         });
         try {
-            const response = await putEventAsync(params.id, {
+            await putEventAsync(params.id, {
                 title: state.title,
                 description: state.description,
                 startDate: state.startDate,
@@ -61,23 +60,18 @@ const EventEdit = () => {
                 participantIds: filteredParticipantsIds
             });
             history.goBack();
-        } catch (error) {
-            // show the error toast in case something went wrong and stay on current page
-            console.log(error);
-            triggerErrorToast();
-            //TODO: implement error messages of fluent validation
-            // setError(s => ({
-            //     title: (error.Title && error.Title[0]) || "",
-            //     description: (error.Description && error.Description[0]) || "",
-            //     startDate: (error.StartDate && error.StartDate[0]) || "",
-            //     endDate: (error.EndDate && error.EndDate[0]) || ""
-            // }))
+        } catch (ex) {
+            if(ex.errors) {
+                setError(s => ({
+                    title: (ex.errors.Title && ex.errors.Title[0]) || "",
+                    description: (ex.errors.Description && ex.errors.Description[0]) || "",
+                    startDate: (ex.errors.StartDate && ex.errors.StartDate[0]) || "",
+                    endDate: (ex.errors.EndDate && ex.errors.EndDate[0]) || ""
+                }))
+            } else {
+                setErrorDetail(ex.detail);
+            }
         }
-    }
-
-    const triggerErrorToast = () => {
-        const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-        errorToast.show();
     }
 
     const handleSubmitAsync = async (e) => {
@@ -109,15 +103,15 @@ const EventEdit = () => {
                     title={"Update Event"}
                     state={state}
                     error={error}
+                    errorDetail={errorDetail}
                     handleFormChange={handleFormChange}
                     handleParticipantSearchAdd={handleParticipantSearchAdd}
                     handleParticipantSearchDelete={handleParticipantSearchDelete}
                     participants={participants}>
-                    <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{params.id ? "Update" : "Create"}</button>
+                    <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Update</button>
                     <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>Cancel</button>
                 </EventFormular>
                 }
-                <Toast idString="errorToast" />
             </div>
         </>
     )

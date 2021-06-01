@@ -36,6 +36,7 @@ const FormParticipantSearch = ({ participants, handleParticipantSearchAdd }) => 
                 participants: searchParticipants
             }));
         })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search.query])
 
     const selectParticipant = (a) => {

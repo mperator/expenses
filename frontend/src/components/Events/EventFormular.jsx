@@ -4,7 +4,7 @@ import FormInput from './../layout/FormInput'
 import FormParticipantList from './FormParticipantList'
 import FormParticipantSearch from './FormParticipantSearch'
 
-const EventFormular = ({ title, state, error, handleFormChange, children, participants, handleParticipantSearchAdd, handleParticipantSearchDelete }) => {
+const EventFormular = ({ title, state, error, errorDetail, handleFormChange, children, participants, handleParticipantSearchAdd, handleParticipantSearchDelete }) => {
     return (
         <>
             <h2>{title}</h2>
@@ -21,6 +21,11 @@ const EventFormular = ({ title, state, error, handleFormChange, children, partic
                 <FormParticipantList 
                     participants={participants} 
                     handleParticipantSearchDelete={handleParticipantSearchDelete} />
+
+                {errorDetail !== "" ? (<>
+                    <div className="is-invalid"></div>
+                    <div className="invalid-feedback">{errorDetail}</div>
+                </>) : null}
 
                 <div className="d-grid gap-2 d-flex justify-content-end">
                     {children}

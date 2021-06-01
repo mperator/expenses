@@ -1,5 +1,4 @@
 ﻿using Expenses.Application.Features.Events.Commands.CreateEvent;
-using Expenses.Application.Features.Events.Queries.GetEvents;
 using Expenses.Application.Features.Events.Queries.GetEventById;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Expenses.Application.Features.Events.Commands.UpdateEvent;
 using Expenses.Application.Features.Events.Commands.DeleteEvent;
 using Expenses.Api.Common;
+using Expenses.Application.Features.Events.Queries.GetEventsByFilter;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace Expenses.Api.Controllers
 {
@@ -20,13 +22,30 @@ namespace Expenses.Api.Controllers
         /// <summary>
         /// Gets a list of events
         /// </summary>
+        /// <param name="parameter">Filter parameter.</param>
         /// <returns>A list of events</returns>
         /// <response code="200">On success</response>
         [HttpGet]
-        public async Task<ActionResult<List<GetEventsQueryEvent>>> GetEventsAsync()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GetEventsByFilterQueryEvent>>> GetEventsByFilterAsync([FromQuery] GetEventsByFilterQuery parameter)
         {
-            return await Mediator.Send(new GetEventsQuery());
+            var events = await Mediator.Send(parameter);
+
+            var metadata = new
+            {
+                events.TotalCount,
+                events.PageSize,
+                events.CurrentPage,
+                events.TotalPages,
+                events.HasNext,
+                events.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
+
+            return events;
         }
+
         /// <summary>
         /// Get a single event by its ID
         /// </summary>
@@ -36,6 +55,9 @@ namespace Expenses.Api.Controllers
         /// <response code="400">No ID given</response>
         /// <response code="404">No resource found for the given ID</response>
         [HttpGet("{id}", Name = nameof(GetEventByIdAsync))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetEventByIdQueryEvent>> GetEventByIdAsync(int id)
         {
             return await Mediator.Send(new GetEventByIdQuery { Id = id });
@@ -49,6 +71,8 @@ namespace Expenses.Api.Controllers
         /// <response code="400">Mapping failed or model isn't valid</response>
         /// <response code="201">Returns created event object</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         public async Task<ActionResult<int>> CreateEventAsync([FromBody] CreateEventCommand eventCommand)
         {
             return await Mediator.Send(eventCommand);
@@ -62,6 +86,9 @@ namespace Expenses.Api.Controllers
         /// <response code="404">No event to update found for the given ID </response>
         /// <response code="204">On success</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateEventAsync(int id, [FromBody] UpdateEventCommand updateEventCommand)
         {
             updateEventCommand.Id = id;
@@ -77,6 +104,10 @@ namespace Expenses.Api.Controllers
         /// <response code="404">No event to delete found for the given ID</response>
         /// <response code="204">On success</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteEventByIdAsync(int id)
         {
             await Mediator.Send(new DeleteEventCommand { Id = id });

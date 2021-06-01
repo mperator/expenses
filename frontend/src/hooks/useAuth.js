@@ -20,7 +20,7 @@ const useAuth = () => {
     const [state, setState] = useContext(AuthContext);
 
     async function loginAsync(username, password) {
-        var response = await fetch(`/auth/login`, {
+        var response = await fetch(`/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,20 +29,25 @@ const useAuth = () => {
             body: JSON.stringify({ username, password })
         });
 
-        if (response.status === 200) {
-            const data = await response.json();
-            setState(state => ({
-                ...state,
-                tokenType: data.tokenType,
-                accessToken: data.accessToken
-            }));
-        } else {
-            throw "Username or password invalid.";
+        switch (response.status) {
+            case 200:
+                const data = await response.json();
+                setState(state => ({
+                    ...state,
+                    tokenType: data.tokenType,
+                    accessToken: data.accessToken
+                }));
+                break;
+            case 400:
+                const error = await response.json()
+                throw error;
+            default:
+                throw Error("Unknown error");
         }
     }
 
     async function logoutAsync() {
-        let response = await fetch('/auth/logout', {
+        let response = await fetch('/api/auth/logout', {
             method: 'POST',
             headers: {
                 'Authorization': `${state.token}`,
@@ -67,9 +72,9 @@ const useAuth = () => {
                 //console.log("Renewed Token", renewedToken)
                 if (!renewedToken) {
                     // history.push(`/`)
-                    throw "Unauthorized";
+                    throw Error("Unauthorized");
                 }
-                response = await fetch('/auth/logout', {
+                response = await fetch('/api/auth/logout', {
                     method: 'POST',
                     headers: {
                         'Authorization': `${renewedToken}`,
@@ -93,7 +98,7 @@ const useAuth = () => {
 
     // renew access token independen if existing
     async function renewAccessTokenAsync() {
-        const response = await fetch(`/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' });
+        const response = await fetch(`/api/auth/refreshTokenSilent`, { method: 'POST', credentials: 'include' });
         if (response.status === 200) {
             const data = await response.json();
 
