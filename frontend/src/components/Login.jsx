@@ -1,5 +1,10 @@
-import React, { useState } from 'react'
-import useAuth from '../hooks/useAuth';
+import React from 'react'
+import useAuth from '../hooks/useAuth'
+import useForm from '../hooks/useForm'
+
+import FormInput from './layout/FormInput';
+
+
 
 import { Redirect, useLocation } from "react-router-dom";
 import SkeletonLoader from './SkeletonLoader';
@@ -9,37 +14,25 @@ function Login() {
     const { isLoading, hasToken, loginAsync } = useAuth();
     const location = useLocation();
 
-    const [state, setState] = useState({
+    const { state, error, errorDetail, handleFormChange, setError, setErrorDetail } = useForm({
         username: "",
         password: "",
-        error: ""
     });
-
-    function handleChange(e) {
-        setState({
-            ...state,
-            error: "",
-            [e.target.name]: e.target.value
-        })
-    }
 
     async function handleSubmitAsync(e) {
         e.preventDefault();
 
-        // try logging in 
-        // success -> 
-        // yes: check if redirect is needed
-        // no: go to dashboard
-
-        // fail -> print error
         try {
             await loginAsync(state.username, state.password)
-        } catch (error) {
-            setState({
-                ...state,
-                error: error,
-            })
-            return;
+        } catch (ex) {
+            if (ex.errors) {
+                setError(s => ({
+                    username: (ex.errors.Username && ex.errors.Username[0]) || "",
+                    password: (ex.errors.Password && ex.errors.Password[0]) || ""
+                }))
+            } else {
+                setErrorDetail(ex.detail);
+            }
         }
     }
 
@@ -52,7 +45,7 @@ function Login() {
             if (split.length > 0) path = split[0];
             if (split.length > 1) search = split[1];
         }
-        console.log(path, search)
+        //console.log(path, search)
         return <Redirect to={{ pathname: `/${path}`, search }} />
     }
 
@@ -65,31 +58,18 @@ function Login() {
                     <div className="col" />
                     <div className="col-lg-6">
                         <form>
-                            <div className="row mb-3">
-                                <label htmlFor="username" className="col-sm-2 col-form-label">Username</label>
-                                <div className="col-sm-10">
-                                    <input type="text" className="form-control" id="username" name="username" value={state.username} onChange={handleChange} />
-                                </div>
-                            </div>
-                            <div className="row mb-3">
-                                <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
-                                <div className="col-sm-10">
-                                    <input type="password" className="form-control" id="password" name="password" value={state.password} onChange={handleChange} />
-                                </div>
-                            </div>
-                            {/* <div className="row mb-3">
-                                <div className="col-sm-10 offset-sm-2">
-                                    <div className="form-check">
-                                        <input className="form-check-input" type="checkbox" id="gridCheck1" />
-                                        <label className="form-check-label" for="gridCheck1">Remember</label>
-                                    </div>
-                                </div>
-                            </div> */}
-                            <div className="position-relative">
-                                <button type="submit" className="btn btn-primary float-end" onClick={handleSubmitAsync}>Sign in</button>
-                            </div>
+                            <FormInput type="text" id="username" label="Username" value={state.username} handleChange={handleFormChange} error={error.username} />
 
-                            <p className="text-danger">{state.error}</p>
+                            <FormInput type="password" id="password" label="Password" value={state.password} handleChange={handleFormChange} error={error.password} />
+
+                            {errorDetail !== "" ? (<>
+                                <div className="is-invalid"></div>
+                                <div className="invalid-feedback">{errorDetail}</div>
+                            </>) : null}
+
+                            <div className="d-grid gap-2 d-flex justify-content-end">
+                                <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Sign In</button>
+                            </div>
                         </form>
                     </div>
                     <div className="col" />

@@ -9,7 +9,6 @@ namespace Expenses.Application.Features.Auth.Commands.Login
     public class LoginCommand : IRequest<(Result, TokenModel, RefreshToken)>
     {
         public string Username { get; set; }
-        public string Email { get; set; }
         public string Password { get; set; }
     }
 
@@ -26,7 +25,7 @@ namespace Expenses.Application.Features.Auth.Commands.Login
 
         public async Task<(Result, TokenModel, RefreshToken)> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            return await _identityService.LoginAsync(request.Username, request.Email, request.Password);
+            return await _identityService.LoginAsync(request.Username, null, request.Password);
         }
     }
 }
