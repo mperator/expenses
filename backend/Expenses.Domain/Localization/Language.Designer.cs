@@ -115,6 +115,150 @@ namespace Expenses.Domain.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The expenese date must be in range of event start and end date..
+        /// </summary>
+        internal static string EventAddExpenseDateNotInRange {
+            get {
+                return ResourceManager.GetString("EventAddExpenseDateNotInRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The currency does not match the event currency..
+        /// </summary>
+        internal static string EventAddExpenseInvalidCurrency {
+            get {
+                return ResourceManager.GetString("EventAddExpenseInvalidCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No credit set..
+        /// </summary>
+        internal static string EventAddExpenseNoCredit {
+            get {
+                return ResourceManager.GetString("EventAddExpenseNoCredit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No debits set..
+        /// </summary>
+        internal static string EventAddExpenseNoDebits {
+            get {
+                return ResourceManager.GetString("EventAddExpenseNoDebits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A user is not part of the event and cannot be added..
+        /// </summary>
+        internal static string EventAddExpenseUserNotInEvent {
+            get {
+                return ResourceManager.GetString("EventAddExpenseUserNotInEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Participant already exists in event..
+        /// </summary>
+        internal static string EventAddParticipantExists {
+            get {
+                return ResourceManager.GetString("EventAddParticipantExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start date must be before or same as end date..
+        /// </summary>
+        internal static string EventInvalidDateRange {
+            get {
+                return ResourceManager.GetString("EventInvalidDateRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No creator set..
+        /// </summary>
+        internal static string EventNoCreator {
+            get {
+                return ResourceManager.GetString("EventNoCreator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No currency set..
+        /// </summary>
+        internal static string EventNoCurrency {
+            get {
+                return ResourceManager.GetString("EventNoCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No description set..
+        /// </summary>
+        internal static string EventNoDescription {
+            get {
+                return ResourceManager.GetString("EventNoDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No end date set..
+        /// </summary>
+        internal static string EventNoEndDate {
+            get {
+                return ResourceManager.GetString("EventNoEndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No start date set..
+        /// </summary>
+        internal static string EventNoStartDate {
+            get {
+                return ResourceManager.GetString("EventNoStartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No title set..
+        /// </summary>
+        internal static string EventNoTitle {
+            get {
+                return ResourceManager.GetString("EventNoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The expense could not be found..
+        /// </summary>
+        internal static string EventRemoveExpenseNotFound {
+            get {
+                return ResourceManager.GetString("EventRemoveExpenseNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Participant takes part in expense and cannot be deleted..
+        /// </summary>
+        internal static string EventRemoveParticipantHasExpenses {
+            get {
+                return ResourceManager.GetString("EventRemoveParticipantHasExpenses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Participant was not found..
+        /// </summary>
+        internal static string EventRemoveParticipantNotFound {
+            get {
+                return ResourceManager.GetString("EventRemoveParticipantNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Id must not be empty..
         /// </summary>
         internal static string UserInvalidId {

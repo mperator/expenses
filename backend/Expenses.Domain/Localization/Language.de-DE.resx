@@ -135,6 +135,54 @@
   <data name="DebitInvalidDebitor" xml:space="preserve">
     <value>Kein Debitor gesetzt.</value>
   </data>
+  <data name="EventAddExpenseDateNotInRange" xml:space="preserve">
+    <value>Das Expense Datum muss zwischen dem Event-Start und End-Datum liegen.</value>
+  </data>
+  <data name="EventAddExpenseInvalidCurrency" xml:space="preserve">
+    <value>Die Expense Währung entspricht nicht der Event Währung.</value>
+  </data>
+  <data name="EventAddExpenseNoCredit" xml:space="preserve">
+    <value>Kein Kredit vorhanden.</value>
+  </data>
+  <data name="EventAddExpenseNoDebits" xml:space="preserve">
+    <value>Keine Debits vorhanden.</value>
+  </data>
+  <data name="EventAddExpenseUserNotInEvent" xml:space="preserve">
+    <value>Ein oder mehrere Nutzer sind nicht Teilnehmer des Events und können nicht verwendet werden.</value>
+  </data>
+  <data name="EventAddParticipantExists" xml:space="preserve">
+    <value>Der Teilnehmer ist bereits im Event.</value>
+  </data>
+  <data name="EventInvalidDateRange" xml:space="preserve">
+    <value>Das Start Datum muss kleiner oder gleich dem End Datum entsprechen.</value>
+  </data>
+  <data name="EventNoCreator" xml:space="preserve">
+    <value>Kein Ersteller angegeben.</value>
+  </data>
+  <data name="EventNoCurrency" xml:space="preserve">
+    <value>Keine Währung gesetzt.</value>
+  </data>
+  <data name="EventNoDescription" xml:space="preserve">
+    <value>Keine Beschreibung gesetzt.</value>
+  </data>
+  <data name="EventNoEndDate" xml:space="preserve">
+    <value>Kein End Datum gesetzt.</value>
+  </data>
+  <data name="EventNoStartDate" xml:space="preserve">
+    <value>Kein Start Datum gesetzt.</value>
+  </data>
+  <data name="EventNoTitle" xml:space="preserve">
+    <value>Kein Titel gesetzt.</value>
+  </data>
+  <data name="EventRemoveExpenseNotFound" xml:space="preserve">
+    <value>Die Expense konnte nicht gefunden werden.</value>
+  </data>
+  <data name="EventRemoveParticipantHasExpenses" xml:space="preserve">
+    <value>Der Teilnehmer hat mehrere Expenses und kann nicht gelöscht werden.</value>
+  </data>
+  <data name="EventRemoveParticipantNotFound" xml:space="preserve">
+    <value>Der Teilnehmer wurde nicht gefunden.</value>
+  </data>
   <data name="UserInvalidId" xml:space="preserve">
     <value>Die User Id darf nicht leer sein.</value>
   </data>
