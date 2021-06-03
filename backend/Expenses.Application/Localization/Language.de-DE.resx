@@ -123,4 +123,19 @@
   <data name="LoginNoUsername" xml:space="preserve">
     <value>Kein Benutzername angegeben.</value>
   </data>
+  <data name="RegisterInvalidEmail" xml:space="preserve">
+    <value>Ungültige E-Mail Adresse.</value>
+  </data>
+  <data name="RegisterInvalidPassword" xml:space="preserve">
+    <value>Ungültiges Password.</value>
+  </data>
+  <data name="RegisterNoFirstName" xml:space="preserve">
+    <value>Vorname nicht angegeben.</value>
+  </data>
+  <data name="RegisterNoLastName" xml:space="preserve">
+    <value>Nachname nicht angegben.</value>
+  </data>
+  <data name="RegisterNoUsername" xml:space="preserve">
+    <value>Username nicht angegeben.</value>
+  </data>
 </root>

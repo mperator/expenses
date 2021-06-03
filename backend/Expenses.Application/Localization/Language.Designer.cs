@@ -77,5 +77,50 @@ namespace Expenses.Application.Localization {
                 return ResourceManager.GetString("LoginNoUsername", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid email..
+        /// </summary>
+        internal static string RegisterInvalidEmail {
+            get {
+                return ResourceManager.GetString("RegisterInvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid password..
+        /// </summary>
+        internal static string RegisterInvalidPassword {
+            get {
+                return ResourceManager.GetString("RegisterInvalidPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No first name set..
+        /// </summary>
+        internal static string RegisterNoFirstName {
+            get {
+                return ResourceManager.GetString("RegisterNoFirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No last name set..
+        /// </summary>
+        internal static string RegisterNoLastName {
+            get {
+                return ResourceManager.GetString("RegisterNoLastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No username set..
+        /// </summary>
+        internal static string RegisterNoUsername {
+            get {
+                return ResourceManager.GetString("RegisterNoUsername", resourceCulture);
+            }
+        }
     }
 }
