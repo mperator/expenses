@@ -117,6 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EventCreateCurrency" xml:space="preserve">
+    <value>Währung muss nach ISO 4217 agegeben werden.</value>
+  </data>
+  <data name="EventCreateDescriptionRequired" xml:space="preserve">
+    <value>Beschreibung wird benötigt.</value>
+  </data>
+  <data name="EventCreateEndDate" xml:space="preserve">
+    <value>End-Datum wird benötigt.</value>
+  </data>
+  <data name="EventCreateStartDate" xml:space="preserve">
+    <value>Start-Datum wird benötigt.</value>
+  </data>
+  <data name="EventCreateTitleRequired" xml:space="preserve">
+    <value>Titel wird benötigt.</value>
+  </data>
+  <data name="EventUpdateDescriptionRequired" xml:space="preserve">
+    <value>Beschreibung wird benötigt.</value>
+  </data>
+  <data name="EventUpdateTitle" xml:space="preserve">
+    <value>Titel wird benötigt.</value>
+  </data>
   <data name="LoginNoPassword" xml:space="preserve">
     <value>Kein Passwort angegeben.</value>
   </data>

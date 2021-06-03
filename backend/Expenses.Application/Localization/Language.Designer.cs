@@ -61,6 +61,69 @@ namespace Expenses.Application.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Currency is required in ISO 4217..
+        /// </summary>
+        internal static string EventCreateCurrency {
+            get {
+                return ResourceManager.GetString("EventCreateCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description is required..
+        /// </summary>
+        internal static string EventCreateDescriptionRequired {
+            get {
+                return ResourceManager.GetString("EventCreateDescriptionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Date is required..
+        /// </summary>
+        internal static string EventCreateEndDate {
+            get {
+                return ResourceManager.GetString("EventCreateEndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Date is required..
+        /// </summary>
+        internal static string EventCreateStartDate {
+            get {
+                return ResourceManager.GetString("EventCreateStartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title is required..
+        /// </summary>
+        internal static string EventCreateTitleRequired {
+            get {
+                return ResourceManager.GetString("EventCreateTitleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description is required..
+        /// </summary>
+        internal static string EventUpdateDescriptionRequired {
+            get {
+                return ResourceManager.GetString("EventUpdateDescriptionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title is required..
+        /// </summary>
+        internal static string EventUpdateTitleRequired {
+            get {
+                return ResourceManager.GetString("EventUpdateTitleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No password set..
         /// </summary>
         internal static string LoginNoPassword {
