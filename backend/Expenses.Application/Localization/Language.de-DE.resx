@@ -138,6 +138,45 @@
   <data name="EventUpdateTitle" xml:space="preserve">
     <value>Titel wird benötigt.</value>
   </data>
+  <data name="ExpenseCreateCreditorAmountRequired" xml:space="preserve">
+    <value>Ein Kreditor Betrag wird benötigt.</value>
+  </data>
+  <data name="ExpenseCreateCreditorIdRequired" xml:space="preserve">
+    <value>Eine Kreditor Id wird benötigt.</value>
+  </data>
+  <data name="ExpenseCreateDateRequired" xml:space="preserve">
+    <value>Datum wird benötigt.</value>
+  </data>
+  <data name="ExpenseCreateDebitorAmountRequired" xml:space="preserve">
+    <value>Ein Debitor Betrag wird benötigt.</value>
+  </data>
+  <data name="ExpenseCreateDebitorIdRequired" xml:space="preserve">
+    <value>Eine Debitor Id wird benötigt.</value>
+  </data>
+  <data name="ExpenseCreateDescriptionRequired" xml:space="preserve">
+    <value>Beschreibung wird benötigt.</value>
+  </data>
+  <data name="ExpenseCreateTitleRequired" xml:space="preserve">
+    <value>Titel wird benötigt.</value>
+  </data>
+  <data name="ExpenseUpdateCreditorAmountRequired" xml:space="preserve">
+    <value>Ein Kreditor Betrag wird benötigt.</value>
+  </data>
+  <data name="ExpenseUpdateCreditorIdRequired" xml:space="preserve">
+    <value>Eine Kreditor Id wird benötigt.</value>
+  </data>
+  <data name="ExpenseUpdateDebitorAmountRequired" xml:space="preserve">
+    <value>Ein Debitor Betrag wird benötigt.</value>
+  </data>
+  <data name="ExpenseUpdateDebitorIdRequired" xml:space="preserve">
+    <value>Eine Debitor Id wird benötigt.</value>
+  </data>
+  <data name="ExpenseUpdateDescriptionRequired" xml:space="preserve">
+    <value>Beschreibung wird benötigt.</value>
+  </data>
+  <data name="ExpenseUpdateTitleRequired" xml:space="preserve">
+    <value>Titel wird benötigt.</value>
+  </data>
   <data name="LoginNoPassword" xml:space="preserve">
     <value>Kein Passwort angegeben.</value>
   </data>

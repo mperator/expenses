@@ -13,19 +13,19 @@ namespace Expenses.Application.Features.Expenses.Commands.UpdateExpense
                 .NotNull()
                 .ChildRules(request =>
                 {
-                    request.RuleFor(e => e.Title).NotNull().WithMessage("Title is required.");
-                    request.RuleFor(e => e.Description).NotNull().WithMessage("Description is required.");
+                    request.RuleFor(e => e.Title).NotNull().WithMessage(Localization.Language.ExpenseUpdateTitleRequired);
+                    request.RuleFor(e => e.Description).NotNull().WithMessage(Localization.Language.ExpenseUpdateDescriptionRequired);
 
                     request.RuleFor(e => e.Credit).ChildRules(credit =>
                     {
-                        credit.RuleFor(e => e.CreditorId).NotNull().WithMessage("Creditor is required.");
-                        credit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage("Credit amount is required.");
+                        credit.RuleFor(e => e.CreditorId).NotNull().WithMessage(Localization.Language.ExpenseUpdateCreditorIdRequired);
+                        credit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage(Localization.Language.ExpenseUpdateCreditorAmountRequired);
                     });
 
                     request.RuleForEach(e => e.Debits).ChildRules(debit =>
                     {
-                        debit.RuleFor(e => e.DebitorId).NotNull().WithMessage("Debitor is required.");
-                        debit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage("Amount is required.");
+                        debit.RuleFor(e => e.DebitorId).NotNull().WithMessage(Localization.Language.ExpenseUpdateDebitorIdRequired);
+                        debit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage(Localization.Language.ExpenseUpdateDebitorAmountRequired);
                     });
                 });
         }

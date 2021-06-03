@@ -124,6 +124,123 @@ namespace Expenses.Application.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A creditor amount is required..
+        /// </summary>
+        internal static string ExpenseCreateCreditorAmountRequired {
+            get {
+                return ResourceManager.GetString("ExpenseCreateCreditorAmountRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A creditor id is required..
+        /// </summary>
+        internal static string ExpenseCreateCreditorIdRequired {
+            get {
+                return ResourceManager.GetString("ExpenseCreateCreditorIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date is required..
+        /// </summary>
+        internal static string ExpenseCreateDateRequired {
+            get {
+                return ResourceManager.GetString("ExpenseCreateDateRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A debitor amount is required..
+        /// </summary>
+        internal static string ExpenseCreateDebitorAmountRequired {
+            get {
+                return ResourceManager.GetString("ExpenseCreateDebitorAmountRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A debitor id is required..
+        /// </summary>
+        internal static string ExpenseCreateDebitorIdRequired {
+            get {
+                return ResourceManager.GetString("ExpenseCreateDebitorIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description is required..
+        /// </summary>
+        internal static string ExpenseCreateDescriptionRequired {
+            get {
+                return ResourceManager.GetString("ExpenseCreateDescriptionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title is required..
+        /// </summary>
+        internal static string ExpenseCreateTitleRequired {
+            get {
+                return ResourceManager.GetString("ExpenseCreateTitleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A creditor amount is required..
+        /// </summary>
+        internal static string ExpenseUpdateCreditorAmountRequired {
+            get {
+                return ResourceManager.GetString("ExpenseUpdateCreditorAmountRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A creditor id is required..
+        /// </summary>
+        internal static string ExpenseUpdateCreditorIdRequired {
+            get {
+                return ResourceManager.GetString("ExpenseUpdateCreditorIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A debitor amount is required..
+        /// </summary>
+        internal static string ExpenseUpdateDebitorAmountRequired {
+            get {
+                return ResourceManager.GetString("ExpenseUpdateDebitorAmountRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A debitor id is required..
+        /// </summary>
+        internal static string ExpenseUpdateDebitorIdRequired {
+            get {
+                return ResourceManager.GetString("ExpenseUpdateDebitorIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description is required..
+        /// </summary>
+        internal static string ExpenseUpdateDescriptionRequired {
+            get {
+                return ResourceManager.GetString("ExpenseUpdateDescriptionRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title is required..
+        /// </summary>
+        internal static string ExpenseUpdateTitleRequired {
+            get {
+                return ResourceManager.GetString("ExpenseUpdateTitleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No password set..
         /// </summary>
         internal static string LoginNoPassword {
