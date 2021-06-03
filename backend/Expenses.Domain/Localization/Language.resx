@@ -183,6 +183,36 @@
   <data name="EventRemoveParticipantNotFound" xml:space="preserve">
     <value>Participant was not found.</value>
   </data>
+  <data name="ExpenseInvalidCurrencyLength" xml:space="preserve">
+    <value>Currency must have length of three.</value>
+  </data>
+  <data name="ExpenseNoCreator" xml:space="preserve">
+    <value>No creator set.</value>
+  </data>
+  <data name="ExpenseNoCurrency" xml:space="preserve">
+    <value>No currency set.</value>
+  </data>
+  <data name="ExpenseNoDate" xml:space="preserve">
+    <value>No date set.</value>
+  </data>
+  <data name="ExpenseNoDescription" xml:space="preserve">
+    <value>No description set.</value>
+  </data>
+  <data name="ExpenseNoTitle" xml:space="preserve">
+    <value>No title set.</value>
+  </data>
+  <data name="ExpenseSplitDebitorDuplication" xml:space="preserve">
+    <value>A debitor can only take part once.</value>
+  </data>
+  <data name="ExpenseSplitInvalidBalance" xml:space="preserve">
+    <value>The balance between credit and debits is invalid.</value>
+  </data>
+  <data name="ExpenseSplitNoCredit" xml:space="preserve">
+    <value>No credit set.</value>
+  </data>
+  <data name="ExpenseSplitNoDebits" xml:space="preserve">
+    <value>No debit set.</value>
+  </data>
   <data name="UserInvalidId" xml:space="preserve">
     <value>User Id must not be empty.</value>
   </data>

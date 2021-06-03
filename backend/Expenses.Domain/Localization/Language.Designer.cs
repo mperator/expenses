@@ -259,6 +259,96 @@ namespace Expenses.Domain.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Currency must have length of three..
+        /// </summary>
+        internal static string ExpenseInvalidCurrencyLength {
+            get {
+                return ResourceManager.GetString("ExpenseInvalidCurrencyLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No creator set..
+        /// </summary>
+        internal static string ExpenseNoCreator {
+            get {
+                return ResourceManager.GetString("ExpenseNoCreator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No currency set..
+        /// </summary>
+        internal static string ExpenseNoCurrency {
+            get {
+                return ResourceManager.GetString("ExpenseNoCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No date set..
+        /// </summary>
+        internal static string ExpenseNoDate {
+            get {
+                return ResourceManager.GetString("ExpenseNoDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No description set..
+        /// </summary>
+        internal static string ExpenseNoDescription {
+            get {
+                return ResourceManager.GetString("ExpenseNoDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No title set..
+        /// </summary>
+        internal static string ExpenseNoTitle {
+            get {
+                return ResourceManager.GetString("ExpenseNoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A debitor can only take part once..
+        /// </summary>
+        internal static string ExpenseSplitDebitorDuplication {
+            get {
+                return ResourceManager.GetString("ExpenseSplitDebitorDuplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The balance between credit and debits is invalid..
+        /// </summary>
+        internal static string ExpenseSplitInvalidBalance {
+            get {
+                return ResourceManager.GetString("ExpenseSplitInvalidBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No credit set..
+        /// </summary>
+        internal static string ExpenseSplitNoCredit {
+            get {
+                return ResourceManager.GetString("ExpenseSplitNoCredit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No debit set..
+        /// </summary>
+        internal static string ExpenseSplitNoDebits {
+            get {
+                return ResourceManager.GetString("ExpenseSplitNoDebits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Id must not be empty..
         /// </summary>
         internal static string UserInvalidId {

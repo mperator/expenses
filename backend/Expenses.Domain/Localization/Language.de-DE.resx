@@ -183,6 +183,36 @@
   <data name="EventRemoveParticipantNotFound" xml:space="preserve">
     <value>Der Teilnehmer wurde nicht gefunden.</value>
   </data>
+  <data name="ExpenseInvalidCurrencyLength" xml:space="preserve">
+    <value>Währungscode muss aus 3 Zeichen bestehen.</value>
+  </data>
+  <data name="ExpenseNoCreator" xml:space="preserve">
+    <value>Kein Ersteller gesetzt.</value>
+  </data>
+  <data name="ExpenseNoCurrency" xml:space="preserve">
+    <value>Keine Währung gesetzt.</value>
+  </data>
+  <data name="ExpenseNoDate" xml:space="preserve">
+    <value>Kein Datum gesetzt.</value>
+  </data>
+  <data name="ExpenseNoDescription" xml:space="preserve">
+    <value>Keine Beschreibung gesetzt.</value>
+  </data>
+  <data name="ExpenseNoTitle" xml:space="preserve">
+    <value>Kein Titel gesetzt.</value>
+  </data>
+  <data name="ExpenseSplitDebitorDuplication" xml:space="preserve">
+    <value>Ein Debitor darf nicht doppelt vorkommen.</value>
+  </data>
+  <data name="ExpenseSplitInvalidBalance" xml:space="preserve">
+    <value>Die Balance zwischen Kredit und Debits ist ungültig.</value>
+  </data>
+  <data name="ExpenseSplitNoCredit" xml:space="preserve">
+    <value>Kein Kredit gesetzt.</value>
+  </data>
+  <data name="ExpenseSplitNoDebits" xml:space="preserve">
+    <value>Kein Debit gesetzt.</value>
+  </data>
   <data name="UserInvalidId" xml:space="preserve">
     <value>Die User Id darf nicht leer sein.</value>
   </data>
