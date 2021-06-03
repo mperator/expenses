@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Common;
+using Expenses.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -14,8 +15,8 @@ namespace Expenses.Domain.ValueObjects
 
         public Debit(User debitorId, decimal amount)
         {
-            if (debitorId == null) throw new Exception("Invalid dbitor id.");
-            if (amount < 0.0M) throw new Exception("Amount must me greater than zero.");
+            if (debitorId == null) throw new BusinessValidationException(Localization.Language.DebitInvalidDebitor);
+            if (amount < 0.0M) throw new BusinessValidationException(Localization.Language.DebitInvalidAmount);
 
             Debitor = debitorId;
             Amount = amount;

@@ -61,11 +61,65 @@ namespace Expenses.Domain.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The creator is null or empty. No No!.
+        ///   Looks up a localized string similar to The credit amount must be greater than zero..
         /// </summary>
-        internal static string InvalidCreator {
+        internal static string CreditInvalidAmount {
             get {
-                return ResourceManager.GetString("InvalidCreator", resourceCulture);
+                return ResourceManager.GetString("CreditInvalidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No creditor set..
+        /// </summary>
+        internal static string CreditInvalidCreditor {
+            get {
+                return ResourceManager.GetString("CreditInvalidCreditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid currency code..
+        /// </summary>
+        internal static string CurrencyInvalidCode {
+            get {
+                return ResourceManager.GetString("CurrencyInvalidCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currency code must have a length of three, according to ISO..
+        /// </summary>
+        internal static string CurrencyInvalidLength {
+            get {
+                return ResourceManager.GetString("CurrencyInvalidLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The debit amount must be greater than zero..
+        /// </summary>
+        internal static string DebitInvalidAmount {
+            get {
+                return ResourceManager.GetString("DebitInvalidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No debitor set..
+        /// </summary>
+        internal static string DebitInvalidDebitor {
+            get {
+                return ResourceManager.GetString("DebitInvalidDebitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Id must not be empty..
+        /// </summary>
+        internal static string UserInvalidId {
+            get {
+                return ResourceManager.GetString("UserInvalidId", resourceCulture);
             }
         }
     }

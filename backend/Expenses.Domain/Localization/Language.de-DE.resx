@@ -117,7 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidCreator" xml:space="preserve">
-    <value>Ersteller darf nicht null oder leer sein. Nein Nein.</value>
+  <data name="CreditInvalidAmount" xml:space="preserve">
+    <value>Der Kreditwert muss größer als 0 sein.</value>
+  </data>
+  <data name="CreditInvalidCreditor" xml:space="preserve">
+    <value>Kein Kreditor gesetzt.</value>
+  </data>
+  <data name="CurrencyInvalidCode" xml:space="preserve">
+    <value>Ungültiger Währungscode.</value>
+  </data>
+  <data name="CurrencyInvalidLength" xml:space="preserve">
+    <value>Der Währunscode muss nach ISO drei stellig sein.</value>
+  </data>
+  <data name="DebitInvalidAmount" xml:space="preserve">
+    <value>Der Debitwert muss größer als 0 sein.</value>
+  </data>
+  <data name="DebitInvalidDebitor" xml:space="preserve">
+    <value>Kein Debitor gesetzt.</value>
+  </data>
+  <data name="UserInvalidId" xml:space="preserve">
+    <value>Die User Id darf nicht leer sein.</value>
   </data>
 </root>

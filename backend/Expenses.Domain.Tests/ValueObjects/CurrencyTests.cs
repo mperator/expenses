@@ -1,4 +1,5 @@
-﻿using Expenses.Domain.ValueObjects;
+﻿using Expenses.Domain.Exceptions;
+using Expenses.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace Expenses.Domain.Tests.ValueObjects
             var ex = Record.Exception(() => new Currency(code));
 
             // assert
-            Assert.IsType<Exception>(ex);
+            Assert.IsType<BusinessValidationException>(ex);
         }
     }
 }

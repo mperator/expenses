@@ -31,7 +31,7 @@ namespace Expenses.Domain.Entities
 
         public Event(User creator, string title, string description, DateTime startDate, DateTime endDate, string currency)
         {
-            if (creator == null) throw new EventValidationException(Localization.Language.InvalidCreator);
+            if (creator == null) throw new EventValidationException("Invalid creator.");
             if (string.IsNullOrWhiteSpace(title)) throw new EventValidationException("No title set.");
             if (string.IsNullOrWhiteSpace(description)) throw new EventValidationException("No description set.");
             if (startDate == default) throw new EventValidationException("Start date not set.");
