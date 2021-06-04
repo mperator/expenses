@@ -1,8 +1,18 @@
 export const TRANSLATIONS_ENUS = {
+    navigation: {
+        expenses: "Expenses",
+        dashboard: "Dashboard",
+        info: "Info",
+        register: "Register",
+        login: "Login"
+    },
     login: {
         username: "Username",
         password: "Password",
         signIn: "Sign In"
+    },
+    logout: {
+        signOut: "Sign Out"
     },
     register: {
         title: "Register",

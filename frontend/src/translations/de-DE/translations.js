@@ -1,8 +1,18 @@
 export const TRANSLATIONS_DEDE = {
+    navigation: {
+        expenses: "Expenses",
+        dashboard: "Dashboard",
+        info: "Info",
+        register: "Registrieren",
+        login: "Anmelden"
+    },
     login: {
         username: "Benutzername",
         password: "Passwort",
-        signIn: "Login"
+        signIn: "Anmelden"
+    },
+    logout: {
+        signOut: "Abmelden"
     },
     register: {
         title: "Registrierung",
