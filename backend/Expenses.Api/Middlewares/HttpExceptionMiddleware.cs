@@ -51,6 +51,7 @@ namespace Expenses.Api.Middlewares
                 var actionContext = new ActionContext(context, routeData, new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
                 await _executor.ExecuteAsync(actionContext, result);
                 await context.Response.CompleteAsync();
+                return;
             }
             else if(ex is DomainException ve)
             {
@@ -61,10 +62,11 @@ namespace Expenses.Api.Middlewares
                 var actionContext = new ActionContext(context, routeData, new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
                 await _executor.ExecuteAsync(actionContext, result);
                 await context.Response.CompleteAsync();
+                return;
             }
             else if (ex is Application.Common.Exceptions.NotFoundException)  code = HttpStatusCode.NotFound;
             else if (ex is Application.Common.Exceptions.ForbiddenAccessException) code = HttpStatusCode.Forbidden; 
-          
+            
             context.Response.StatusCode = (int)code;
         }
     }
