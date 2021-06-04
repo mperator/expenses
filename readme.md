@@ -98,6 +98,24 @@ microservices-reference-application/
 
 We've developed and tested the app using SQL Server 2019. How to setup SQL Server 2019 in docker you can read [here](https://www.michalbialecki.com/2020/04/23/set-up-a-sql-server-in-a-docker-container/).
 
+Adjust your `appsettings.json` inside the backend folder:
+
+```bash
+"ConnectionStrings": {
+    "Test": YOUR_CONNECTION_STRING
+}
+
+"JwtToken": {
+    "SecretKey": "dmEPcQ%MU^B&tWTNU67gb,:t?:n*Y+Ms",    // you can adjust this as you want
+    "Issuer": "Expenses.Api",                           // you can adjust this as you want
+    "Audience": "Expenses.Api",                         // you can adjust this as you want
+    "AccessTokenExpiryTimeInSeconds": 900,              // you can adjust this as you want
+    "RefreshTokenExpiryTimeInSeconds": 1209600          // you can adjust this as you want
+  },
+
+
+```
+
 Once database is up, you can go to backend and frontend directory and excute following command to start the app:
 
 ```bash
