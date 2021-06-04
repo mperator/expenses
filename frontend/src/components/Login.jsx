@@ -58,16 +58,16 @@ function Login() {
                     <div className="col" />
                     <div className="col-lg-6">
                         <form>
-                            <FormInput type="text" id="username" label="Username" data-test="username-field" value={state.username} handleChange={handleFormChange} error={error.username} />
+                            <FormInput type="text" id="username" label="Username" data-test="username-field" value={state.username} handleChange={handleFormChange} error={error.username} dataTestValue="username-field" />
 
-                            <FormInput type="password" id="password" label="Password" data-test="password-field" value={state.password} handleChange={handleFormChange} error={error.password} />
+                            <FormInput type="password" id="password" label="Password" data-test="password-field" value={state.password} handleChange={handleFormChange} error={error.password} dataTestValue="password-field" />
                             {errorDetail !== "" ? (<>
                                 <div className="is-invalid"></div>
                                 <div className="invalid-feedback">{errorDetail}</div>
                             </>) : null}
 
                             <div className="d-grid gap-2 d-flex justify-content-end">
-                                <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Sign In</button>
+                                <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync} data-test="signIn-button">Sign In</button>
                             </div>
                         </form>
                     </div>
