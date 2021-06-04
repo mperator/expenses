@@ -1,261 +1,118 @@
-# Projekt
-07.11.2020
+# Expenses - a .NET 5 & React Sample Application
 
-https://www.khanacademy.org/computing/computer-programming/programming/good-practices/a/planning-a-programming-project
+The main purpose of this repository is to experiment with some technologies. Get them to know and how to use them. Furthermore we've tried to follow DDD and implemented the CQRS pattern in the REST api.
 
+## Motivation and purpose
 
-## 1. What do you want to make?
+There are a lot of sample applications around showing CQRS, DDD and other patterns. But there's no application which uses some real business logic or is a bit more complex. That's why we've tried our luck developing expenses.
 
-**Expenses**: Eine Anwendung mit der Kosten für ein Event z.B. Urlaub für mehrere Leute getrackt werden können. Am Ende des Events bekommt jeder eine Auflistung über eine Überweisung, die er an jemand anderen Tätigen muss.
+**Expenses**: An application to track costs for an event, e.g. vacation for several people. At the end of the event, everyone gets a listing of a transfer they have to make to someone else.
 
-## 2. What technology will you use?
-Als Technologie sollen .NET Core 3.1 für Backend, ReactJs für Frontend und SQLServer zum Speichern der Daten verwendet werden. 
+## System Architecture
 
-**Libraries**
-- ApplicationInsights soll für Logging verwendet werden.
-- Serilog Logger
+At the moment it's just a frontend and a backend service. There are already plans to split the backend into more services.
+
+![expenses-system-architecture](docs/images/expenses.png)
+
+## Getting started
+
+Interested to contribute to this project and not sure where to start? Please follow the [Setup a dev environment guide](##Setup-a-dev-environment-guide) for environment setup or knowing repository structure. If you stuck anywhere or need any help, feel free to create an `Issue` for discussion.
+
+## Deployment
+
+At the moment we've deployed the app for testing purposes on Azure. In general it doesn't matter where you want to deploy the app.
+
+## Technology stack & Tools
+
+- Docker
 - AutoMapper
 - FluentValidation
-- mermaid: https://mermaid-js.github.io/mermaid/#/
 - SwashBuckle
+- Bootstrap 5
+- React
+- NodeJS
+- .NET 5
+- EF Core Framework
 
-## 3. What features will it include?
-- Betrag mit Bezichnung und Datum
-- Event für Zeitraum und Personen
-- Benutzerregistrierung
+## Want to Contribute?
 
-- Berechtigung zur Verwaltung von Events
-- Benachrichtigungssystem
-- Währungen mit evtl. API für aktuellen Umrechnungskurs
-- PDF Generierung über die Ausgaben
-- Statistiken pro Nutzer
+Your valuable contribution is always welcome to keep this repository up to date and relevant. If you have some cool idea or new features requirement, please feel free to open a Github issue.
 
-- Expenses Aufteilen (Expense individuall auf User verteilen)
+## Setup a dev environment guide
 
-## 4. But what features must it include?
+### Prerequsites
 
-### Release v1
-- Benutzerverwaltung (Anmeldung, Registierung, Einladung)
-- EventVerwaltung
-    - Betrag mit Bezeichnung und Datum
+Before proceeding with setup, make sure you have following tools installed in your machine:
 
-### Release v2
-- Berechtigung zur Verwaltung von Events
-- Benachrichtigungssystem
-- Währungen mit evtl. API für aktuellen Umrechnungskurs
-- PDF Generierung über die Ausgaben
-- Statistiken pro Nutzer
-- Expenses Aufteilen (Expense individuall auf User verteilen)
+- NodeJS v12+
+- Docker
+- .NET
 
-## 5. How will you implement it?
-### Interation 1
+NOTE: Please refer to official installation guide for above tools installation.
 
-#### Database
-User: (FirstName, LastName, DateOfBirth)  
-Event: (Id, Title, Description, Creator, BeginDate, EndDate, Currency)  
-EventParticipants: (E_Id, UserId)  
-EventExpenses: (E_Id, EX_Id)  
-Expenses: (Id, Title, Description, Date, Amount, Issuer)  
-ExpensesParticipants: (EX_Id, UserId)  
+### Code Checkout
 
-#### Businessrules
-- Issuer can update event data
-- Issuer can invite other users
-- Issuer can modify and delete all expenses
-- Participants can create expenses
-- Participants can delete own expenses
-- Participants can view all expenses
-- Expense participant must be an event participant
-- User can change login data (Password, TwoFactorAuth, BackupCodes, Email Reset)
+Clone the source code from this Github repository:
 
-#### Architecture
-MSSQL <--> Backend (ASP.NET Core 3.1) <--> Frontend (reactjs)
+```bash
+git clone https://github.com/mperator/expenses.git
+```
 
-expenses
-- frontend
-    - src
-    - ...
-- backend
-    - Expenses.Api
-- .git
+Open the code in Visual Studio Code:
 
-## 6. What's your timeline?
-Weekly Wednesday Meetup 20:00 Uhr
-- Week 1: Initialize Project, introduce object structure, API Design, User Flow
+```bash
+cd expenses
+code .
+```
 
-**AuthController**  
-    
-    POST api/auth/register
-        FromBody: UserRegisterModel
-        Returns: 
-            201 NoContent
-            400 BadRequest
-                X is invalid or already taken.
+### Understanding Directory Structure
 
-    POST api/auth/login
-        FromBody: LoginModel
-        Returns:
-            200 Ok -> TokenModel
-            400 BadRequest
+Once you open the code in VS Code, you shoud see following structure:
 
-    POST api/auth/logout
-        Returns:
-            201 NoContent
+```folders
+microservices-reference-application/
+├── .github/                            -> Github actions CI/CD config
+├── backend/                            -> backend source code (C#)
+│   ├── Expenses.Api/                   -> source folder api layer
+│   ├── Expenses.Application/           -> source folder application layer
+│   ├── Expenses.Domain/                -> source folder domain layer
+│   ├── Expenses.Domain.Tests/          -> source folder unit tests domain layer
+│   ├── Expenses.Infrastructre/         -> source folder infrastructre layer
+│   ├── Expenses.Infrastructre.Tests/   -> source folder unit tests infrastructre layer
+│   ├── Expenses.Api.sln                -> Visual Studio Solution file
+│   ├── .gitignore                      -> Git ignore file
+├── frontend/ 
+│   ├── .vscode/                        -> VS code files for debugging
+│   ├── public/                         -> static files
+│   ├── src/                            -> source folder
+│   ├── .gitignore                      -> Git ignore file
+│   ├── package-lock.json               -> Package JSON lock file
+│   ├── package.json                    -> Package JSON file
+├── docs/                               -> documentation folder
+│   ├── images/                         -> image folder used in global readme.md
+├── Dockerfile                          -> Dockerfile for containerization
+└── readme.md                           -> Global Readme file
+```
 
-    POST api/auth/refreshToken
-        FromCookie
-        Returns: 
-            200 Ok -> TokenModel
-            400 BadRequest
-            401 Unauthorized
+### Running the app
 
-    POST api/auth/emailVerification
+We've developed and tested the app using SQL Server 2019. How to setup SQL Server 2019 in docker you can read [here](https://www.michalbialecki.com/2020/04/23/set-up-a-sql-server-in-a-docker-container/).
 
-**UserController**  
-    
-    [Authorized]
-    GET api/users/info
-    Get userdata from backend
-        Returns:
-            200 Ok -> UserInfoReadModel
-            401 Unauthorized
+Once database is up, you can go to backend and frontend directory and excute following command to start the app:
 
-    [Authorized]
-    POST api/users/changeEmail
-        FromBody: UserInfoEmailWriteModel
-    Request email change
-        Returns: 
-            201 NoContent
-            401 Unauthorized
+```bash
+# Run backend
+cd backend
+dotnet restore
+dotnet run dev
+```
 
-    [Authorized]
-    PUT api/users/info
-        FromBody: UserInfoWriteModel
-        Returns: 
-            200 Ok -> UserInfoReadModel
-            401 Unauthorized
+```bash
+# Run frontend
+cd frontend
+npm i
+npm start
 
-
-**EventController**  
-
-    [Authorized]
-    POST api/events
-        FromBody: EventWriteModel
-        Returns: 
-            200 Ok -> EventReadModel
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-    
-    [Authorized]
-    GET api/events
-        FromQuery: Filter options
-        Returns: 
-            200 Ok -> List<EventReadModel>
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-
-    [Authorized]
-    GET api/events/{id}
-        Returns: 
-            200 Ok -> EventReadModel
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-
-    [Authorized]
-    PUT api/events/{id}
-        FromBody: EventWriteModel
-        Returns: 
-            201 NoContent
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-
-    [Authorized]
-    DELETE api/events/{id}
-        Returns: 
-            201 NoContent
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-
-
-**ExpenseController**
-
-    [Authorized]
-    POST api/events/{eventid}/expenses
-        FromBody: ExpenseWriteModel
-        Returns: 
-            200 Ok -> ExpenseReadModel
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-    
-    [Authorized]
-    GET api/events/{eventid}/expenses
-        FromQuery: Filter options
-        Returns: 
-            200 Ok -> List<ExpenseReadModel>
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-
-    [Authorized]
-    GET api/events/{eventid}/expenses/{id}
-        Returns: 
-            200 Ok -> ExpenseReadModel
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-
-    [Authorized]
-    PUT api/events/{eventid}/expenses/{id}
-        FromBody: ExpenseWriteModel
-        Returns: 
-            201 NoContent
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-
-    [Authorized]
-    DELETE api/events/{eventid}/expenses/{id}
-        Returns: 
-            201 NoContent
-            400 BadRequest
-            401 Unauthorized
-            403 Forbidden
-
-- Week 2: Implementation objects, api, ...
-- Week 3: Design UI
-- Week 4: Implementation UI
-- Week 5: Finalization Release v1
-- Week 6: Release v1
-
-
-
-
-## Domain Aggregate / Entity
-Understanding of domain layer and how to use domain business logic.
-
-API -> Application -> EventService.AddEvent(EventDTO data)
-
-EventService.AddEvent(EventDTO data) {
-
-    var event = Domain.Event.Create(params from DTO, ...);
-        // 1. Creator valid
-        // 2. Datum valid
-        // 3. At least one expense 
-        // 4. Expense split amount valid
-    // IF DOMAIN BUSINISS LOGIC ERROR -> throw Business Exception
-
-    // Infrastructure call persistance
-    IRepository.CreateEvent(event); -> event speichern, user speichern, ...
-}
-
-EventService.AddExpense(EventId, ExpensedataDTO) {
-    var event = IRepository.GetById();
-    event.AddExpense(data, ....)
-    IRepository.Save(event);
-}
+# open your browser and navigate to:
+http://localhost:5001/dashboard
+```
