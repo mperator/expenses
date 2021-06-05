@@ -7,6 +7,7 @@ export const TRANSLATIONS_ENUS = {
         dashboard: "Dashboard",
         info: "Info",
         register: "Register",
+        settings: "Settings",
         login: "Login"
     },
     login: {
@@ -33,7 +34,7 @@ export const TRANSLATIONS_ENUS = {
         searchPlaceHolder: "Search for an event title ...",
         noEvents: "We couldn't find any events. Let's go create one."
     },
-    event : {
+    event: {
         newTitle: "New Event",
         newAction: "Create",
         editTitle: "Edit Event",
@@ -66,5 +67,14 @@ export const TRANSLATIONS_ENUS = {
         split: "Split",
         creditor: "Creditor",
         participants: "Participants"
+    },
+    settings: {
+        title: "Settings",
+        lang: "Language"
+    },
+    languages: {
+        auto: "browser settings (auto)",
+        "de-DE": "Deutsch",
+        "en-US": "English"
     }
 };

@@ -7,6 +7,7 @@ export const TRANSLATIONS_DEDE = {
         dashboard: "Dashboard",
         info: "Info",
         register: "Registrieren",
+        settings: "Einstellungen",
         login: "Anmelden"
     },
     login: {
@@ -66,5 +67,14 @@ export const TRANSLATIONS_DEDE = {
         split: "Aufteilen",
         creditor: "Kreditor",
         participants: "Teilnehmer"
+    },
+    settings: {
+        title: "Einstellungen",
+        lang: "Sprache"
+    },
+    languages: {
+        auto: "Browsereinstellungen (auto)",
+        "de-DE": "Deutsch",
+        "en-US": "English"
     }
 };

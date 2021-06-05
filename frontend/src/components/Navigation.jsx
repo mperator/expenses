@@ -41,7 +41,10 @@ const Navigation = () => {
                                         <Link className="nav-link" to='/dashboard'>{t("navigation.dashboard")}</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to='/info'>Info</Link>
+                                        <Link className="nav-link" to='/info'>{t("navigation.info")}</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to='/settings'>{t("navigation.settings")}</Link>
                                     </li>
                                 </> : null
                         }

@@ -22,4 +22,9 @@ i18n
     });
 
 // use browser language as default (auto)
-i18n.changeLanguage(navigator.language || navigator.userLanguage)
+const lang = localStorage.getItem("lang") || "auto";
+if(lang === "auto") {
+    i18n.changeLanguage(navigator.language || navigator.userLanguage)
+} else {
+    i18n.changeLanguage(lang);
+}
