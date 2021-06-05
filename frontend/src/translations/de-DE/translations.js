@@ -24,5 +24,10 @@ export const TRANSLATIONS_DEDE = {
         passwordConfirmation: "Passwort wiederholen",
         register: "Registrieren",
         errorPasswordNoMatch: "Passwort stimmt nicht überein."
+    },
+    dashboard: {
+        title: "Meine Events",
+        searchPlaceHolder: "Such nach einem Event Titel ...",
+        noEvents: "Wir konnten keine Event finden. Los geht's erstell eins."
     }
 };

@@ -24,5 +24,10 @@ export const TRANSLATIONS_ENUS = {
         passwordConfirmation: "Password confirmation",
         register: "Register",
         errorPasswordNoMatch: "Password does not match."
+    },
+    dashboard: {
+        title: "My Events",
+        searchPlaceHolder: "Search for an event title ...",
+        noEvents: "We couldn't find any events. Let's go create one."
     }
 };
