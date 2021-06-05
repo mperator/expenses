@@ -1,4 +1,7 @@
 export const TRANSLATIONS_ENUS = {
+    common: {
+        dateFormat: "MM/DD/YYYY"
+    },
     navigation: {
         expenses: "Expenses",
         dashboard: "Dashboard",

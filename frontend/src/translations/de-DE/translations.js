@@ -1,4 +1,7 @@
 export const TRANSLATIONS_DEDE = {
+    common: {
+        dateFormat: "DD.MM.YYYY"
+    },
     navigation: {
         expenses: "Expenses",
         dashboard: "Dashboard",
