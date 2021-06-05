@@ -6,7 +6,11 @@ import useForm from './../../hooks/useForm'
 import ExpenseFormular from './ExpenseFormular';
 import dayjs from 'dayjs';
 
+import { useTranslation } from 'react-i18next'
+import './../../translations/i18n'
+
 const ExpenseNew = () => {
+    const { t } =useTranslation();
     const history = useHistory();
     const { eventId, expenseId } = useParams()
     const { getEventAsync, postExpenseAsync } = useClient();
@@ -145,7 +149,7 @@ const ExpenseNew = () => {
             <div className="container mt-4">
                 {loading ? null :
                     <ExpenseFormular
-                        title={"Create Expense"}
+                        title={t("expense.newTitle")}
                         state={state}
                         error={error}
                         errorDetail={errorDetail}
@@ -153,8 +157,8 @@ const ExpenseNew = () => {
                         handleSplit={handleSplit}
                         handleCreditorChange={handleCreditorChange} handleParticipantAmountChange={handleParticipantAmountChange}
                     >
-                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Create</button>
-                        <button className="btn btn-outline-secondary" type="submit" onClick={handleCancel}>Cancel</button>
+                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{t("expense.newAction")}</button>
+                        <button className="btn btn-outline-secondary" type="submit" onClick={handleCancel}>{t("expense.cancel")}</button>
                     </ExpenseFormular>
                 }
             </div>

@@ -29,5 +29,21 @@ export const TRANSLATIONS_ENUS = {
         title: "My Events",
         searchPlaceHolder: "Search for an event title ...",
         noEvents: "We couldn't find any events. Let's go create one."
+    },
+    expense: {
+        newTitle: "New Expense",
+        newAction: "Create",
+        editTitle: "Edit Expense",
+        editAction: "Update",
+        cancel: "Cancel",
+        date: "Date",
+        title: "Title",
+        titlePlaceholder: "My expense title ...",
+        description: "Description",
+        descriptionPlaceholder: "My expense description ...",
+        amount: "Amount",
+        split: "Split",
+        creditor: "Creditor",
+        participants: "Participants"
     }
 };
