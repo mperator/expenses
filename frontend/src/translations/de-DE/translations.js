@@ -30,6 +30,24 @@ export const TRANSLATIONS_DEDE = {
         searchPlaceHolder: "Such nach einem Event Titel ...",
         noEvents: "Wir konnten keine Event finden. Los geht's erstell eins."
     },
+    event : {
+        newTitle: "Neues Event",
+        newAction: "Erstellen",
+        editTitle: "Event bearbeiten",
+        editAction: "Aktualisieren",
+        cancel: "Abbrechen",
+        title: "Titel",
+        titlePlaceholder: "Mein Event Titel ...",
+        description: "Beschreibung",
+        descriptionPlaceholder: "Meine Event Beschreibung ...",
+        startDate: "Start Datum",
+        endDate: "End Datum",
+        participants: "Teilnehmer",
+        participantSearchPlaceholder: "Tippe Namen zum Suchen ...",
+        totalExpenses: "Totale Ausgaben",
+        credit: "Kredit",
+        debit: "Debit"
+    },
     expense: {
         newTitle: "Neue Ausgabe",
         newAction: "Erstellen",

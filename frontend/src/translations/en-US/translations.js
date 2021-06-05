@@ -30,6 +30,24 @@ export const TRANSLATIONS_ENUS = {
         searchPlaceHolder: "Search for an event title ...",
         noEvents: "We couldn't find any events. Let's go create one."
     },
+    event : {
+        newTitle: "New Event",
+        newAction: "Create",
+        editTitle: "Edit Event",
+        editAction: "Update",
+        cancel: "Cancel",
+        title: "Title",
+        titlePlaceholder: "My event title ...",
+        description: "Description",
+        descriptionPlaceholder: "My event description ...",
+        startDate: "Start Date",
+        endDate: "End Date",
+        participants: "Participants",
+        participantSearchPlaceholder: "Type name to search ...",
+        totalExpenses: "Total Expenses",
+        credit: "Credit",
+        debit: "Debit"
+    },
     expense: {
         newTitle: "New Expense",
         newAction: "Create",
