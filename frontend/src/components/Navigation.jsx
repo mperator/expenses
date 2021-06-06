@@ -3,7 +3,11 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import Logout from './Logout';
 import useAuth from '../hooks/useAuth';
 
+import { useTranslation } from 'react-i18next'
+import '../translations/i18n'
+
 const Navigation = () => {
+    const { t } = useTranslation();
     const { hasToken } = useAuth();
     const location = useLocation();
     const history = useHistory();
@@ -23,7 +27,7 @@ const Navigation = () => {
                             </svg>
                         </button> : null
                     }
-                    <Link className="navbar-brand" to='/dashboard'>Expenses</Link>
+                    <Link className="navbar-brand" to='/dashboard'>{t("navigation.expenses")}</Link>
                 </div>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -34,10 +38,13 @@ const Navigation = () => {
                             hasToken ?
                                 <>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to='/dashboard'>Dashboard</Link>
+                                        <Link className="nav-link" to='/dashboard'>{t("navigation.dashboard")}</Link>
                                     </li>
+                                    {/* <li className="nav-item">
+                                        <Link className="nav-link" to='/info'>{t("navigation.info")}</Link>
+                                    </li> */}
                                     <li className="nav-item">
-                                        <Link className="nav-link" to='/info'>Info</Link>
+                                        <Link className="nav-link" to='/settings'>{t("navigation.settings")}</Link>
                                     </li>
                                 </> : null
                         }
@@ -49,12 +56,12 @@ const Navigation = () => {
                                     <Logout />
                                 </li> :
                                 <>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to='/register'>Register</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to='/login'>Login</Link>
-                                </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to='/register'>{t("navigation.register")}</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to='/login'>{t("navigation.login")}</Link>
+                                    </li>
                                 </>
                         }
                     </ul>

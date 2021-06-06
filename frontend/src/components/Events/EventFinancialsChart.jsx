@@ -1,6 +1,11 @@
 import { HorizontalBar } from 'react-chartjs-2';
 
+import { useTranslation } from 'react-i18next'
+import './../../translations/i18n'
+
 const EventFinancialsChart = ({ financials }) => {
+    const { t } = useTranslation();
+
     const options = {
         indexAxis: 'y',
         responsive: true,
@@ -11,8 +16,8 @@ const EventFinancialsChart = ({ financials }) => {
 
     const calcualateChartData = (data) => {
         const labels = [];
-        const credit = { label: 'credit', data: [], backgroundColor: [] };
-        const debit = { label: 'debit', data: [], backgroundColor: [] };
+        const credit = { label: t("event.credit"), data: [], backgroundColor: [] };
+        const debit = { label: t("event.debit"), data: [], backgroundColor: [] };
 
         for (const d of data) {
             labels.push(d.username);

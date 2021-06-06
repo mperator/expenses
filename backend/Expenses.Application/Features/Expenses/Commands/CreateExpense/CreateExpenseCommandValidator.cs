@@ -12,20 +12,20 @@ namespace Expenses.Application.Features.Expenses.Commands.CreateExpense
                 .NotNull()
                 .ChildRules(request =>
                 {
-                    request.RuleFor(e => e.Title).NotNull().WithMessage("Title is required.");
-                    request.RuleFor(e => e.Description).NotNull().WithMessage("Description is required.");
-                    request.RuleFor(e => e.Date).NotNull().WithMessage("Date is required.");
+                    request.RuleFor(e => e.Title).NotNull().WithMessage(Localization.Language.ExpenseCreateTitleRequired);
+                    request.RuleFor(e => e.Description).NotNull().WithMessage(Localization.Language.ExpenseCreateDescriptionRequired);
+                    request.RuleFor(e => e.Date).NotNull().WithMessage(Localization.Language.ExpenseCreateDateRequired);
 
                     request.RuleFor(e => e.Credit).ChildRules(credit =>
                     {
-                        credit.RuleFor(e => e.CreditorId).NotNull().WithMessage("Creditor is required.");
-                        credit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage("Credit amount is required.");
+                        credit.RuleFor(e => e.CreditorId).NotNull().WithMessage(Localization.Language.ExpenseCreateCreditorIdRequired);
+                        credit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage(Localization.Language.ExpenseCreateCreditorAmountRequired);
                     });
 
                     request.RuleForEach(e => e.Debits).ChildRules(debit =>
                     {
-                        debit.RuleFor(e => e.DebitorId).NotNull().WithMessage("Debitor is required.");
-                        debit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage("Amount is required.");
+                        debit.RuleFor(e => e.DebitorId).NotNull().WithMessage(Localization.Language.ExpenseCreateDebitorIdRequired);
+                        debit.RuleFor(e => e.Amount).GreaterThanOrEqualTo(0).WithMessage(Localization.Language.ExpenseCreateDebitorAmountRequired );
                     });
                 });
         }

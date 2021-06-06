@@ -4,7 +4,11 @@ import FormInput from './layout/FormInput'
 import { useHistory } from 'react-router';
 import useClient from '../hooks/useClient'
 
+import { useTranslation } from 'react-i18next'
+import '../translations/i18n'
+
 function Register() {
+    const {t} = useTranslation();
     const { registerUserAsync } = useClient();
     const history = useHistory();
 
@@ -22,7 +26,7 @@ function Register() {
 
         // soft validation to prevent sending wrong data.
         if(state.password !== state.passwordConfirmation) {
-            setError({...error, passwordConfirmation: "Password does not match." });
+            setError({...error, passwordConfirmation: t("register.errorPasswordNoMatch") });
         } else {
             setError({...error, passwordConfirmation: "" });
         }
@@ -48,16 +52,16 @@ function Register() {
             <div className="row mt-5">
                 <div className="col" />
                 <div className="col-lg-6">
-                    <h2 className="mb-5">Register</h2>
+                    <h2 className="mb-5">{t("register.title")}</h2>
                     <form>
-                        <FormInput type="text" id="username" label="Username" placeholder="JohnDoe21" value={state.username} handleChange={handleFormChange} error={error.username} />
-                        <FormInput type="email" id="email" label="Email" placeholder="johndoe@example.com" value={state.email} handleChange={handleFormChange} error={error.email} />
-                        <FormInput type="text" id="firstName" label="First Name" placeholder="John" value={state.firstName} handleChange={handleFormChange} error={error.firstName} />
-                        <FormInput type="text" id="lastName" label="Last Name" placeholder="Doe" value={state.lastName} handleChange={handleFormChange} error={error.lastName} />
-                        <FormInput type="password" id="password" label="Password" placeholder="" value={state.password} handleChange={handleFormChange} error={error.password} />
-                        <FormInput type="password" id="passwordConfirmation" label="Password Confirmation" placeholder="" value={state.passwordConfirmation} handleChange={handleFormChange} error={error.passwordConfirmation} />
+                        <FormInput type="text" id="username" label={t("register.username")} placeholder="JohnDoe21" value={state.username} handleChange={handleFormChange} error={error.username} />
+                        <FormInput type="email" id="email" label={t("register.email")} placeholder="johndoe@example.com" value={state.email} handleChange={handleFormChange} error={error.email} />
+                        <FormInput type="text" id="firstName" label={t("register.firstName")} placeholder="John" value={state.firstName} handleChange={handleFormChange} error={error.firstName} />
+                        <FormInput type="text" id="lastName" label={t("register.lastName")} placeholder="Doe" value={state.lastName} handleChange={handleFormChange} error={error.lastName} />
+                        <FormInput type="password" id="password" label={t("register.password")} placeholder="" value={state.password} handleChange={handleFormChange} error={error.password} />
+                        <FormInput type="password" id="passwordConfirmation" label={t("register.passwordConfirmation")} placeholder="" value={state.passwordConfirmation} handleChange={handleFormChange} error={error.passwordConfirmation} />
                         <div className="position-relative">
-                            <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Register</button>
+                            <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{t("register.register")}</button>
                         </div>
                     </form>
                 </div>

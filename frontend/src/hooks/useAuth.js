@@ -24,7 +24,8 @@ const useAuth = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Accept-Language': localStorage.getItem("lang") || ""
             },
             body: JSON.stringify({ username, password })
         });
@@ -52,7 +53,8 @@ const useAuth = () => {
             headers: {
                 'Authorization': `${state.token}`,
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Accept-Language': localStorage.getItem("lang") || ""
             }
         });
 

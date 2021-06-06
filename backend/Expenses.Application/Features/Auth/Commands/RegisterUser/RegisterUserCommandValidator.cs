@@ -11,11 +11,11 @@ namespace Expenses.Application.Features.Auth.Commands.RegisterUser
                 .NotNull()
                 .ChildRules(model =>
                 {
-                    model.RuleFor(e => e.FirstName).NotEmpty().WithMessage("No first name provided.");
-                    model.RuleFor(e => e.LastName).NotEmpty().WithMessage("No last name provided.");
-                    model.RuleFor(e => e.Username).NotEmpty().WithMessage("Username name provided.");
-                    model.RuleFor(e => e.Email).NotEmpty().EmailAddress().WithMessage("Invalid Email.");
-                    model.RuleFor(e => e.Password).NotEmpty().WithMessage("Invalid password.");
+                    model.RuleFor(e => e.FirstName).NotEmpty().WithMessage(Localization.Language.RegisterNoFirstName);
+                    model.RuleFor(e => e.LastName).NotEmpty().WithMessage(Localization.Language.RegisterNoLastName);
+                    model.RuleFor(e => e.Username).NotEmpty().WithMessage(Localization.Language.RegisterNoUsername);
+                    model.RuleFor(e => e.Email).NotEmpty().EmailAddress().WithMessage(Localization.Language.RegisterInvalidEmail);
+                    model.RuleFor(e => e.Password).NotEmpty().WithMessage(Localization.Language.RegisterInvalidPassword);
                 });
         }
     }

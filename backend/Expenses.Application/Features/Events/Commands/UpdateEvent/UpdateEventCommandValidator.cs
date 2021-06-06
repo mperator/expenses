@@ -9,11 +9,11 @@ namespace Expenses.Application.Features.Events.Commands.UpdateEvent
         {
             RuleFor(e => e.Title)
                 .NotEmpty()
-                .WithMessage("Title is required.");
+                .WithMessage(Localization.Language.EventUpdateTitleRequired);
 
             RuleFor(e => e.Description)
                 .NotEmpty()
-                .WithMessage("Description is required.");
+                .WithMessage(Localization.Language.EventUpdateDescriptionRequired);
         }
     }
 }

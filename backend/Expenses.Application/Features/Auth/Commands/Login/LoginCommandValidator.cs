@@ -9,9 +9,9 @@ namespace Expenses.Application.Features.Auth.Commands.Login
 
         public LoginCommandValidator()
         {
-            RuleFor(e => e.Username).NotEmpty().WithMessage("No username provided.");
+            RuleFor(e => e.Username).NotEmpty().WithMessage(Localization.Language.LoginNoUsername);
 
-            RuleFor(e => e.Password).NotEmpty().WithMessage("No password provided.");
+            RuleFor(e => e.Password).NotEmpty().WithMessage(Localization.Language.LoginNoPassword);
         }
     }
 }
