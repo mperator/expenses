@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Common;
+using Expenses.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace Expenses.Domain.ValueObjects
 
         public User(string id)
         {
-            if (string.IsNullOrWhiteSpace(id)) throw new Exception("Invelid user id.");
+            if (string.IsNullOrWhiteSpace(id)) throw new BusinessValidationException(Localization.Language.UserInvalidId);
             Id = id;
         }
 

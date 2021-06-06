@@ -9,6 +9,7 @@ import Navigation from './components/Navigation';
 import Register from './components/Register'
 import Login from './components/Login';
 import Info from './components/Info';
+import Settings from './components/Settings/Settings';
 
 import Event from './components/Events/Event'
 import EventFinancials from './components/Events/EventFinancials';
@@ -44,6 +45,7 @@ function App() {
                         <ProtectedRoute exact path='/event/:eventId/expenses/:expenseId/edit' component={ExpenseEdit} />
 
                         <ProtectedRoute exact path='/info' component={Info} />
+                        <ProtectedRoute exact path='/settings' component={Settings} />
                     </Switch>
                 </Router>
             </AuthProvider>

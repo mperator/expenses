@@ -4,12 +4,15 @@ import useForm from '../hooks/useForm'
 
 import FormInput from './layout/FormInput';
 
-
-
 import { Redirect, useLocation } from "react-router-dom";
 import SkeletonLoader from './SkeletonLoader';
 
+import { useTranslation } from 'react-i18next'
+import '../translations/i18n'
+
 function Login() {
+    const {t} = useTranslation();
+
     // check if user is logged in the naviaget to Home (or redirekt)
     const { isLoading, hasToken, loginAsync } = useAuth();
     const location = useLocation();
@@ -58,16 +61,16 @@ function Login() {
                     <div className="col" />
                     <div className="col-lg-6">
                         <form>
-                            <FormInput type="text" id="username" label="Username" data-test="username-field" value={state.username} handleChange={handleFormChange} error={error.username} dataTestValue="username-field" />
+                            <FormInput type="text" id="username" label={t("login.username")} value={state.username} handleChange={handleFormChange} error={error.username} dataTestValue="username-field" />                            
 
-                            <FormInput type="password" id="password" label="Password" data-test="password-field" value={state.password} handleChange={handleFormChange} error={error.password} dataTestValue="password-field" />
+                            <FormInput type="password" id="password" label={t("login.password")} value={state.password} handleChange={handleFormChange} error={error.password} dataTestValue="password-field" />
                             {errorDetail !== "" ? (<>
                                 <div className="is-invalid"></div>
                                 <div className="invalid-feedback">{errorDetail}</div>
                             </>) : null}
 
                             <div className="d-grid gap-2 d-flex justify-content-end">
-                                <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync} data-test="signIn-button">Sign In</button>
+                                <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync} data-test="signIn-button">{t("login.signIn")}</button>
                             </div>
                         </form>
                     </div>

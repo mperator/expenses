@@ -7,7 +7,11 @@ import EventFinancialsChart from './EventFinancialsChart';
 import ParticipantMoneyList from './ParticipantMoneyList';
 import DateFormat from '../DateFormat';
 
+import { useTranslation } from 'react-i18next'
+import './../../translations/i18n'
+
 const EventFinancials = () => {
+    const { t } = useTranslation();
     const { getEventAsync } = useClient();
     const { userId } = useAuth();
     const params = useParams();
@@ -79,7 +83,7 @@ const EventFinancials = () => {
                         </span>
                     </div>
                     <div>
-                        <p className="mt-3 display-5">Total expenses: <span className="text-muted"><strong>{calculateExpenseSummary()}</strong></span> {event.currency}</p>
+                        <p className="mt-3 display-5">{t("event.totalExpenses")}: <span className="text-muted"><strong>{calculateExpenseSummary()}</strong></span> {event.currency}</p>
                     </div>
 
                     {/* expenses */}

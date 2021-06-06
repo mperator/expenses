@@ -7,8 +7,12 @@ import DashboardEventList from './DashboardEventList'
 
 import './Dashboard.css'
 
+import { useTranslation } from 'react-i18next'
+import './../../translations/i18n'
+
 /* Get a list of events and display them. */
 const Dashboard = () => {
+    const { t } = useTranslation();
     const { getEventsAsync, getFilteredEventsAsync } = useClient();
     const [loading, setLoading] = useState(true);
     const [events, setEvents] = useState([]);
@@ -56,14 +60,14 @@ const Dashboard = () => {
         <>
             { loading ? <SkeletonLoader />
                 : <div className="container mt-3">
-                    <h2 className="display-3">My Events</h2>
+                    <h2 className="display-3">{t("dashboard.title")}</h2>
 
                     {/* search bar  */}
                     <div className="my-4 d-flex align-items-center gap-2">
                         <SearchBar
                             query={search.query}
                             handleChange={handleQueryChange}
-                            placeholder={"Search for an event title ..."}
+                            placeholder={t("dashboard.searchPlaceHolder")}
                             handleClick={handleSearch} />
                         <LinkButtonPlus to={'/event/new'} />
                     </div>

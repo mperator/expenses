@@ -1,22 +1,26 @@
 import React from 'react'
 import FormInput from '../layout/FormInput';
 
+import { useTranslation } from 'react-i18next'
+import './../../translations/i18n'
+
 const ExpenseFormular = ({ title, state, error, errorDetail, handleFormChange, handleSplit, handleCreditorChange, handleParticipantAmountChange, children }) => {
+    const { t } = useTranslation();
     return (
         <>
             <h2>{title}</h2>
             <form>
-                <FormInput type="date" id="date" label="Date" value={state.date} handleChange={handleFormChange} error={error.date} />
+                <FormInput type="date" id="date" label={t("expense.date")} value={state.date} handleChange={handleFormChange} error={error.date} />
 
-                <FormInput type="text" id="title" label="Title" placeholder="My event title ..." value={state.title} handleChange={handleFormChange} error={error.title} />
+                <FormInput type="text" id="title" label={t("expense.title")} placeholder={t("expense.titlePlaceholder")} value={state.title} handleChange={handleFormChange} error={error.title} />
 
-                <FormInput type="textarea" id="description" label="Description" placeholder="My event description ..." value={state.description} handleChange={handleFormChange} error={error.description} />
+                <FormInput type="textarea" id="description" label={t("expense.description")} placeholder={t("expense.descriptionPlaceholder")} value={state.description} handleChange={handleFormChange} error={error.description} />
 
                 <div className="mb-3">
-                    <label htmlFor="amount" className="form-label">Amount</label>
+                    <label htmlFor="amount" className="form-label">{t("expense.amount")}</label>
                     <div className="input-group">
                         <input type="text" className="form-control text-right" aria-label="amount" id="amount" name="amount" value={state.amount} onChange={handleFormChange} />
-                        <button type="button" className="btn btn-outline-primary" onClick={handleSplit}>Split</button>
+                        <button type="button" className="btn btn-outline-primary" onClick={handleSplit}>{t("expense.split")}</button>
                         <span className="input-group-text">€</span>
                     </div>
                 </div>
@@ -28,12 +32,12 @@ const ExpenseFormular = ({ title, state, error, errorDetail, handleFormChange, h
                                 <option key={participant.id} value={participant.id}>{participant.username}</option>
                             )}
                         </select>
-                        <label htmlFor="creditorId">Creditor</label>
+                        <label htmlFor="creditorId">{t("expense.creditor")}</label>
                     </div>
                 </div>
                 
                 <div className="mb-3">
-                    <h3 className="mb-3" >Participants</h3>
+                    <h3 className="mb-3" >{t("expense.participants")}</h3>
                     {state.participants.map((p, i) => (
                         <div key={p.id} className="row mb-2">
                             <label className="col-sm-3 col-form-label">{p.username}</label>

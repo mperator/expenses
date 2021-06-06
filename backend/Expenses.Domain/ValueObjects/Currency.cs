@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Common;
+using Expenses.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -10,8 +11,8 @@ namespace Expenses.Domain.ValueObjects
 
         public Currency(string code)
         {
-            if (string.IsNullOrWhiteSpace(code)) throw new Exception("Invalid code.");
-            if (!(code.Length == 3)) throw new Exception("Length not invalid");
+            if (string.IsNullOrWhiteSpace(code)) throw new BusinessValidationException(Localization.Language.CurrencyInvalidCode);
+            if (!(code.Length == 3)) throw new BusinessValidationException(Localization.Language.CurrencyInvalidLength);
 
             Code = code;
         }

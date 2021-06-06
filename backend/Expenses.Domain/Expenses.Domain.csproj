@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Localization\Language.de-DE.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Localization\Language.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Language.Designer.cs</LastGenOutput>

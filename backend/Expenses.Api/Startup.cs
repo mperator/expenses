@@ -3,6 +3,7 @@ using Expenses.Application;
 using Expenses.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -28,6 +29,13 @@ namespace Expenses.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRequestLocalization(options =>
+            {
+                options.AddSupportedCultures("en-US", "de-DE");
+                options.AddSupportedUICultures("en-US", "de-DE");
+                options.DefaultRequestCulture = new RequestCulture("en-US");
+            });
+
             services.AddHttpContextAccessor();
             services.AddInfrastructure(Configuration);
             services.AddApplication();
@@ -44,7 +52,7 @@ namespace Expenses.Api
                 options.Filters.Add(new ProducesAttribute("application/json"));
                 options.Filters.Add(new ConsumesAttribute("application/json"));
             });
-                
+
 
             services.AddSwaggerGen(c =>
             {
@@ -73,6 +81,7 @@ namespace Expenses.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Expenses v1"));
             }
 
+            app.UseRequestLocalization();
             app.UseMiddleware<HttpExceptionMiddleware>();
 
             app.UseHttpsRedirection();
@@ -82,6 +91,7 @@ namespace Expenses.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

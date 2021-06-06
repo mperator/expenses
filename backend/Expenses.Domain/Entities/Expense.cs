@@ -28,14 +28,14 @@ namespace Expenses.Domain.Entities
         public Expense(User creator, string title, string description, DateTime date, string currency)
         {
             // domain validation
-            if (creator == null) throw new ExpenseValidationException("Invalid creator.");
-            if (string.IsNullOrWhiteSpace(title)) throw new ExpenseValidationException("Invalid title.");
-            if (string.IsNullOrWhiteSpace(description)) throw new ExpenseValidationException("description.");  // TODO: allow null?
-            if (date == default) throw new ExpenseValidationException("Date must be set.");
+            if (creator == null) throw new ExpenseValidationException(Localization.Language.ExpenseNoCreator);
+            if (string.IsNullOrWhiteSpace(title)) throw new ExpenseValidationException(Localization.Language.ExpenseNoTitle);
+            if (string.IsNullOrWhiteSpace(description)) throw new ExpenseValidationException(Localization.Language.ExpenseNoDescription);  // TODO: allow null?
+            if (date == default) throw new ExpenseValidationException(Localization.Language.ExpenseNoDate);
             
             // TODO: Use value object for currency
-            if (string.IsNullOrWhiteSpace(currency)) throw new ExpenseValidationException("Invalid currency set.");
-            if (currency.Length != 3) throw new ExpenseValidationException("No valid currency string.");
+            if (string.IsNullOrWhiteSpace(currency)) throw new ExpenseValidationException(Localization.Language.ExpenseNoCurrency);
+            if (currency.Length != 3) throw new ExpenseValidationException(Localization.Language.ExpenseInvalidCurrencyLength);
 
             Creator = creator;
             Title = title;
@@ -46,13 +46,13 @@ namespace Expenses.Domain.Entities
 
         public void Split(Credit credit, List<Debit> debits)
         {
-            if (credit == null) throw new ExpenseValidationException("Credit must not be null.");
-            if (debits == null || debits.Count == 0) throw new ExpenseValidationException("Debits must not be null or empty.");
+            if (credit == null) throw new ExpenseValidationException(Localization.Language.ExpenseSplitNoCredit);
+            if (debits == null || debits.Count == 0) throw new ExpenseValidationException(Localization.Language.ExpenseSplitNoDebits);
 
-            if (credit.Amount != debits.Sum(d => d.Amount)) throw new ExpenseValidationException("Invalid amount between credit and debits.");
+            if (credit.Amount != debits.Sum(d => d.Amount)) throw new ExpenseValidationException(Localization.Language.ExpenseSplitInvalidBalance);
             
             // TODO: does this matter?
-            if (debits.Count() != debits.Select(d => d.Debitor).Distinct().Count()) throw new ExpenseValidationException("Same debitor is not allowed");
+            if (debits.Count() != debits.Select(d => d.Debitor).Distinct().Count()) throw new ExpenseValidationException(Localization.Language.ExpenseSplitDebitorDuplication);
 
             _credit = credit;
             _debits = debits;

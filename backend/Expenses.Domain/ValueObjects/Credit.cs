@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Common;
+using Expenses.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -14,8 +15,8 @@ namespace Expenses.Domain.ValueObjects
 
         public Credit(User creditor, decimal amount)
         {
-            if (creditor == null) throw new Exception("Invalid creditor id.");
-            if(amount < 0.0M) throw new Exception("Amount must me greater than zero.");
+            if (creditor == null) throw new BusinessValidationException(Localization.Language.CreditInvalidCreditor);
+            if(amount < 0.0M) throw new BusinessValidationException(Localization.Language.CreditInvalidAmount);
 
             Creditor = creditor;
             Amount = amount;

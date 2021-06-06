@@ -40,7 +40,8 @@ const useClient = () => {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'Authorization': `${token}`
+                'Authorization': `${token}`,
+                'Accept-Language': localStorage.getItem("lang") || ""
             }
         });
         return await handleResponseAsync(response, getWithAuthenticationAsync, url);
@@ -51,7 +52,8 @@ const useClient = () => {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Accept-Language': localStorage.getItem("lang") || ""
             },
             body: JSON.stringify(data)
         })
@@ -64,7 +66,8 @@ const useClient = () => {
             headers: {
                 'Authorization': `${token}`,
                 'Content-type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Accept-Language': localStorage.getItem("lang") || ""
             },
             body: JSON.stringify(data)
         })
@@ -77,7 +80,8 @@ const useClient = () => {
             headers: {
                 'Authorization': `${token}`,
                 'Content-type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Accept-Language': localStorage.getItem("lang") || ""
             },
             body: JSON.stringify(data)
         })
@@ -89,6 +93,7 @@ const useClient = () => {
             method: 'DELETE',
             headers: {
                 'Authorization': `${token}`,
+                'Accept-Language': localStorage.getItem("lang") || ""
             }
         })
         return await handleResponseAsync(response, deleteWithAuthenticationAsync, url);

@@ -7,8 +7,11 @@ import dayjs from 'dayjs'
 import useAuth from './../../hooks/useAuth';
 import EventFormular from './EventFormular'
 
+import { useTranslation } from 'react-i18next'
+import './../../translations/i18n'
 
 const EventCreate = () => {
+    const { t } = useTranslation();
     const history = useHistory();
     const { userId } = useAuth();
     const { postEventAsync, getParticipantByIdAsync } = useClient();
@@ -91,7 +94,7 @@ const EventCreate = () => {
             <div className="container mt-4">
                 {loading ? null :
                     <EventFormular
-                        title={"Create Event"}
+                        title={t("event.newTitle")}
                         state={state}
                         error={error}
                         errorDetail={errorDetail}
@@ -99,8 +102,8 @@ const EventCreate = () => {
                         handleParticipantSearchAdd={handleParticipantSearchAdd}
                         handleParticipantSearchDelete={handleParticipantSearchDelete}
                         participants={participants}>
-                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>Create</button>
-                        <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>Cancel</button>
+                        <button className="btn btn-primary" type="submit" onClick={handleSubmitAsync}>{t("event.newAction")}</button>
+                        <button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>{t("event.cancel")}</button>
                     </EventFormular>
                 }
             </div>

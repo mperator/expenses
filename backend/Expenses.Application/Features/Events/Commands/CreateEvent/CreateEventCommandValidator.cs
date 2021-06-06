@@ -8,23 +8,23 @@ namespace Expenses.Application.Features.Events.Commands.CreateEvent
         {
             RuleFor(e => e.Title)
                 .NotEmpty()
-                .WithMessage("Title is required.");
+                .WithMessage(Localization.Language.EventCreateTitleRequired);
 
             RuleFor(e => e.Description)
                 .NotEmpty()
-                .WithMessage("Description is required.");
+                .WithMessage(Localization.Language.EventCreateDescriptionRequired);
 
             RuleFor(e => e.Currency)
                 .Length(3)
-                .WithMessage("Currency must be providet in ISO 4217.");
+                .WithMessage(Localization.Language.EventCreateCurrency);
 
             RuleFor(e => e.StartDate)
                 .NotEmpty()
-                .WithMessage("Start date not set.");
+                .WithMessage(Localization.Language.EventCreateStartDate);
 
             RuleFor(e => e.EndDate)
                 .NotEmpty()
-                .WithMessage("End date not set.");
+                .WithMessage(Localization.Language.EventCreateEndDate);
         }
     }
 }

@@ -117,103 +117,85 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CreditInvalidAmount" xml:space="preserve">
-    <value>Der Kreditwert muss größer als 0 sein.</value>
+  <data name="EventCreateCurrency" xml:space="preserve">
+    <value>Währung muss nach ISO 4217 angegeben werden.</value>
   </data>
-  <data name="CreditInvalidCreditor" xml:space="preserve">
-    <value>Kein Kreditor gesetzt.</value>
+  <data name="EventCreateDescriptionRequired" xml:space="preserve">
+    <value>Beschreibung wird benötigt.</value>
   </data>
-  <data name="CurrencyInvalidCode" xml:space="preserve">
-    <value>Ungültiger Währungscode.</value>
+  <data name="EventCreateEndDate" xml:space="preserve">
+    <value>End-Datum wird benötigt.</value>
   </data>
-  <data name="CurrencyInvalidLength" xml:space="preserve">
-    <value>Der Währunscode muss nach ISO drei stellig sein.</value>
+  <data name="EventCreateStartDate" xml:space="preserve">
+    <value>Start-Datum wird benötigt.</value>
   </data>
-  <data name="DebitInvalidAmount" xml:space="preserve">
-    <value>Der Debitwert muss größer als 0 sein.</value>
+  <data name="EventCreateTitleRequired" xml:space="preserve">
+    <value>Titel wird benötigt.</value>
   </data>
-  <data name="DebitInvalidDebitor" xml:space="preserve">
-    <value>Kein Debitor gesetzt.</value>
+  <data name="EventUpdateDescriptionRequired" xml:space="preserve">
+    <value>Beschreibung wird benötigt.</value>
   </data>
-  <data name="EventAddExpenseDateNotInRange" xml:space="preserve">
-    <value>Das Expense Datum muss zwischen dem Event-Start und End-Datum liegen.</value>
+  <data name="EventUpdateTitle" xml:space="preserve">
+    <value>Titel wird benötigt.</value>
   </data>
-  <data name="EventAddExpenseInvalidCurrency" xml:space="preserve">
-    <value>Die Expense Währung entspricht nicht der Event Währung.</value>
+  <data name="ExpenseCreateCreditorAmountRequired" xml:space="preserve">
+    <value>Ein Kreditor Betrag wird benötigt.</value>
   </data>
-  <data name="EventAddExpenseNoCredit" xml:space="preserve">
-    <value>Kein Kredit vorhanden.</value>
+  <data name="ExpenseCreateCreditorIdRequired" xml:space="preserve">
+    <value>Eine Kreditor Id wird benötigt.</value>
   </data>
-  <data name="EventAddExpenseNoDebits" xml:space="preserve">
-    <value>Keine Debits vorhanden.</value>
+  <data name="ExpenseCreateDateRequired" xml:space="preserve">
+    <value>Datum wird benötigt.</value>
   </data>
-  <data name="EventAddExpenseUserNotInEvent" xml:space="preserve">
-    <value>Ein oder mehrere Nutzer sind nicht Teilnehmer des Events und können nicht verwendet werden.</value>
+  <data name="ExpenseCreateDebitorAmountRequired" xml:space="preserve">
+    <value>Ein Debitor Betrag wird benötigt.</value>
   </data>
-  <data name="EventAddParticipantExists" xml:space="preserve">
-    <value>Der Teilnehmer ist bereits im Event.</value>
+  <data name="ExpenseCreateDebitorIdRequired" xml:space="preserve">
+    <value>Eine Debitor Id wird benötigt.</value>
   </data>
-  <data name="EventInvalidDateRange" xml:space="preserve">
-    <value>Das Start-Datum muss kleiner oder gleich dem End-Datum sein.</value>
+  <data name="ExpenseCreateDescriptionRequired" xml:space="preserve">
+    <value>Beschreibung wird benötigt.</value>
   </data>
-  <data name="EventNoCreator" xml:space="preserve">
-    <value>Kein Ersteller angegeben.</value>
+  <data name="ExpenseCreateTitleRequired" xml:space="preserve">
+    <value>Titel wird benötigt.</value>
   </data>
-  <data name="EventNoCurrency" xml:space="preserve">
-    <value>Keine Währung gesetzt.</value>
+  <data name="ExpenseUpdateCreditorAmountRequired" xml:space="preserve">
+    <value>Ein Kreditor Betrag wird benötigt.</value>
   </data>
-  <data name="EventNoDescription" xml:space="preserve">
-    <value>Keine Beschreibung gesetzt.</value>
+  <data name="ExpenseUpdateCreditorIdRequired" xml:space="preserve">
+    <value>Eine Kreditor Id wird benötigt.</value>
   </data>
-  <data name="EventNoEndDate" xml:space="preserve">
-    <value>Kein End Datum gesetzt.</value>
+  <data name="ExpenseUpdateDebitorAmountRequired" xml:space="preserve">
+    <value>Ein Debitor Betrag wird benötigt.</value>
   </data>
-  <data name="EventNoStartDate" xml:space="preserve">
-    <value>Kein Start Datum gesetzt.</value>
+  <data name="ExpenseUpdateDebitorIdRequired" xml:space="preserve">
+    <value>Eine Debitor Id wird benötigt.</value>
   </data>
-  <data name="EventNoTitle" xml:space="preserve">
-    <value>Kein Titel gesetzt.</value>
+  <data name="ExpenseUpdateDescriptionRequired" xml:space="preserve">
+    <value>Beschreibung wird benötigt.</value>
   </data>
-  <data name="EventRemoveExpenseNotFound" xml:space="preserve">
-    <value>Die Expense konnte nicht gefunden werden.</value>
+  <data name="ExpenseUpdateTitleRequired" xml:space="preserve">
+    <value>Titel wird benötigt.</value>
   </data>
-  <data name="EventRemoveParticipantHasExpenses" xml:space="preserve">
-    <value>Der Teilnehmer hat mehrere Expenses und kann nicht gelöscht werden.</value>
+  <data name="LoginNoPassword" xml:space="preserve">
+    <value>Kein Passwort angegeben.</value>
   </data>
-  <data name="EventRemoveParticipantNotFound" xml:space="preserve">
-    <value>Der Teilnehmer wurde nicht gefunden.</value>
+  <data name="LoginNoUsername" xml:space="preserve">
+    <value>Kein Benutzername angegeben.</value>
   </data>
-  <data name="ExpenseInvalidCurrencyLength" xml:space="preserve">
-    <value>Währungscode muss aus 3 Zeichen bestehen.</value>
+  <data name="RegisterInvalidEmail" xml:space="preserve">
+    <value>Ungültige E-Mail Adresse.</value>
   </data>
-  <data name="ExpenseNoCreator" xml:space="preserve">
-    <value>Kein Ersteller gesetzt.</value>
+  <data name="RegisterInvalidPassword" xml:space="preserve">
+    <value>Ungültiges Passwort.</value>
   </data>
-  <data name="ExpenseNoCurrency" xml:space="preserve">
-    <value>Keine Währung gesetzt.</value>
+  <data name="RegisterNoFirstName" xml:space="preserve">
+    <value>Vorname nicht angegeben.</value>
   </data>
-  <data name="ExpenseNoDate" xml:space="preserve">
-    <value>Kein Datum gesetzt.</value>
+  <data name="RegisterNoLastName" xml:space="preserve">
+    <value>Nachname nicht angegben.</value>
   </data>
-  <data name="ExpenseNoDescription" xml:space="preserve">
-    <value>Keine Beschreibung gesetzt.</value>
-  </data>
-  <data name="ExpenseNoTitle" xml:space="preserve">
-    <value>Kein Titel gesetzt.</value>
-  </data>
-  <data name="ExpenseSplitDebitorDuplication" xml:space="preserve">
-    <value>Ein Debitor darf nicht doppelt vorkommen.</value>
-  </data>
-  <data name="ExpenseSplitInvalidBalance" xml:space="preserve">
-    <value>Die Balance zwischen Kredit und Debits ist ungültig.</value>
-  </data>
-  <data name="ExpenseSplitNoCredit" xml:space="preserve">
-    <value>Kein Kredit gesetzt.</value>
-  </data>
-  <data name="ExpenseSplitNoDebits" xml:space="preserve">
-    <value>Kein Debit gesetzt.</value>
-  </data>
-  <data name="UserInvalidId" xml:space="preserve">
-    <value>Die User Id darf nicht leer sein.</value>
+  <data name="RegisterNoUsername" xml:space="preserve">
+    <value>Username nicht angegeben.</value>
   </data>
 </root>

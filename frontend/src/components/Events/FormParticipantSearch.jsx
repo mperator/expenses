@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react'
 import Participant from './Participant';
 import useClient from './../../hooks/useClient'
 
+import { useTranslation } from 'react-i18next'
+import './../../translations/i18n'
+
 const FormParticipantSearch = ({ participants, handleParticipantSearchAdd }) => {
+    const { t } = useTranslation();
     const { getParticipantsByNameAsync } = useClient();
 
     const [search, setSearch] = useState({
@@ -57,8 +61,8 @@ const FormParticipantSearch = ({ participants, handleParticipantSearchAdd }) => 
 
     return (
         <div className="mb-3">
-            <label htmlFor="search" className="form-label">Participants</label>
-            <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder="Type name to search ..." autoComplete="off"></input>
+            <label htmlFor="search" className="form-label">{t("event.participants")}</label>
+            <input className="form-control" id="search" name="search" type="text" value={search.query} onChange={handleSearch} placeholder={t("event.participantSearchPlaceholder")} autoComplete="off"></input>
 
             <div className="list-group">
                 {search.participants.map(a => (
