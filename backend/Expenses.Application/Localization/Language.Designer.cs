@@ -61,7 +61,7 @@ namespace Expenses.Application.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Currency is required in ISO 4217..
+        ///   Looks up a localized string similar to Currency is required according to ISO 4217..
         /// </summary>
         internal static string EventCreateCurrency {
             get {

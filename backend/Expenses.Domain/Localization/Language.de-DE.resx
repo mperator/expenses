@@ -154,7 +154,7 @@
     <value>Der Teilnehmer ist bereits im Event.</value>
   </data>
   <data name="EventInvalidDateRange" xml:space="preserve">
-    <value>Das Start Datum muss kleiner oder gleich dem End Datum entsprechen.</value>
+    <value>Das Start-Datum muss kleiner oder gleich dem End-Datum sein.</value>
   </data>
   <data name="EventNoCreator" xml:space="preserve">
     <value>Kein Ersteller angegeben.</value>

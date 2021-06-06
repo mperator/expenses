@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="EventCreateCurrency" xml:space="preserve">
-    <value>Currency is required in ISO 4217.</value>
+    <value>Currency is required according to ISO 4217.</value>
   </data>
   <data name="EventCreateDescriptionRequired" xml:space="preserve">
     <value>Description is required.</value>

@@ -32,7 +32,7 @@ export const TRANSLATIONS_DEDE = {
     dashboard: {
         title: "Meine Events",
         searchPlaceHolder: "Such nach einem Event Titel ...",
-        noEvents: "Wir konnten keine Event finden. Los geht's erstell eins."
+        noEvents: "Wir konnten keine Events finden. Los geht's erstell eins."
     },
     event : {
         newTitle: "Neues Event",

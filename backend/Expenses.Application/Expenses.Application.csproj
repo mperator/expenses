@@ -5,6 +5,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Exceptions\**" />
+	  <EmbeddedResource Remove="Exceptions\**" />
+	  <None Remove="Exceptions\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
 		<PackageReference Include="FluentValidation" Version="10.1.0" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.1.0" />
@@ -17,10 +23,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Exceptions\" />
 	</ItemGroup>
 
 	<ItemGroup>
