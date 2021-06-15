@@ -70,7 +70,7 @@ code .
 Once you open the code in VS Code, you shoud see following structure:
 
 ```folders
-microservices-reference-application/
+expenses/
 ├── .github/                            -> Github actions CI/CD config
 ├── backend/                            -> backend source code (C#)
 │   ├── Expenses.Api/                   -> source folder api layer
